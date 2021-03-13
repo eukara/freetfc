@@ -15,9 +15,10 @@
 
 ../../../src/gs-entbase/server.src
 ../../../src/gs-entbase/shared.src
-../shared/include.src
 
 defs.h
+
+../shared/include.src
 
 ../../../valve/src/server/player.qc
 ../../../valve/src/server/spectator.qc
@@ -37,7 +38,6 @@ server.qc
 
 ../../../src/botlib/include.src
 
-input.qc
 spawn.qc
 
 ../../../src/server/include.src

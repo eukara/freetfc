@@ -19,7 +19,6 @@
 ../../../src/gs-entbase/shared.src
 ../shared/include.src
 
-../../../valve/src/client/predict.qc
 init.qc
 ../../../valve/src/client/player.qc
 entities.qc
@@ -30,7 +29,6 @@ entities.qc
 ../../../valve/src/client/hud.qc
 ../../../valve/src/client/hud_weaponselect.qc
 ../../../valve/src/client/scoreboard.qc
-../../../valve/src/client/input.qc
 ../../../base/src/client/modelevent.qc
 
 ../../../src/client/include.src

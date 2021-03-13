@@ -60,10 +60,4 @@ ClientGame_RendererRestart(string rstr)
 	precache_model("sprites/tfchud05.spr");
 	precache_model("sprites/tfchud06.spr");
 	precache_model("sprites/tfchud07.spr");
-
-	precache_model("sprites/chainsaw.spr");
-	precache_model("sprites/hammer.spr");
-	precache_model("sprites/w_cannon.spr");
-
-	BEAM_TRIPMINE = particleeffectnum("weapon_tripmine.beam");
 }

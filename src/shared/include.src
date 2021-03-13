@@ -38,4 +38,5 @@ w_umbrella.qc
 w_wrench.qc
 weapons.qc
 ../../../valve/src/shared/weapon_common.qc
+input.qc
 #endlist
