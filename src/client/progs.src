@@ -1,5 +1,5 @@
 #pragma target fte
-#pragma progs_dat  "../..//csprogs.dat"
+#pragma progs_dat  "../../csprogs.dat"
 
 #define CSQC
 #define CLIENT
@@ -19,6 +19,7 @@
 ../../../src/gs-entbase/shared.src
 ../shared/include.src
 
+../../../base/src/client/draw.qc
 init.qc
 ../../../valve/src/client/player.qc
 entities.qc
