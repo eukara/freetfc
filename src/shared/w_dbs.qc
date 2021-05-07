@@ -120,7 +120,7 @@ w_dbs_primary(void)
 
 #ifdef SERVER
 	TraceAttack_FireBullets(4, pl.origin + pl.view_ofs, 14, [0.17365,0.04362], WEAPON_DBS);
-	Weapons_PlaySound(pl, CHAN_WEAPON, "weapons/sbarrel1.wav", 1, ATTN_NORM);
+	sound(pl, CHAN_WEAPON, "weapons/sbarrel1.wav", 1, ATTN_NORM);
 	pl.shotgun_mag--;
 	Weapons_UpdateAmmo(pl, pl.shotgun_mag, pl.ammo_shells, __NULL__);
 #else

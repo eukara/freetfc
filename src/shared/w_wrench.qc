@@ -110,9 +110,9 @@ w_wrench_primary(void)
 
 #ifdef SERVER
 	if (pl.flags & FL_CROUCHING) {
-		Animation_PlayerTopTemp(ANIM_SHOOTCROWBAR, 0.5f);
+		Animation_PlayerTop(pl, ANIM_SHOOTCROWBAR, 0.5f);
 	} else {
-		Animation_PlayerTopTemp(ANIM_CR_SHOOTCROWBAR, 0.42f);
+		Animation_PlayerTop(pl, ANIM_CR_SHOOTCROWBAR, 0.42f);
 	}
 
 	sound(pl, CHAN_WEAPON, "weapons/cbar_miss1.wav", 1, ATTN_NORM);

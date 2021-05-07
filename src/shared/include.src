@@ -11,7 +11,7 @@
 ../../../valve/src/shared/fx_breakmodel.qc
 ../../../valve/src/shared/fx_explosion.qc
 ../../../valve/src/shared/fx_gibhuman.qc
-../../../valve/src/shared/fx_spark.qc
+../../../base/src/shared/fx_spark.qc
 ../../../valve/src/shared/fx_impact.qc
 
 items.h
