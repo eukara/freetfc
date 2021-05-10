@@ -75,7 +75,7 @@ w_dbs_pickup(int new, int startammo)
 	player pl = (player)self;
 	pl.shotgun_mag = bound(0, pl.shotgun_mag + 8, 8);
 #endif
-	return TRUE;
+	return (1);
 }
 
 void
