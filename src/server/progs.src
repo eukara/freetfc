@@ -31,7 +31,7 @@ item_tfgoal.qc
 gamerules.qc
 ../../../valve/src/server/client.qc
 server.qc
-../../../valve/src/server/damage.qc
+../../../base/src/server/damage.qc
 ../../../valve/src/server/rules.qc
 ../../../valve/src/server/flashlight.qc
 ../../../base/src/server/modelevent.qc
