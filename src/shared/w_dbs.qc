@@ -55,15 +55,21 @@ w_dbs_updateammo(player pl)
 	Weapons_UpdateAmmo(pl, pl.shotgun_mag, pl.ammo_shells, __NULL__);
 #endif
 }
-string w_dbs_wmodel(void)
+
+string
+w_dbs_wmodel(void)
 {
 	return "models/w_shot2.mdl";
 }
-string w_dbs_pmodel(void)
+
+string
+w_dbs_pmodel(void)
 {
 	return "models/p_shot2.mdl";
 }
-string w_dbs_deathmsg(void)
+
+string
+w_dbs_deathmsg(void)
 {
 	return "";
 }
@@ -252,7 +258,7 @@ w_dbs_hudpic(int s, vector pos, float a)
 weapon_t w_dbs =
 {
 	.name		= "sbs",
-	.id			= ITEM_DBS,
+	.id		= ITEM_DBS,
 	.slot		= 2,
 	.slot_pos	= 1,
 	.draw		= w_dbs_draw,
