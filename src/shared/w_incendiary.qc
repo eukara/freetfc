@@ -93,7 +93,7 @@ w_incendiary_hudpic(int selected, vector pos, float a)
 weapon_t w_incendiary =
 {
 	.name		= "incendiary",
-	.id			= ITEM_INCENDIARY,
+	.id		= ITEM_INCENDIARY,
 	.slot		= 4,
 	.slot_pos	= 3,
 	.draw		= w_incendiary_draw,

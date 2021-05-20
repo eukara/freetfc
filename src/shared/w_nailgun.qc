@@ -93,7 +93,7 @@ w_nailgun_hudpic(int selected, vector pos, float a)
 weapon_t w_nailgun =
 {
 	.name		= "nailgun",
-	.id			= ITEM_NAILGUN,
+	.id		= ITEM_NAILGUN,
 	.slot		= 3,
 	.slot_pos	= 0,
 	.draw		= w_nailgun_draw,

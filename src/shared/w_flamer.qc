@@ -93,7 +93,7 @@ w_flamer_hudpic(int selected, vector pos, float a)
 weapon_t w_flamer =
 {
 	.name		= "flamer",
-	.id			= ITEM_FLAMER,
+	.id		= ITEM_FLAMER,
 	.slot		= 3,
 	.slot_pos	= 3,
 	.draw		= w_flamer_draw,

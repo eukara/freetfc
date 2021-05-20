@@ -94,7 +94,7 @@ w_pipebomb_hudpic(int selected, vector pos, float a)
 weapon_t w_pipebomb =
 {
 	.name		= "pipebomb",
-	.id			= ITEM_PIPEBOMB,
+	.id		= ITEM_PIPEBOMB,
 	.slot		= 4,
 	.slot_pos	= 1,
 	.draw		= w_pipebomb_draw,

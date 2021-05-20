@@ -253,7 +253,7 @@ w_sbs_hudpic(int s, vector pos, float a)
 weapon_t w_sbs =
 {
 	.name		= "sbs",
-	.id			= ITEM_SBS,
+	.id		= ITEM_SBS,
 	.slot		= 1,
 	.slot_pos	= 0,
 	.draw		= w_sbs_draw,

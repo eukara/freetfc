@@ -211,7 +211,7 @@ w_crowbar_hudpic(int selected, vector pos, float a)
 weapon_t w_crowbar =
 {
 	.name		= "crowbar",
-	.id			= ITEM_CROWBAR,
+	.id		= ITEM_CROWBAR,
 	.slot		= 0,
 	.slot_pos	= 0,
 	.draw		= w_crowbar_draw,

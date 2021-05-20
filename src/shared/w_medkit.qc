@@ -93,7 +93,7 @@ w_medkit_hudpic(int selected, vector pos, float a)
 weapon_t w_medkit =
 {
 	.name		= "medkit",
-	.id			= ITEM_MEDKIT,
+	.id		= ITEM_MEDKIT,
 	.slot		= 0,
 	.slot_pos	= 1,
 	.draw		= w_medkit_draw,

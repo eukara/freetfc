@@ -93,7 +93,7 @@ w_supernail_hudpic(int selected, vector pos, float a)
 weapon_t w_supernail =
 {
 	.name		= "supernail",
-	.id			= ITEM_SUPERNAIL,
+	.id		= ITEM_SUPERNAIL,
 	.slot		= 3,
 	.slot_pos	= 2,
 	.draw		= w_supernail_draw,

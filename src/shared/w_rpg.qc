@@ -75,7 +75,7 @@ w_rpg_hudpic(int selected, vector pos, float a)
 weapon_t w_rpg =
 {
 	.name		= "rpg",
-	.id			= ITEM_RPG,
+	.id		= ITEM_RPG,
 	.slot		= 4,
 	.slot_pos	= 0,
 	.draw		= w_rpg_draw,

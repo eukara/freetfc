@@ -93,7 +93,7 @@ w_sniper_hudpic(int selected, vector pos, float a)
 weapon_t w_sniper =
 {
 	.name		= "sniper",
-	.id			= ITEM_SNIPER,
+	.id		= ITEM_SNIPER,
 	.slot		= 1,
 	.slot_pos	= 1,
 	.draw		= w_sniper_draw,

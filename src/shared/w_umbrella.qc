@@ -214,7 +214,7 @@ w_umbrella_hudpic(int selected, vector pos, float a)
 weapon_t w_umbrella =
 {
 	.name		= "umbrella",
-	.id			= ITEM_UMBRELLA,
+	.id		= ITEM_UMBRELLA,
 	.slot		= 0,
 	.slot_pos	= 4,
 	.draw		= w_umbrella_draw,

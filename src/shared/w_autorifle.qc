@@ -93,7 +93,7 @@ w_autorifle_hudpic(int selected, vector pos, float a)
 weapon_t w_autorifle =
 {
 	.name		= "autorifle",
-	.id			= ITEM_AUTORIFLE,
+	.id		= ITEM_AUTORIFLE,
 	.slot		= 2,
 	.slot_pos	= 0,
 	.draw		= w_autorifle_draw,

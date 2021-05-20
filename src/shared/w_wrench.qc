@@ -204,7 +204,7 @@ w_wrench_hudpic(int selected, vector pos, float a)
 weapon_t w_wrench =
 {
 	.name		= "wrench",
-	.id			= ITEM_WRENCH,
+	.id		= ITEM_WRENCH,
 	.slot		= 0,
 	.slot_pos	= 3,
 	.draw		= w_wrench_draw,

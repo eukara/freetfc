@@ -93,7 +93,7 @@ w_tranquil_hudpic(int selected, vector pos, float a)
 weapon_t w_tranquil =
 {
 	.name		= "tranquil",
-	.id			= ITEM_TRANQUIL,
+	.id		= ITEM_TRANQUIL,
 	.slot		= 1,
 	.slot_pos	= 2,
 	.draw		= w_tranquil_draw,

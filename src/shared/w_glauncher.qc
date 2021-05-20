@@ -93,7 +93,7 @@ w_glauncher_hudpic(int selected, vector pos, float a)
 weapon_t w_glauncher =
 {
 	.name		= "glauncher",
-	.id			= ITEM_GLAUNCHER,
+	.id		= ITEM_GLAUNCHER,
 	.slot		= 3,
 	.slot_pos	= 1,
 	.draw		= w_glauncher_draw,

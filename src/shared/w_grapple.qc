@@ -93,7 +93,7 @@ w_grapple_hudpic(int selected, vector pos, float a)
 weapon_t w_grapple =
 {
 	.name		= "grapple",
-	.id			= ITEM_GRAPPLE,
+	.id		= ITEM_GRAPPLE,
 	.slot		= 5,
 	.slot_pos	= 0,
 	.draw		= w_grapple_draw,
