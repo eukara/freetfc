@@ -27,10 +27,11 @@ ClientGame_Init(float apilevel, string enginename, float engineversion)
 	Obituary_Init();
 }
 
+void VGUI_ChooseTeam(void);
 void
 ClientGame_InitDone(void)
 {
-//	VGUI_ChooseTeam();
+	VGUI_ChooseTeam();
 }
 
 void

@@ -34,5 +34,6 @@ entities.qc
 ../../../base/src/client/modelevent.qc
 
 ../../../src/client/include.src
+vgui_chooseteam.qc
 ../../../src/shared/include.src
 #endlist
