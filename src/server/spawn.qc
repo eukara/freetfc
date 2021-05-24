@@ -61,15 +61,23 @@ CSEv_TeamJoin_f(float f)
 	/* mess, do it better */
 	if (f < 10) {
 		pl.team = 1; /* Blue */
+		forceinfokey(pl, "topcolor", "0x9aff");
+		forceinfokey(pl, "bottomcolor", "0x9aff");
 	} else if (f < 20) {
 		pl.team = 2; /* Red */
 		f -= 10;
+		forceinfokey(pl, "topcolor", "0xff1800");
+		forceinfokey(pl, "bottomcolor", "0xff1800");
 	} else if (f < 30) {
 		pl.team = 3; /* Yellow */
 		f -= 20;
+		forceinfokey(pl, "topcolor", "0xffca00");
+		forceinfokey(pl, "bottomcolor", "0xffca00");
 	} else if (f < 40) {
 		pl.team = 4; /* Green */
 		f -= 30;
+		forceinfokey(pl, "topcolor", "0x3bff00");
+		forceinfokey(pl, "bottomcolor", "0x3bff00");
 	}
 
 	pl.model = g_teammodels[f];
