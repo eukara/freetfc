@@ -66,7 +66,7 @@ void
 TFCGameRules::PlayerSpawn(base_player pp)
 {
 	player pl = (player)pp;
-	pl.classname = "spectator";
+	pl.classname = "unspawned";
 	pl.health = 0;
 	pl.armor = 0;
 	pl.takedamage = DAMAGE_NO;
