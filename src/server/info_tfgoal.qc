@@ -14,32 +14,192 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+/* A lot of this has been sourced and verified via:
+ * http://www.bspquakeeditor.com/archive/planetfortress_com_factory/files/tfortmap.txt
+ */
+
+typedef enum
+{
+	TFGOAL_ACTIVE, /* cannot be touched by a player */
+	TFGOAL_INACTIVE, /* will become ACTIVE when the toucher meets the criteria */
+	TFGOAL_REMOVED /* cannot be touched by players at all, only other events */
+} tfgoal_state;
+
+/* conditions under which the goal will activate */
+typedef enumflags
+{
+	TFACT_NONE,
+	TFACT_TOUCH,
+	TFACT_DETPACK,
+	TFACT_FAILURE,
+	TFACT_DROPTOGROUND = 2048
+} tfgoal_activation;
+
+typedef enumflags
+{
+	TFEF_ACTIVATOR, /* single activator */
+	TFEF_ACTTEAM, /* activators team */
+	TFEF_NONACTTEAM, /* everyone elses but activators team */
+	TFEF_NONACTIVATORS, /* everyone but the activator */
+	TFEF_WALLOBSTRUCT, /* everyone not tracelineable? */
+	TFEF_PVS, /* everyone not in the same pvs? */
+	TFEF_CHECK, /* no idea */
+} tfgoal_effects;
+
+typedef enumflags
+{
+	TFRESULT_NONE = 0,
+	TFRESULT_REMOVE = 1, /* remove right away */
+	TFRESULT_SUBGOAL_MODS = 2,
+	TFRESULT_SCORES = 4,
+	TFRESULT_SUBGOAL_NOMODS = 8,
+	TFRESULT_NODISGUISE = 16,
+	TFRESULT_FORCERESPAWN = 32,
+	TFRESULT_REMOVE_BUILDINGS = 64
+} tfgoal_result;
+
+/* point entity version */
 class info_tfgoal:CBaseTrigger
 {
 	string m_strName;
-	string m_strSound;
+	string m_strActivatedSound;
+
+	int m_iGoalID; /* goal identifer */
+	int m_iGoalGroupID; /* goal group ID */
+
+	tfgoal_state m_tfgState;
+	tfgoal_activation m_tfgActivation;
+	tfgoal_effects m_tfgEffects;
+	tfgoal_result m_tfgResult;
+	player m_Activator;
+
+	float m_dMustCarry; /* player must carry item of this ID */
+	float m_dRespawn; /* respawn after num seconds on TFRESULT_REMOVE */ 
+
+	float m_dTeamBlueGain;
+	float m_dTeamRedGain;
+	float m_dTeamYellowGain;
+	float m_dTeamGreenGain;
+	float m_dScore; /* score to be added to the activators' team score */
+	int m_iTeam; /* which team this belongs to */
+
+	int m_iHealth;
+	int m_iArmor;
+	int m_iShells;
+	int m_iNails;
+	int m_iCells;
+	int m_iMedikit;
+	int m_iRockets;
+	int m_iDetpack;
 
 	void(void) info_tfgoal;
 	virtual void(void) touch;
 	virtual void(void) Respawn;
+	virtual void(string, string) SpawnKey;
 };
 
 void
 info_tfgoal::touch(void)
 {
+	item_tfgoal findme = __NULL__;
+
 	if (other.classname != "player") {
 		return;
 	}
+	player pl = (player)other;
 
-	sound(this, CHAN_ITEM, m_strSound, 1.0f, ATTN_NORM);
+	/* check for state */
+	if (m_tfgState != TFGOAL_INACTIVE)
+		return;
+
+	/* check for team eligibility */
+	if (m_iTeam)
+	if (other.team != m_iTeam)
+		return;
+
+	/* check for the must-have carry */
+	if (m_dMustCarry) {
+		item_tfgoal findme = __NULL__;
+
+		/* find the needle in the haystack */
+		for (entity e = world; (e = find(e, ::classname, "item_tfgoal"));) {
+			item_tfgoal a = (item_tfgoal)e;
+
+			if (a.m_dItemID == m_dMustCarry)
+				findme = a;
+		}
+
+		if (!findme) {
+			printf("can't find the pickup\n");
+			return;
+		}
+
+		if (findme.solid != SOLID_NOT) {
+			printf("the item is not picked up.\n");
+			return;
+		}
+
+		if (findme.m_eActivator != pl) {
+			printf("you are not the items activator.\n");
+			return;
+		} else {
+			/* unset the activator and make it reappear */
+			findme.Respawn();
+		}
+	}
+
+	sound(this, CHAN_ITEM, m_strActivatedSound, 1.0f, ATTN_NORM);
 	Logging_Pickup(other, this, m_strName);
 
-	if (cvar("sv_playerslots") == 1) {
-		remove(self);
-	} else {
+	/* here we increase/decrease funstuff */
+	pl.health += m_iHealth;
+	pl.armor += m_iArmor;
+	pl.m_iAmmoShells += m_iShells;
+	pl.m_iAmmoNails += m_iNails;
+	pl.m_iAmmoCells += m_iCells;
+	pl.m_iAmmoRockets += m_iRockets;
+	pl.m_iAmmoMedikit += m_iMedikit;
+	pl.m_iAmmoDetpack += m_iDetpack;
+
+	/* clamp */
+	pl.health = bound(0, pl.health, pl.m_iMaxHealth);
+	pl.armor = bound(0, pl.armor, pl.m_iMaxArmor);
+	pl.m_iAmmoShells = bound(0, pl.m_iAmmoShells, pl.m_iMaxShells);
+	pl.m_iAmmoNails = bound(0, pl.m_iAmmoNails, pl.m_iMaxNails);
+	pl.m_iAmmoCells = bound(0, pl.m_iAmmoCells, pl.m_iMaxCells);
+	pl.m_iAmmoRockets = bound(0, pl.m_iAmmoRockets, pl.m_iMaxRockets);
+
+	pl.frags += frags;
+
+	string ts;
+	if (m_dScore) {
+		ts = sprintf("teamscore_%i", m_iTeam);
+		forceinfokey(world, ts, sprintf("%d", serverkeyfloat(ts) + m_dScore));
+	}
+	if (m_dTeamBlueGain) {
+		ts = "teamscore_1";
+		forceinfokey(world, ts, sprintf("%d", serverkeyfloat(ts) + m_dTeamBlueGain));
+	}
+	if (m_dTeamRedGain) {
+		ts = "teamscore_2";
+		forceinfokey(world, ts, sprintf("%d", serverkeyfloat(ts) + m_dTeamRedGain));
+	}
+	if (m_dTeamYellowGain) {
+		ts = "teamscore_3";
+		forceinfokey(world, ts, sprintf("%d", serverkeyfloat(ts) + m_dTeamYellowGain));
+	}
+	if (m_dTeamGreenGain) {
+		ts = "teamscore_4";
+		forceinfokey(world, ts, sprintf("%d", serverkeyfloat(ts) + m_dTeamGreenGain));
+	}
+
+	/* remove? */
+	if (m_tfgResult & TFRESULT_REMOVE) {
 		Hide();
-		think = Respawn;
-		nextthink = time + 30.0f;
+		if (m_dRespawn) {
+			think = Respawn;
+			nextthink = time + m_dRespawn;
+		}
 	}
 }
 
@@ -54,28 +214,128 @@ info_tfgoal::Respawn(void)
 }
 
 void
+info_tfgoal::SpawnKey(string strKey, string strValue)
+{
+	switch (strKey) {
+	case "netname":
+		netname = strValue;
+		break;
+	case "noise":
+		m_strActivatedSound = strValue;
+		break;
+	case "mdl":
+		model = strValue;
+		break;
+	case "goal_state":
+		m_tfgState = stof(strValue);
+		break;
+	case "g_a":
+		m_tfgActivation = stof(strValue);
+		break;
+	case "g_e":
+		m_tfgEffects = stof(strValue);
+		break;
+	case "goal_result":
+		m_tfgResult = stof(strValue);
+		break;
+	case "items_allowed":
+		m_dMustCarry = stof(strValue);
+		break;
+	case "team_no":
+		m_iTeam = stoi(strValue);
+		break;
+	case "count":
+		m_dScore = stof(strValue);
+		break;
+	case "wait":
+		m_dRespawn = stof(strValue);
+		break;
+	case "increase_team1":
+		m_dTeamBlueGain = stof(strValue);
+		break;
+	case "increase_team2":
+		m_dTeamRedGain = stof(strValue);
+		break;
+	case "increase_team3":
+		m_dTeamYellowGain = stof(strValue);
+		break;
+	case "increase_team4":
+		m_dTeamGreenGain = stof(strValue);
+		break;
+	/* AP manipulators */
+	case "health":
+		m_iHealth = stoi(strValue);
+		break;
+	case "armor":
+		m_iArmor = stoi(strValue);
+		break;
+	case "ammo_shells":
+		m_iShells = stoi(strValue);
+		break;
+	case "ammo_nails":
+		m_iNails = stoi(strValue);
+		break;
+	case "ammo_rockets":
+		m_iRockets = stoi(strValue);
+		break;
+	case "ammo_cells":
+		m_iCells = stoi(strValue);
+		break;
+	case "ammo_medikit":
+		m_iMedikit = stoi(strValue);
+		break;
+	default:
+		CBaseTrigger::SpawnKey(strKey, strValue);
+		break;
+	}
+}
+
+void
 info_tfgoal::info_tfgoal(void)
 {
+	m_tfgState = TFGOAL_INACTIVE;
+	m_tfgResult = TFRESULT_REMOVE;
+
 	for (int i = 1; i < (tokenize(__fullspawndata) - 1); i += 2) {
-		switch (argv(i)) {
-		case "netname":
-			m_strSound = argv(i+1);
-			netname = __NULL__;
-			break;
-		case "noise":
-			m_strSound = argv(i+1);
-			break;
-		case "mdl":
-			model = argv(i+1);
-			break;
-		default:
-			break;
-		}
+		SpawnKey(argv(i), argv(i+1));
 	}
-	precache_sound(m_strSound);
+
+	precache_sound(m_strActivatedSound);
 
 	CBaseEntity::CBaseEntity();
 	info_tfgoal::Respawn();
 }
 
-CLASSEXPORT(i_t_g, info_tfgoal)
+class i_t_g:info_tfgoal
+{
+	void(void) i_t_g;
+	virtual void(void) Respawn;
+};
+
+void
+i_t_g::Respawn(void)
+{
+	solid = SOLID_BSPTRIGGER;
+	movetype = MOVETYPE_NONE;
+	SetModel(m_oldModel);
+	SetOrigin(m_oldOrigin);
+}
+
+void
+i_t_g::i_t_g(void)
+{
+	classname = "info_tfgoal";
+
+	m_tfgState = TFGOAL_INACTIVE;
+	m_tfgResult = TFRESULT_NONE;
+
+	for (int i = 1; i < (tokenize(__fullspawndata) - 1); i += 2) {
+		SpawnKey(argv(i), argv(i+1));
+	}
+
+
+	CBaseEntity::CBaseEntity();
+
+	precache_sound(m_strActivatedSound);
+	Respawn();
+}

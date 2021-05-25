@@ -28,14 +28,6 @@ enum
 	DBS_IDLE3
 };
 
-enum
-{
-	DBS_IDLE,
-	DBS_RELOAD_START,
-	DBS_RELOAD,
-	DBS_RELOAD_END
-};
-
 void
 w_dbs_precache(void)
 {
@@ -51,9 +43,7 @@ w_dbs_precache(void)
 void
 w_dbs_updateammo(player pl)
 {
-#ifdef SERVER
-	Weapons_UpdateAmmo(pl, pl.shotgun_mag, pl.ammo_shells, __NULL__);
-#endif
+	Weapons_UpdateAmmo(pl, pl.mag_dbs, pl.m_iAmmoShells, __NULL__);
 }
 
 string
@@ -79,7 +69,7 @@ w_dbs_pickup(int new, int startammo)
 {
 #ifdef SERVER
 	player pl = (player)self;
-	pl.shotgun_mag = bound(0, pl.shotgun_mag + 8, 8);
+	pl.mag_dbs = bound(0, pl.mag_dbs + 16, 16);
 #endif
 	return (1);
 }
@@ -89,10 +79,6 @@ w_dbs_draw(void)
 {
 	Weapons_SetModel("models/v_tfc_shotgun.mdl");
 	Weapons_ViewAnimation(DBS_DRAW);
-#ifdef SERVER
-	player pl = (player)self;
-	Weapons_UpdateAmmo(pl, pl.shotgun_mag, pl.ammo_shells, __NULL__);
-#endif
 }
 
 void
@@ -104,125 +90,79 @@ w_dbs_holster(void)
 void
 w_dbs_primary(void)
 {
+	int s;
 	player pl = (player)self;
-	if (pl.w_attack_next) {
+
+	if (pl.mag_dbs != 1)
+		s = w_baseshotgun_fire(WEAPON_DBS, player::mag_dbs, 14, 4, [0.14, 0.08, 0]);
+	else
+		s = w_baseshotgun_fire(WEAPON_DBS, player::mag_dbs, 6, 4, [0.14, 0.08, 0]);
+
+	switch (s) {
+	case AUTO_FIRE_FAILED:
 		return;
+		break;
+	case AUTO_FIRED:
+		pl.mag_dbs--;
+		Weapons_ViewAnimation(DBS_FIRE1);
+		Weapons_ViewPunchAngle([-2,0,0]);
+		//Weapons_Sound(pl, CHAN_WEAPON, "weapon_mossberg.fire");
+		pl.w_attack_next = 0.7f;
+		break;
+	case AUTO_LAST:
+		Weapons_ViewAnimation(DBS_FIRE1);
+		Weapons_ViewPunchAngle([-2,0,0]);
+		//Weapons_Sound(pl, CHAN_WEAPON, "weapon_mossberg.fire");
+		pl.w_attack_next = 0.7f;
+		break;
+	case AUTO_EMPTY:
+		//Weapons_Sound(pl, CHAN_WEAPON, "weapon_mossberg.fire_empty");
+		pl.w_attack_next = 0.2f;
+		break;
 	}
 
-	if (pl.a_ammo3 > DBS_IDLE) {
-		return;
-	}
-
-	/* Ammo check */
-#ifdef SERVER
-	if (pl.shotgun_mag <= 0) {
-		return;
-	}
-#else
-	if (pl.a_ammo1 <= 0) {
-		return;
-	}
-#endif
-
-#ifdef SERVER
-	TraceAttack_FireBullets(4, pl.origin + pl.view_ofs, 14, [0.17365,0.04362], WEAPON_DBS);
-	sound(pl, CHAN_WEAPON, "weapons/sbarrel1.wav", 1, ATTN_NORM);
-	pl.shotgun_mag--;
-	Weapons_UpdateAmmo(pl, pl.shotgun_mag, pl.ammo_shells, __NULL__);
-#else
-	View_SetMuzzleflash(MUZZLE_WEIRD);
-	Weapons_ViewPunchAngle([-5,0,0]);
-	pl.a_ammo1--;
-#endif
-	Weapons_ViewAnimation(DBS_FIRE1);
-
-	pl.w_attack_next = 0.75;
-	pl.w_idle_next = 2.5f;
+	pl.w_idle_next = 1.5f;
 }
 
 void
 w_dbs_reload(void)
 {
 	player pl = (player)self;
-#ifdef CLIENT
-	if (pl.a_ammo1 >= 8) {
-		return;
-	}
-	if (pl.a_ammo2 <= 0) { 
-		return;
-	}
-#else
-	if (pl.shotgun_mag >= 8) {
-		return;
-	}
-	if (pl.ammo_shells <= 0) {
-		return;
-	}
-#endif
-	
-	if (pl.a_ammo3 > DBS_IDLE) {
-		return;
-	}
-	pl.a_ammo3 = DBS_RELOAD_START;
-	pl.w_idle_next = 0.0f;
+	w_baseshotgun_reload(player::mag_dbs, player::m_iAmmoShells, 16);
 }
 
 void
 w_dbs_release(void)
 {
 	player pl = (player)self;
+	int s = w_baseshotgun_release(player::mag_dbs, player::m_iAmmoShells, 16);
 
-	if (pl.w_idle_next > 0.0) {
-		return;
-	}
-
-	if (pl.a_ammo3 == DBS_IDLE) {
-		int r = floor(random(0,3));
-		switch (r) {
-		case 0:
+	switch (s) {
+	case SHOTGUN_IDLE:
+		int r = (float)input_sequence % 3;
+		if (r == 1) {
 			Weapons_ViewAnimation(DBS_IDLE1);
-			break;
-		case 1:
+		} else if (r == 2) {
 			Weapons_ViewAnimation(DBS_IDLE2);
-			break;
-		case 2:
+		} else {
 			Weapons_ViewAnimation(DBS_IDLE3);
-			break;
 		}
-		pl.w_idle_next = 15.0f;
-	} else if (pl.a_ammo3 == DBS_RELOAD_START) {
+		pl.w_idle_next = 5.0f;
+		break;
+	case SHOTGUN_BUSY:
+		break;
+	case SHOTGUN_START_RELOAD:
 		Weapons_ViewAnimation(DBS_START_RELOAD);
-		pl.a_ammo3 = DBS_RELOAD;
-		pl.w_idle_next = 0.65f;
-	} else if (pl.a_ammo3 == DBS_RELOAD) {
+		break;
+	case SHOTGUN_RELOAD:
 		Weapons_ViewAnimation(DBS_ADDSHELL);
-#ifdef CLIENT
-		pl.a_ammo1++;
-		pl.a_ammo2--;
-
-		if (pl.a_ammo2 <= 0 || pl.a_ammo1 >= 8) {
-			pl.a_ammo3 = DBS_RELOAD_END;
-		}
-#else
-		pl.shotgun_mag++;
-		pl.ammo_shells--;
-		Weapons_UpdateAmmo(pl, pl.shotgun_mag, pl.ammo_shells, pl.a_ammo3);
-	 	sound(pl, CHAN_WEAPON, "weapons/reload3.wav", 1.0, ATTN_NORM);	
-		if (pl.ammo_shells <= 0 || pl.shotgun_mag >= 8) {
-			pl.a_ammo3 = DBS_RELOAD_END;
-		}
-#endif
-		pl.w_idle_next = 0.5f;	
-	} else if (pl.a_ammo3 == DBS_RELOAD_END) {
+		break;
+	case SHOTGUN_END_RELOAD:
 		Weapons_ViewAnimation(DBS_PUMP);
-#ifdef SERVER
-		sound(pl, CHAN_WEAPON, "weapons/scock1.wav", 1.0, ATTN_NORM);
-#endif
-		pl.a_ammo3 = DBS_IDLE;
-		pl.w_idle_next = 10.0f;
-		pl.w_attack_next = 0.5f;
+		break;
 	}
 }
+
 void
 w_dbs_crosshair(void)
 {

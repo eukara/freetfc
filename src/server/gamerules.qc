@@ -82,3 +82,13 @@ TFCGameRules::PlayerSpawn(base_player pp)
 	forceinfokey(pl, "*spec", "2");
 	Spawn_ObserverCam(pl);
 }
+
+void
+TFCGameRules::TFCGameRules(void)
+{
+	forceinfokey(world, "teams", "2");
+	forceinfokey(world, "team_1", "Blue");
+	forceinfokey(world, "teamscore_1", "0");
+	forceinfokey(world, "team_2", "Red");
+	forceinfokey(world, "teamscore_2", "0");
+}

@@ -16,6 +16,8 @@
 
 class TFCGameRules:CGameRules
 {
+	void(void) TFCGameRules;
+
 	virtual void(base_player) PlayerConnect;
 	virtual void(base_player) PlayerDisconnect;
 	virtual void(base_player) PlayerPostFrame;

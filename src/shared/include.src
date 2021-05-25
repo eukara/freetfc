@@ -1,6 +1,6 @@
  #includelist
 ../../../valve/src/shared/flags.h
-../../../valve/src/shared/player.qc
+player.qc
 ../../../base/src/shared/weapon_common.h
 ../../../valve/src/shared/animations.h
 ../../../valve/src/shared/animations.qc
@@ -16,6 +16,13 @@
 
 items.h
 weapons.h
+
+../../../base/src/shared/weapon_basesemi.qc
+../../../base/src/shared/weapon_basemelee.qc
+../../../base/src/shared/weapon_baseshotgun.qc
+../../../base/src/shared/weapon_baseprojectile.qc
+../../../base/src/shared/weapon_baseautomatic.qc
+
 w_asscan.qc
 w_autorifle.qc
 w_crowbar.qc

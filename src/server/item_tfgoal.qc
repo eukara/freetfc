@@ -16,7 +16,14 @@
 
 class item_tfgoal:CBaseTrigger
 {
+	float m_dItemID;
+
+	int m_iTeamUses;
 	string m_strSound;
+	string m_voxTeam;
+	string m_voxOtherTeam;
+	string m_voxActivator;
+	player m_eActivator;
 
 	void(void) item_tfgoal;
 	virtual void(void) touch;
@@ -30,12 +37,35 @@ item_tfgoal::touch(void)
 		return;
 	}
 
-	if (cvar("sv_playerslots") == 1) {
-		remove(self);
-	} else {
-		Hide();
-		think = Respawn;
-		nextthink = time + 20.0f;
+	player pl = (player)other;
+
+	/* team filter */
+	if (m_iTeamUses)
+		if (m_iTeamUses != pl.team)
+			return;
+
+	Hide();
+	pl.g_items |= ITEM_GOALITEM;
+	m_eActivator = pl;
+
+	sound(this, CHAN_ITEM, m_strSound, 1.0f, ATTN_NONE);
+	
+	/* broadcast via VOX that this was taken from us */
+	for (entity e = world; (e = find(e, ::classname, "player")); ) {
+		WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+		WriteByte(MSG_MULTICAST, EV_CHAT_VOX);
+
+		if (e.team != m_iTeamUses) {
+			WriteString(MSG_MULTICAST, m_voxOtherTeam);
+		} else {
+			if (e == pl)
+				WriteString(MSG_MULTICAST, m_voxActivator);
+			else
+				WriteString(MSG_MULTICAST, m_voxTeam);
+		}
+
+		msg_entity = e;
+		multicast([0,0,0], MULTICAST_ONE);
 	}
 }
 
@@ -47,6 +77,7 @@ item_tfgoal::Respawn(void)
 	SetModel(m_oldModel);
 	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	SetOrigin(m_oldOrigin);
+	m_eActivator = __NULL__;
 }
 
 void
@@ -59,6 +90,21 @@ item_tfgoal::item_tfgoal(void)
 			break;
 		case "mdl":
 			model = argv(i+1);
+			break;
+		case "goal_no":
+			m_dItemID = stof(argv(i+1));
+			break;
+		case "team_no":
+			m_iTeamUses = stoi(argv(i+1));
+			break;
+		case "AP_speak":
+			m_voxActivator = argv(i+1);
+			break;
+		case "team_speak":
+			m_voxTeam = argv(i+1);
+			break;
+		case "non_team_speak":
+			m_voxOtherTeam = argv(i+1);
 			break;
 		default:
 			break;

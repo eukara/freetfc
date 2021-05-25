@@ -80,6 +80,7 @@ CSEv_TeamJoin_f(float f)
 		forceinfokey(pl, "bottomcolor", "0x3bff00");
 	}
 
+	forceinfokey(pl, "*team", ftos(pl.team));
 	pl.model = g_teammodels[f];
 	setmodel(pl, pl.model);
 	setsize(pl, VEC_HULL_MIN, VEC_HULL_MAX);
@@ -119,6 +120,18 @@ CSEv_TeamJoin_f(float f)
 		Weapons_AddItem(pl, WEAPON_CROWBAR, -1);
 		Weapons_AddItem(pl, WEAPON_SBS, -1);
 		Weapons_AddItem(pl, WEAPON_NAILGUN, -1);
+		pl.m_iAmmoShells = 17;
+		pl.m_iAmmoNails = 100;
+
+		pl.m_iMaxHealth = 75;
+		pl.m_iMaxArmor = 50;
+		pl.health = pl.m_iMaxHealth;
+		pl.armor = 25;
+
+		pl.m_iMaxShells = 50;
+		pl.m_iMaxNails = 200;
+		pl.m_iMaxCells = 100;
+		pl.m_iMaxRockets = 25;
 		env_message_single(pl, "HELP_SCOUT");
 		break;
 	case CLASS_SNIPER:
@@ -126,6 +139,18 @@ CSEv_TeamJoin_f(float f)
 		Weapons_AddItem(pl, WEAPON_SNIPER, -1);
 		Weapons_AddItem(pl, WEAPON_AUTORIFLE, -1);
 		Weapons_AddItem(pl, WEAPON_NAILGUN, -1);
+		pl.m_iAmmoShells = 60; /* sniper rifles use shells */
+		pl.m_iAmmoNails = 50;
+
+		pl.m_iMaxHealth = 90;
+		pl.m_iMaxArmor = 50;
+		pl.health = pl.m_iMaxHealth;
+		pl.armor = 0;
+
+		pl.m_iMaxShells = 75;
+		pl.m_iMaxNails = 100;
+		pl.m_iMaxCells = 50;
+		pl.m_iMaxRockets = 25;
 		env_message_single(pl, "HELP_SNIPER");
 		break;
 	case CLASS_SOLDIER:
@@ -133,6 +158,18 @@ CSEv_TeamJoin_f(float f)
 		Weapons_AddItem(pl, WEAPON_SBS, -1);
 		Weapons_AddItem(pl, WEAPON_DBS, -1);
 		Weapons_AddItem(pl, WEAPON_RPG, -1);
+		pl.m_iAmmoShells = 26;
+		pl.m_iAmmoRockets = 6;
+
+		pl.m_iMaxHealth = 100;
+		pl.m_iMaxArmor = 200;
+		pl.health = pl.m_iMaxHealth;
+		pl.armor = 100;
+
+		pl.m_iMaxShells = 100;
+		pl.m_iMaxNails = 100;
+		pl.m_iMaxCells = 50;
+		pl.m_iMaxRockets = 50;
 		env_message_single(pl, "HELP_SOLDIER");
 		break;
 	case CLASS_DEMO:
@@ -140,6 +177,18 @@ CSEv_TeamJoin_f(float f)
 		Weapons_AddItem(pl, WEAPON_SBS, -1);
 		Weapons_AddItem(pl, WEAPON_GLAUNCHER, -1);
 		Weapons_AddItem(pl, WEAPON_PIPEBOMB, -1);
+		pl.m_iAmmoShells = 22;
+		pl.m_iAmmoRockets = 14;
+
+		pl.m_iMaxHealth = 90;
+		pl.m_iMaxArmor = 100;
+		pl.health = pl.m_iMaxHealth;
+		pl.armor = 50;
+
+		pl.m_iMaxShells = 75;
+		pl.m_iMaxNails = 50;
+		pl.m_iMaxCells = 50;
+		pl.m_iMaxRockets = 50;
 		env_message_single(pl, "HELP_DEMOMAN");
 		break;
 	case CLASS_MEDIC:
@@ -147,6 +196,18 @@ CSEv_TeamJoin_f(float f)
 		Weapons_AddItem(pl, WEAPON_SBS, -1);
 		Weapons_AddItem(pl, WEAPON_DBS, -1);
 		Weapons_AddItem(pl, WEAPON_SUPERNAIL, -1);
+		pl.m_iAmmoShells = 26;
+		pl.m_iAmmoNails = 50;
+
+		pl.m_iMaxHealth = 90;
+		pl.m_iMaxArmor = 100;
+		pl.health = pl.m_iMaxHealth;
+		pl.armor = 50;
+
+		pl.m_iMaxShells = 75;
+		pl.m_iMaxNails = 150;
+		pl.m_iMaxCells = 50;
+		pl.m_iMaxRockets = 25;
 		env_message_single(pl, "HELP_MEDIC");
 		break;
 	case CLASS_HVYWEAPON:
@@ -154,6 +215,17 @@ CSEv_TeamJoin_f(float f)
 		Weapons_AddItem(pl, WEAPON_SBS, -1);
 		Weapons_AddItem(pl, WEAPON_DBS, -1);
 		Weapons_AddItem(pl, WEAPON_ASSCAN, -1);
+		pl.m_iAmmoShells = 176; /* all of the heavy's weapons use shells */
+
+		pl.m_iMaxHealth = 100;
+		pl.m_iMaxArmor = 250;
+		pl.health = pl.m_iMaxHealth;
+		pl.armor = 150;
+
+		pl.m_iMaxShells = 200;
+		pl.m_iMaxNails = 200;
+		pl.m_iMaxCells = 50;
+		pl.m_iMaxRockets = 25;
 		env_message_single(pl, "HELP_HWGUY");
 		break;
 	case CLASS_PYRO:
@@ -161,6 +233,19 @@ CSEv_TeamJoin_f(float f)
 		Weapons_AddItem(pl, WEAPON_SBS, -1);
 		Weapons_AddItem(pl, WEAPON_FLAMER, -1);
 		Weapons_AddItem(pl, WEAPON_INCENDIARY, -1);
+		pl.m_iAmmoShells = 12;
+		pl.m_iAmmoCells = 120;
+		pl.m_iAmmoRockets = 5;
+
+		pl.m_iMaxHealth = 100;
+		pl.m_iMaxArmor = 150;
+		pl.health = pl.m_iMaxHealth;
+		pl.armor = 50;
+
+		pl.m_iMaxShells = 40;
+		pl.m_iMaxNails = 50;
+		pl.m_iMaxCells = 200;
+		pl.m_iMaxRockets = 60;
 		env_message_single(pl, "HELP_PYRO");
 		break;
 	case CLASS_SPY:
@@ -168,12 +253,37 @@ CSEv_TeamJoin_f(float f)
 		Weapons_AddItem(pl, WEAPON_TRANQUIL, -1);
 		Weapons_AddItem(pl, WEAPON_DBS, -1);
 		Weapons_AddItem(pl, WEAPON_NAILGUN, -1);
+		pl.m_iAmmoShells = 24; /* tranquil and dbs use shells */
+		pl.m_iAmmoNails = 50;
+
+		pl.m_iMaxHealth = 90;
+		pl.m_iMaxArmor = 100;
+		pl.health = pl.m_iMaxHealth;
+		pl.armor = 25;
+
+		pl.m_iMaxShells = 40;
+		pl.m_iMaxNails = 50;
+		pl.m_iMaxCells = 30;
+		pl.m_iMaxRockets = 15;
 		env_message_single(pl, "HELP_SPY");
 		break;
 	case CLASS_ENGINEER:
 		Weapons_AddItem(pl, WEAPON_WRENCH, -1);
 		Weapons_AddItem(pl, WEAPON_RAILGUN, -1);
 		Weapons_AddItem(pl, WEAPON_DBS, -1);
+		pl.m_iAmmoCells = 100;
+		pl.m_iAmmoNails = 25;
+		pl.m_iAmmoShells = 4;
+
+		pl.m_iMaxHealth = 80;
+		pl.m_iMaxArmor = 50;
+		pl.health = pl.m_iMaxHealth;
+		pl.armor = 25;
+
+		pl.m_iMaxShells = 50;
+		pl.m_iMaxNails = 50;
+		pl.m_iMaxCells = 200;
+		pl.m_iMaxRockets = 30;
 		env_message_single(pl, "HELP_ENGINEER");
 		break;
 	}

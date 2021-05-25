@@ -25,8 +25,8 @@ defs.h
 
 ../../../valve/src/server/items.qc
 info_player_teamspawn.qc
-info_tfgoal.qc
 item_tfgoal.qc
+info_tfgoal.qc
 
 gamerules.qc
 ../../../valve/src/server/client.qc

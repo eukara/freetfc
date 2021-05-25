@@ -14,20 +14,31 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+enum
+{
+	NAILGUN_IDLE,
+	NAILGUN_FIDGET1,
+	NAILGUN_UNUSED1,
+	NAILGUN_UNUSED2,
+	NAILGUN_DEPLOY,
+	NAILGUN_SHOOT1,
+	NAILGUN_SHOOT2,
+	NAILGUN_SHOOT3,
+};
+
 void
 w_nailgun_precache(void)
 {
 	precache_model("models/v_tfc_nailgun.mdl");
 	precache_model("models/w_nailgun.mdl");
 	precache_model("models/p_nailgun.mdl");
+	precache_model("models/nail.mdl");
 }
 
 void
 w_nailgun_updateammo(player pl)
 {
-#ifdef SERVER
-	Weapons_UpdateAmmo(pl, __NULL__, __NULL__, __NULL__);
-#endif
+	Weapons_UpdateAmmo(pl, __NULL__, pl.m_iAmmoNails, __NULL__);
 }
 
 string
@@ -51,13 +62,104 @@ void
 w_nailgun_draw(void)
 {
 	Weapons_SetModel("models/v_tfc_nailgun.mdl");
-	Weapons_ViewAnimation(0);
+	Weapons_ViewAnimation(NAILGUN_DEPLOY);
 }
 
 float
 w_nailgun_aimanim(void)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+}
+
+void
+w_nailgun_shootnail(void)
+{
+	static void w_rpg_shootrocket_touch(void) {
+		remove(self);
+	}
+
+	Weapons_MakeVectors();
+	entity p = spawn();
+	setmodel(p, "models/nail.mdl");
+	setorigin(p, Weapons_GetCameraPos() + (v_forward * 8));
+	p.owner = self;
+	p.movetype = MOVETYPE_FLYMISSILE;
+	p.solid = SOLID_BBOX;
+	p.gravity = 0.5f;
+	p.velocity = (v_forward * 1000);
+	p.angles = vectoangles(p.velocity);
+	p.touch = w_rpg_shootrocket_touch;
+	p.think = Util_Destroy;
+	p.nextthink = time + 5.0f;
+}
+
+void
+w_nailgun_primary(void)
+{
+	player pl = (player)self;
+	int s = w_baseprojectile_fire(WEAPON_NAILGUN, player::m_iAmmoNails, w_nailgun_shootnail);
+
+	switch (s) {
+	case AUTO_FIRE_FAILED:
+		return;
+		break;
+	case AUTO_FIRED:
+	case AUTO_LAST:
+		int r = (float)input_sequence % 3;
+		if (r == 1) {
+			Weapons_ViewAnimation(NAILGUN_SHOOT1);
+		} else if (r == 2) {
+			Weapons_ViewAnimation(NAILGUN_SHOOT2);
+		} else {
+			Weapons_ViewAnimation(NAILGUN_SHOOT3);
+		}
+		Weapons_ViewAnimation(NAILGUN_SHOOT2);
+		Weapons_ViewPunchAngle([-1,0,0]);
+		pl.w_attack_next = 0.1f;
+		break;
+	case AUTO_EMPTY:
+		pl.w_attack_next = 0.2f;
+		break;
+	}
+
+	pl.w_idle_next = 1.5f;
+}
+
+void
+w_nailgun_hud(void)
+{
+#ifdef CLIENT
+	player pl = (player)self;
+	vector cross_pos;
+	vector aicon_pos;
+
+	/* crosshair/laser */
+	cross_pos = g_hudmins + (g_hudres / 2) + [-12,-12];
+	drawsubpic(
+		cross_pos,
+		[24,24],
+		g_cross_spr,
+		[0.1875,0],
+		[0.1875, 0.1875],
+		[1,1,1],
+		1.0f,
+		DRAWFLAG_NORMAL
+	);
+
+	HUD_DrawAmmo2();
+
+	aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];
+	drawsubpic(
+		aicon_pos,
+		[24,24],
+		g_hud7_spr,
+		[0,72/128],
+		[24/256, 24/128],
+		g_hud_color,
+		pSeatLocal->m_flAmmo2Alpha,
+		DRAWFLAG_ADDITIVE
+	);
+#endif
 }
 
 void
@@ -98,11 +200,11 @@ weapon_t w_nailgun =
 	.slot_pos	= 0,
 	.draw		= w_nailgun_draw,
 	.holster	= __NULL__,
-	.primary	= __NULL__,
+	.primary	= w_nailgun_primary,
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= __NULL__,
-	.crosshair	= __NULL__,
+	.crosshair	= w_nailgun_hud,
 	.precache	= w_nailgun_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_nailgun_updateammo,
