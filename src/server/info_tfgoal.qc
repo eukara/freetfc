@@ -81,7 +81,8 @@ class info_tfgoal:CBaseTrigger
 	float m_dTeamYellowGain;
 	float m_dTeamGreenGain;
 	float m_dScore; /* score to be added to the activators' team score */
-	int m_iTeam; /* which team this belongs to */
+	int m_iTeamUses; /* who can use it */
+	int m_iTeamOwner; /* owner of the item */
 
 	int m_iHealth;
 	int m_iArmor;
@@ -91,6 +92,21 @@ class info_tfgoal:CBaseTrigger
 	int m_iMedikit;
 	int m_iRockets;
 	int m_iDetpack;
+
+	/* visual fluff */
+	string m_msgAll; /* global */
+	string m_msgActivator; /* AP */
+	string m_msgActTeam; /* AP team */
+	string m_msgNonActTeam; /* non-AP team */
+	string m_msgOwnerTeam; /* owner team */
+	string m_msgNonOwnerTeams;  /* non-owner team */
+
+	string m_voxAll; /* global */
+	string m_voxActivator; /* AP */
+	string m_voxActTeam; /* AP team */
+	string m_voxNonActTeam; /* non-AP team */
+	string m_voxOwnerTeam; /* owner team */
+	string m_voxNonOwnerTeams;  /* non-owner team */
 
 	void(void) info_tfgoal;
 	virtual void(void) touch;
@@ -113,14 +129,12 @@ info_tfgoal::touch(void)
 		return;
 
 	/* check for team eligibility */
-	if (m_iTeam)
-	if (other.team != m_iTeam)
+	if (m_iTeamUses)
+	if (other.team != m_iTeamUses)
 		return;
 
 	/* check for the must-have carry */
 	if (m_dMustCarry) {
-		item_tfgoal findme = __NULL__;
-
 		/* find the needle in the haystack */
 		for (entity e = world; (e = find(e, ::classname, "item_tfgoal"));) {
 			item_tfgoal a = (item_tfgoal)e;
@@ -173,7 +187,7 @@ info_tfgoal::touch(void)
 
 	string ts;
 	if (m_dScore) {
-		ts = sprintf("teamscore_%i", m_iTeam);
+		ts = sprintf("teamscore_%i", m_iTeamUses);
 		forceinfokey(world, ts, sprintf("%d", serverkeyfloat(ts) + m_dScore));
 	}
 	if (m_dTeamBlueGain) {
@@ -193,6 +207,50 @@ info_tfgoal::touch(void)
 		forceinfokey(world, ts, sprintf("%d", serverkeyfloat(ts) + m_dTeamGreenGain));
 	}
 
+	/* message broadcaster */
+	if (m_msgAll) {
+		env_message_broadcast(m_msgAll);
+	} else {
+		for (entity e = world; (e = find(e, ::classname, "player")); ) {
+			if (e == pl) {
+				env_message_single(e, m_msgActivator);
+			} else if (e.team == pl.team ) {
+				env_message_single(e, m_msgActTeam);
+			} else if (e.team != pl.team) {
+				if (e.team == m_iTeamOwner && m_msgOwnerTeam)
+					env_message_single(e, m_msgOwnerTeam);
+				else {
+					if (m_msgNonOwnerTeams)
+						env_message_single(e, m_msgNonOwnerTeams);
+					else
+						env_message_single(e, m_msgNonActTeam);
+				}
+			}
+		}
+	}
+
+	/* vox speaker */
+	if (m_voxAll) {
+		Vox_Sentence_Broadcast(m_voxAll);
+	} else {
+		for (entity e = world; (e = find(e, ::classname, "player")); ) {
+			if (e == pl) {
+				Vox_Sentence_Single(e, m_voxActivator);
+			} else if (e.team == pl.team ) {
+				Vox_Sentence_Single(e, m_voxActTeam);
+			} else if (e.team != pl.team) {
+				if (e.team == m_iTeamOwner && m_voxOwnerTeam)
+					Vox_Sentence_Single(e, m_voxOwnerTeam);
+				else {
+					if (m_voxNonOwnerTeams)
+						Vox_Sentence_Single(e, m_voxNonOwnerTeams);
+					else
+						Vox_Sentence_Single(e, m_voxNonActTeam);
+				}
+			}
+		}
+	}
+	
 	/* remove? */
 	if (m_tfgResult & TFRESULT_REMOVE) {
 		Hide();
@@ -242,7 +300,10 @@ info_tfgoal::SpawnKey(string strKey, string strValue)
 		m_dMustCarry = stof(strValue);
 		break;
 	case "team_no":
-		m_iTeam = stoi(strValue);
+		m_iTeamUses = stoi(strValue);
+		break;
+	case "owned_by":
+		m_iTeamOwner = stoi(strValue);
 		break;
 	case "count":
 		m_dScore = stof(strValue);
@@ -261,6 +322,47 @@ info_tfgoal::SpawnKey(string strKey, string strValue)
 		break;
 	case "increase_team4":
 		m_dTeamGreenGain = stof(strValue);
+		break;
+	/* messages that get sent */
+	case "b_b":
+		m_msgAll = strValue; /* global */
+		break;
+	case "message":
+		m_msgActivator = strValue; /* AP */
+		break;
+	case "b_t":
+	case "team_broadcast":
+		m_msgActTeam = strValue; /* AP team */
+		break;
+	case "b_n":
+	case "netname_non_team_broadcast":
+		m_msgNonActTeam = strValue; /* non-AP team */
+		break;
+	case "b_o":
+	case "owners_team_broadcast":
+		m_msgOwnerTeam = strValue; /* owner team */
+		break;
+	case "non_owners_team_broadcast":
+		m_msgNonOwnerTeams = strValue;  /* non-owner team */
+		break;
+	/* sentences that get played */
+	case "speak":
+		m_voxAll = strValue; /* global */
+		break;
+	case "AP_speak":
+		m_voxActivator = strValue; /* AP */
+		break;
+	case "team_speak":
+		m_voxActTeam = strValue; /* AP team */
+		break;
+	case "non_team_speak":
+		m_voxNonActTeam = strValue; /* non-AP team */
+		break;
+	case "owners_team_speak":
+		m_voxOwnerTeam = strValue; /* owner team */
+		break;
+	case "non_owners_team_speak":
+		m_voxNonOwnerTeams = strValue;  /* non-owner team */
 		break;
 	/* AP manipulators */
 	case "health":
@@ -306,6 +408,7 @@ info_tfgoal::info_tfgoal(void)
 	info_tfgoal::Respawn();
 }
 
+/* the brush based version of tfgoal */
 class i_t_g:info_tfgoal
 {
 	void(void) i_t_g;

@@ -19,15 +19,30 @@ class item_tfgoal:CBaseTrigger
 	float m_dItemID;
 
 	int m_iTeamUses;
+	int m_iTeamOwner;
+
 	string m_strSound;
-	string m_voxTeam;
-	string m_voxOtherTeam;
-	string m_voxActivator;
 	player m_eActivator;
+
+	/* visual fluff */
+	string m_msgAll; /* global */
+	string m_msgActivator; /* AP */
+	string m_msgActTeam; /* AP team */
+	string m_msgNonActTeam; /* non-AP team */
+	string m_msgOwnerTeam; /* owner team */
+	string m_msgNonOwnerTeams;  /* non-owner team */
+
+	string m_voxAll; /* global */
+	string m_voxActivator; /* AP */
+	string m_voxActTeam; /* AP team */
+	string m_voxNonActTeam; /* non-AP team */
+	string m_voxOwnerTeam; /* owner team */
+	string m_voxNonOwnerTeams;  /* non-owner team */
 
 	void(void) item_tfgoal;
 	virtual void(void) touch;
 	virtual void(void) Respawn;
+	virtual void(string, string) SpawnKey;
 };
 
 void
@@ -49,23 +64,49 @@ item_tfgoal::touch(void)
 	m_eActivator = pl;
 
 	sound(this, CHAN_ITEM, m_strSound, 1.0f, ATTN_NONE);
-	
-	/* broadcast via VOX that this was taken from us */
-	for (entity e = world; (e = find(e, ::classname, "player")); ) {
-		WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-		WriteByte(MSG_MULTICAST, EV_CHAT_VOX);
 
-		if (e.team != m_iTeamUses) {
-			WriteString(MSG_MULTICAST, m_voxOtherTeam);
-		} else {
-			if (e == pl)
-				WriteString(MSG_MULTICAST, m_voxActivator);
-			else
-				WriteString(MSG_MULTICAST, m_voxTeam);
+	/* message broadcaster */
+	if (m_msgAll) {
+		env_message_broadcast(m_msgAll);
+	} else {
+		for (entity e = world; (e = find(e, ::classname, "player")); ) {
+			if (e == pl) {
+				env_message_single(e, m_msgActivator);
+			} else if (e.team == pl.team ) {
+				env_message_single(e, m_msgActTeam);
+			} else if (e.team != pl.team) {
+				if (e.team == m_iTeamOwner && m_msgOwnerTeam)
+					env_message_single(e, m_msgOwnerTeam);
+				else {
+					if (m_msgNonOwnerTeams)
+						env_message_single(e, m_msgNonOwnerTeams);
+					else
+						env_message_single(e, m_msgNonActTeam);
+				}
+			}
 		}
+	}
 
-		msg_entity = e;
-		multicast([0,0,0], MULTICAST_ONE);
+	/* vox speaker */
+	if (m_voxAll) {
+		Vox_Sentence_Broadcast(m_voxAll);
+	} else {
+		for (entity e = world; (e = find(e, ::classname, "player")); ) {
+			if (e == pl) {
+				Vox_Sentence_Single(e, m_voxActivator);
+			} else if (e.team == pl.team ) {
+				Vox_Sentence_Single(e, m_voxActTeam);
+			} else if (e.team != pl.team) {
+				if (e.team == m_iTeamOwner && m_voxOwnerTeam)
+					Vox_Sentence_Single(e, m_voxOwnerTeam);
+				else {
+					if (m_voxNonOwnerTeams)
+						Vox_Sentence_Single(e, m_voxNonOwnerTeams);
+					else
+						Vox_Sentence_Single(e, m_voxNonActTeam);
+				}
+			}
+		}
 	}
 }
 
@@ -81,34 +122,75 @@ item_tfgoal::Respawn(void)
 }
 
 void
+item_tfgoal::SpawnKey(string strKey, string strValue)
+{
+	switch (strKey) {
+	case "noise":
+		m_strSound = strValue;
+		break;
+	case "mdl":
+		model = strValue;
+		break;
+	case "goal_no":
+		m_dItemID = stof(strValue);
+		break;
+	case "team_no":
+		m_iTeamUses = stoi(strValue);
+		break;
+	case "owned_by":
+		m_iTeamOwner = stoi(strValue);
+		break;
+	/* messages that get sent */
+	case "b_b":
+		m_msgAll = strValue; /* global */
+		break;
+	case "message":
+		m_msgActivator = strValue; /* AP */
+		break;
+	case "b_t":
+	case "team_broadcast":
+		m_msgActTeam = strValue; /* AP team */
+		break;
+	case "b_n":
+	case "netname_non_team_broadcast":
+		m_msgNonActTeam = strValue; /* non-AP team */
+		break;
+	case "b_o":
+	case "owners_team_broadcast":
+		m_msgOwnerTeam = strValue; /* owner team */
+		break;
+	case "non_owners_team_broadcast":
+		m_msgNonOwnerTeams = strValue;  /* non-owner team */
+		break;
+	/* sentences that get played */
+	case "speak":
+		m_voxAll = strValue; /* global */
+		break;
+	case "AP_speak":
+		m_voxActivator = strValue; /* AP */
+		break;
+	case "team_speak":
+		m_voxActTeam = strValue; /* AP team */
+		break;
+	case "non_team_speak":
+		m_voxNonActTeam = strValue; /* non-AP team */
+		break;
+	case "owners_team_speak":
+		m_voxOwnerTeam = strValue; /* owner team */
+		break;
+	case "non_owners_team_speak":
+		m_voxNonOwnerTeams = strValue;  /* non-owner team */
+		break;
+	default:
+		break;
+	}
+}
+
+void
 item_tfgoal::item_tfgoal(void)
 {
 	for (int i = 1; i < (tokenize(__fullspawndata) - 1); i += 2) {
-		switch (argv(i)) {
-		case "noise":
-			m_strSound = argv(i+1);
-			break;
-		case "mdl":
-			model = argv(i+1);
-			break;
-		case "goal_no":
-			m_dItemID = stof(argv(i+1));
-			break;
-		case "team_no":
-			m_iTeamUses = stoi(argv(i+1));
-			break;
-		case "AP_speak":
-			m_voxActivator = argv(i+1);
-			break;
-		case "team_speak":
-			m_voxTeam = argv(i+1);
-			break;
-		case "non_team_speak":
-			m_voxOtherTeam = argv(i+1);
-			break;
-		default:
-			break;
-		}
+		SpawnKey(argv(i), argv(i+1));
 	}
 	precache_sound(m_strSound);
 
