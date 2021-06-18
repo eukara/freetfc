@@ -144,17 +144,17 @@ info_tfgoal::touch(void)
 		}
 
 		if (!findme) {
-			printf("can't find the pickup\n");
+			print("can't find the pickup\n");
 			return;
 		}
 
 		if (findme.solid != SOLID_NOT) {
-			printf("the item is not picked up.\n");
+			print("the item is not picked up.\n");
 			return;
 		}
 
 		if (findme.m_eActivator != pl) {
-			printf("you are not the items activator.\n");
+			print("you are not the items activator.\n");
 			return;
 		} else {
 			/* unset the activator and make it reappear */
@@ -435,7 +435,6 @@ i_t_g::i_t_g(void)
 	for (int i = 1; i < (tokenize(__fullspawndata) - 1); i += 2) {
 		SpawnKey(argv(i), argv(i+1));
 	}
-
 
 	CBaseEntity::CBaseEntity();
 
