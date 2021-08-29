@@ -3,7 +3,7 @@
 
 #define CSQC
 #define CLIENT
-#define VALVE
+#define TFC
 #define CLASSIC_VGUI
 #define GS_RENDERFX
 
