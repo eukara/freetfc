@@ -115,9 +115,9 @@ item_tfgoal::Respawn(void)
 {
 	solid = SOLID_TRIGGER;
 	movetype = MOVETYPE_NONE;
-	SetModel(m_oldModel);
+	SetModel(GetSpawnModel());
 	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
-	SetOrigin(m_oldOrigin);
+	SetOrigin(GetSpawnOrigin());
 	m_eActivator = __NULL__;
 }
 

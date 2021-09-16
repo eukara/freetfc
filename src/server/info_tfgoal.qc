@@ -266,9 +266,9 @@ info_tfgoal::Respawn(void)
 {
 	solid = SOLID_TRIGGER;
 	movetype = MOVETYPE_NONE;
-	SetModel(m_oldModel);
+	SetModel(GetSpawnModel());
 	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
-	SetOrigin(m_oldOrigin);
+	SetOrigin(GetSpawnOrigin());
 }
 
 void
@@ -420,8 +420,8 @@ i_t_g::Respawn(void)
 {
 	solid = SOLID_BSPTRIGGER;
 	movetype = MOVETYPE_NONE;
-	SetModel(m_oldModel);
-	SetOrigin(m_oldOrigin);
+	SetModel(GetSpawnModel());
+	SetOrigin(GetSpawnOrigin());
 }
 
 void
