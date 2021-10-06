@@ -61,4 +61,9 @@ ClientGame_RendererRestart(string rstr)
 	precache_model("sprites/tfchud05.spr");
 	precache_model("sprites/tfchud06.spr");
 	precache_model("sprites/tfchud07.spr");
+
+	/* there's also muzzleflash.spr, but that's just MUZZLE_SMALL again */
+	MUZZLE_RIFLE = (int)getmodelindex("sprites/muzzleflash1.spr");
+	MUZZLE_SMALL = (int)getmodelindex("sprites/muzzleflash2.spr");
+	MUZZLE_WEIRD = (int)getmodelindex("sprites/muzzleflash3.spr");
 }
