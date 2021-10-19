@@ -23,6 +23,7 @@ defs.h
 ../../../valve/src/server/player.qc
 ../../../valve/src/server/spectator.qc
 
+vox.qc
 ../../../valve/src/server/items.qc
 info_player_teamspawn.qc
 item_tfgoal.qc
