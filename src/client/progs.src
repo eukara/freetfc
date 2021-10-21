@@ -19,6 +19,7 @@
 ../../../src/gs-entbase/shared.src
 ../shared/include.src
 
+../../../valve/src/client/damage.qc
 ../../../base/src/client/draw.qc
 init.qc
 ../../../valve/src/client/flashlight.qc
