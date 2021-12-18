@@ -15,6 +15,7 @@ player.qc
 ../../../valve/src/shared/fx_gibhuman.qc
 ../../../base/src/shared/fx_spark.qc
 ../../../valve/src/shared/fx_impact.qc
+../../../base/src/shared/fx_corpse.qc
 
 items.h
 weapons.h
