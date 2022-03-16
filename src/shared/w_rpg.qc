@@ -42,10 +42,9 @@ w_rpg_precache(void)
 }
 
 int
-w_rpg_pickup(int new, int startammo)
+w_rpg_pickup(player pl, int new, int startammo)
 {
 #ifdef SERVER
-	player pl = (player)self;
 	pl.mag_rpg = bound(0, pl.mag_rpg + 4, 4);
 #endif
 	return (1);
@@ -64,7 +63,7 @@ w_rpg_wmodel(void)
 }
 
 string
-w_rpg_pmodel(void)
+w_rpg_pmodel(player pl)
 {
 	return "models/p_rpg.mdl";
 }
@@ -76,24 +75,24 @@ w_rpg_deathmsg(void)
 }
 
 void
-w_rpg_draw(void)
+w_rpg_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_rpg.mdl");
-	Weapons_ViewAnimation(0);
+	Weapons_ViewAnimation(pl, 0);
 }
 
 void
-w_rpg_shootrocket(void)
+w_rpg_shootrocket(player pl)
 {
 	static void w_rpg_shootrocket_touch(void) {
 		FX_Explosion(self.origin);
 		remove(self);
 	}
 
-	Weapons_MakeVectors();
+	Weapons_MakeVectors(pl);
 	entity p = spawn();
 	setmodel(p, "models/rpgrocket.mdl");
-	setorigin(p, Weapons_GetCameraPos() + (v_forward * 8));
+	setorigin(p, Weapons_GetCameraPos(pl) + (v_forward * 8));
 	p.owner = self;
 	p.movetype = MOVETYPE_FLYMISSILE;
 	p.solid = SOLID_BBOX;
@@ -106,23 +105,22 @@ w_rpg_shootrocket(void)
 }
 
 void
-w_rpg_primary(void)
+w_rpg_primary(player pl)
 {
-	player pl = (player)self;
-	int s = w_baseprojectile_fire(WEAPON_RPG, player::mag_rpg, w_rpg_shootrocket);
+	int s = w_baseprojectile_fire(pl, WEAPON_RPG, player::mag_rpg, w_rpg_shootrocket);
 
 	switch (s) {
 	case AUTO_FIRE_FAILED:
 		return;
 		break;
 	case AUTO_FIRED:
-		Weapons_ViewAnimation(RPG_FIRE);
-		Weapons_ViewPunchAngle([-2,0,0]);
+		Weapons_ViewAnimation(pl, RPG_FIRE);
+		Weapons_ViewPunchAngle(pl, [-2,0,0]);
 		pl.w_attack_next = 0.8f;
 		break;
 	case AUTO_LAST:
-		Weapons_ViewAnimation(RPG_FIRE);
-		Weapons_ViewPunchAngle([-2,0,0]);
+		Weapons_ViewAnimation(pl, RPG_FIRE);
+		Weapons_ViewPunchAngle(pl, [-2,0,0]);
 		pl.w_attack_next = 0.8f;
 		break;
 	case AUTO_EMPTY:
@@ -134,55 +132,52 @@ w_rpg_primary(void)
 }
 
 void
-w_rpg_reload(void)
+w_rpg_reload(player pl)
 {
-	player pl = (player)self;
 	w_baseshotgun_reload(player::mag_rpg, player::m_iAmmoRockets, 4);
 }
 
 void
-w_rpg_release(void)
+w_rpg_release(player pl)
 {
-	player pl = (player)self;
 	int s = w_baseshotgun_release(player::mag_rpg, player::m_iAmmoRockets, 4);
 
 	switch (s) {
 	case SHOTGUN_IDLE:
 		int r = (float)input_sequence % 3;
 		if (r == 1) {
-			Weapons_ViewAnimation(RPG_IDLE1);
+			Weapons_ViewAnimation(pl, RPG_IDLE1);
 		} else if (r == 2) {
-			Weapons_ViewAnimation(RPG_FIDGET1);
+			Weapons_ViewAnimation(pl, RPG_FIDGET1);
 		} else {
-			Weapons_ViewAnimation(RPG_FIDGET2);
+			Weapons_ViewAnimation(pl, RPG_FIDGET2);
 		}
 		pl.w_idle_next = 5.0f;
 		break;
 	case SHOTGUN_BUSY:
 		break;
 	case SHOTGUN_START_RELOAD:
-		Weapons_ViewAnimation(RPG_RELOAD_START);
+		Weapons_ViewAnimation(pl, RPG_RELOAD_START);
 		break;
 	case SHOTGUN_RELOAD:
-		Weapons_ViewAnimation(RPG_RELOAD);
+		Weapons_ViewAnimation(pl, RPG_RELOAD);
 		break;
 	case SHOTGUN_END_RELOAD:
-		Weapons_ViewAnimation(RPG_RELOAD_END);
+		Weapons_ViewAnimation(pl, RPG_RELOAD_END);
 		break;
 	}
 }
 
 float
-w_rpg_aimanim(void)
+w_rpg_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
 }
 
 void
-w_rpg_hud(void)
+w_rpg_hud(player pl)
 {
 #ifdef CLIENT
-	player pl = (player)self;
 	vector cross_pos;
 	vector aicon_pos;
 
@@ -220,7 +215,7 @@ w_rpg_hud(void)
 
 
 void
-w_rpg_hudpic(int selected, vector pos, float a)
+w_rpg_hudpic(player pl, int selected, vector pos, float a)
 {
 #ifdef CLIENT
 	if (selected) {
@@ -243,7 +238,7 @@ weapon_t w_rpg =
 	.secondary	= __NULL__,
 	.reload		= w_rpg_reload,
 	.release	= w_rpg_release,
-	.crosshair	= w_rpg_hud,
+	.postdraw	= w_rpg_hud,
 	.precache	= w_rpg_precache,
 	.pickup		= w_rpg_pickup,
 	.updateammo	= w_rpg_updateammo,

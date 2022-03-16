@@ -36,7 +36,7 @@ w_tranquil_wmodel(void)
 	return "models/w_tranquil.mdl";
 }
 string
-w_tranquil_pmodel(void)
+w_tranquil_pmodel(player pl)
 {
 	return "models/p_tranquil.mdl";
 }
@@ -48,20 +48,20 @@ w_tranquil_deathmsg(void)
 }
 
 void
-w_tranquil_draw(void)
+w_tranquil_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_pistol.mdl");
-	Weapons_ViewAnimation(0);
+	Weapons_ViewAnimation(pl, 0);
 }
 
 float
-w_tranquil_aimanim(void)
+w_tranquil_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
 }
 
 void
-w_tranquil_hudpic(int selected, vector pos, float a)
+w_tranquil_hudpic(player pl, int selected, vector pos, float a)
 {
 #ifdef CLIENT
 	if (selected) {
@@ -102,7 +102,7 @@ weapon_t w_tranquil =
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= __NULL__,
-	.crosshair	= __NULL__,
+	.postdraw	= __NULL__,
 	.precache	= w_tranquil_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_tranquil_updateammo,

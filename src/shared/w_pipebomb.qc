@@ -37,7 +37,7 @@ w_pipebomb_wmodel(void)
 }
 
 string
-w_pipebomb_pmodel(void)
+w_pipebomb_pmodel(player pl)
 {
 	return "models/p_pipebomb.mdl";
 }
@@ -49,20 +49,20 @@ w_pipebomb_deathmsg(void)
 }
 
 void
-w_pipebomb_draw(void)
+w_pipebomb_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfgl.mdl");
-	Weapons_ViewAnimation(0);
+	Weapons_ViewAnimation(pl, 0);
 }
 
 float
-w_pipebomb_aimanim(void)
+w_pipebomb_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
 }
 
 void
-w_pipebomb_hudpic(int selected, vector pos, float a)
+w_pipebomb_hudpic(player pl, int selected, vector pos, float a)
 {
 #ifdef CLIENT
 	if (selected) {
@@ -103,7 +103,7 @@ weapon_t w_pipebomb =
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= __NULL__,
-	.crosshair	= __NULL__,
+	.postdraw	= __NULL__,
 	.precache	= w_pipebomb_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_pipebomb_updateammo,

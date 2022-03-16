@@ -34,7 +34,7 @@ w_asscan_wmodel(void)
 	return "models/w_asscan.mdl";
 }
 string
-w_asscan_pmodel(void)
+w_asscan_pmodel(player pl)
 {
 	return "models/p_asscan.mdl";
 }
@@ -46,20 +46,20 @@ w_asscan_deathmsg(void)
 }
 
 void
-w_asscan_draw(void)
+w_asscan_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfac.mdl");
-	Weapons_ViewAnimation(0);
+	Weapons_ViewAnimation(pl, 0);
 }
 
 float
-w_asscan_aimanim(void)
+w_asscan_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
 }
 
 void
-w_asscan_hudpic(int selected, vector pos, float a)
+w_asscan_hudpic(player pl, int selected, vector pos, float a)
 {
 #ifdef CLIENT
 	if (selected) {
@@ -100,7 +100,7 @@ weapon_t w_asscan =
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= __NULL__,
-	.crosshair	= __NULL__,
+	.postdraw	= __NULL__,
 	.precache	= w_asscan_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_asscan_updateammo,

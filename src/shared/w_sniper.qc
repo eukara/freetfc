@@ -36,7 +36,7 @@ w_sniper_wmodel(void)
 	return "models/w_sniper.mdl";
 }
 string
-w_sniper_pmodel(void)
+w_sniper_pmodel(player pl)
 {
 	return "models/p_sniper.mdl";
 }
@@ -48,20 +48,20 @@ w_sniper_deathmsg(void)
 }
 
 void
-w_sniper_draw(void)
+w_sniper_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_sniper.mdl");
-	Weapons_ViewAnimation(0);
+	Weapons_ViewAnimation(pl, 0);
 }
 
 float
-w_sniper_aimanim(void)
+w_sniper_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
 }
 
 void
-w_sniper_hudpic(int selected, vector pos, float a)
+w_sniper_hudpic(player pl, int selected, vector pos, float a)
 {
 #ifdef CLIENT
 	if (selected) {
@@ -102,7 +102,7 @@ weapon_t w_sniper =
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= __NULL__,
-	.crosshair	= __NULL__,
+	.postdraw	= __NULL__,
 	.precache	= w_sniper_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_sniper_updateammo,

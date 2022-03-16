@@ -36,7 +36,7 @@ w_incendiary_wmodel(void)
 	return "models/w_incendiary.mdl";
 }
 string
-w_incendiary_pmodel(void)
+w_incendiary_pmodel(player pl)
 {
 	return "models/p_incendiary.mdl";
 }
@@ -48,20 +48,20 @@ w_incendiary_deathmsg(void)
 }
 
 void
-w_incendiary_draw(void)
+w_incendiary_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_rpg.mdl");
-	Weapons_ViewAnimation(0);
+	Weapons_ViewAnimation(pl, 0);
 }
 
 float
-w_incendiary_aimanim(void)
+w_incendiary_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
 }
 
 void
-w_incendiary_hudpic(int selected, vector pos, float a)
+w_incendiary_hudpic(player pl, int selected, vector pos, float a)
 {
 #ifdef CLIENT
 	if (selected) {
@@ -102,7 +102,7 @@ weapon_t w_incendiary =
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= __NULL__,
-	.crosshair	= __NULL__,
+	.postdraw	= __NULL__,
 	.precache	= w_incendiary_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_incendiary_updateammo,

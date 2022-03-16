@@ -47,7 +47,7 @@ w_nailgun_wmodel(void)
 	return "models/w_nailgun.mdl";
 }
 string
-w_nailgun_pmodel(void)
+w_nailgun_pmodel(player pl)
 {
 	return "models/p_nailgun.mdl";
 }
@@ -59,29 +59,29 @@ w_nailgun_deathmsg(void)
 }
 
 void
-w_nailgun_draw(void)
+w_nailgun_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_nailgun.mdl");
-	Weapons_ViewAnimation(NAILGUN_DEPLOY);
+	Weapons_ViewAnimation(pl, NAILGUN_DEPLOY);
 }
 
 float
-w_nailgun_aimanim(void)
+w_nailgun_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
 }
 
 void
-w_nailgun_shootnail(void)
+w_nailgun_shootnail(player pl)
 {
 	static void w_rpg_shootrocket_touch(void) {
 		remove(self);
 	}
 
-	Weapons_MakeVectors();
+	Weapons_MakeVectors(pl);
 	entity p = spawn();
 	setmodel(p, "models/nail.mdl");
-	setorigin(p, Weapons_GetCameraPos() + (v_forward * 8));
+	setorigin(p, Weapons_GetCameraPos(pl) + (v_forward * 8));
 	p.owner = self;
 	p.movetype = MOVETYPE_FLYMISSILE;
 	p.solid = SOLID_BBOX;
@@ -94,10 +94,9 @@ w_nailgun_shootnail(void)
 }
 
 void
-w_nailgun_primary(void)
+w_nailgun_primary(player pl)
 {
-	player pl = (player)self;
-	int s = w_baseprojectile_fire(WEAPON_NAILGUN, player::m_iAmmoNails, w_nailgun_shootnail);
+	int s = w_baseprojectile_fire(pl, WEAPON_NAILGUN, player::m_iAmmoNails, w_nailgun_shootnail);
 
 	switch (s) {
 	case AUTO_FIRE_FAILED:
@@ -107,14 +106,14 @@ w_nailgun_primary(void)
 	case AUTO_LAST:
 		int r = (float)input_sequence % 3;
 		if (r == 1) {
-			Weapons_ViewAnimation(NAILGUN_SHOOT1);
+			Weapons_ViewAnimation(pl, NAILGUN_SHOOT1);
 		} else if (r == 2) {
-			Weapons_ViewAnimation(NAILGUN_SHOOT2);
+			Weapons_ViewAnimation(pl, NAILGUN_SHOOT2);
 		} else {
-			Weapons_ViewAnimation(NAILGUN_SHOOT3);
+			Weapons_ViewAnimation(pl, NAILGUN_SHOOT3);
 		}
-		Weapons_ViewAnimation(NAILGUN_SHOOT2);
-		Weapons_ViewPunchAngle([-1,0,0]);
+		Weapons_ViewAnimation(pl, NAILGUN_SHOOT2);
+		Weapons_ViewPunchAngle(pl, [-1,0,0]);
 		pl.w_attack_next = 0.1f;
 		break;
 	case AUTO_EMPTY:
@@ -126,10 +125,9 @@ w_nailgun_primary(void)
 }
 
 void
-w_nailgun_hud(void)
+w_nailgun_hud(player pl)
 {
 #ifdef CLIENT
-	player pl = (player)self;
 	vector cross_pos;
 	vector aicon_pos;
 
@@ -163,7 +161,7 @@ w_nailgun_hud(void)
 }
 
 void
-w_nailgun_hudpic(int selected, vector pos, float a)
+w_nailgun_hudpic(player pl, int selected, vector pos, float a)
 {
 #ifdef CLIENT
 	if (selected) {
@@ -204,7 +202,7 @@ weapon_t w_nailgun =
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= __NULL__,
-	.crosshair	= w_nailgun_hud,
+	.postdraw	= w_nailgun_hud,
 	.precache	= w_nailgun_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_nailgun_updateammo,

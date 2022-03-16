@@ -36,7 +36,7 @@ w_autorifle_wmodel(void)
 	return "models/w_autorifle.mdl";
 }
 string
-w_autorifle_pmodel(void)
+w_autorifle_pmodel(player pl)
 {
 	return "models/p_autorifle.mdl";
 }
@@ -48,20 +48,20 @@ w_autorifle_deathmsg(void)
 }
 
 void
-w_autorifle_draw(void)
+w_autorifle_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_sniper.mdl");
-	Weapons_ViewAnimation(0);
+	Weapons_ViewAnimation(pl, 0);
 }
 
 float
-w_autorifle_aimanim(void)
+w_autorifle_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
 }
 
 void
-w_autorifle_hudpic(int selected, vector pos, float a)
+w_autorifle_hudpic(player pl, int selected, vector pos, float a)
 {
 #ifdef CLIENT
 	if (selected) {
@@ -102,7 +102,7 @@ weapon_t w_autorifle =
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= __NULL__,
-	.crosshair	= __NULL__,
+	.postdraw	= __NULL__,
 	.precache	= w_autorifle_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_autorifle_updateammo,

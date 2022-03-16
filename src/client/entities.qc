@@ -24,10 +24,3 @@ ClientGame_EntityUpdate(float id, float new)
 
 	return (1);
 }
-
-void
-ClientGame_EntityRemove(void)
-{
-	if (self.classname == "player")
-		Player_DestroyWeaponModel((base_player) self);
-}

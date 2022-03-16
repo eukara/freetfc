@@ -58,7 +58,7 @@ w_umbrella_wmodel(void)
 	return "models/w_umbrella.mdl";
 }
 string
-w_umbrella_pmodel(void)
+w_umbrella_pmodel(player pl)
 {
 	return "models/p_umbrella.mdl";
 }
@@ -70,30 +70,29 @@ w_umbrella_deathmsg(void)
 }
 
 void
-w_umbrella_draw(void)
+w_umbrella_draw(player pl)
 {
 	Weapons_SetModel("models/v_umbrella.mdl");
-	Weapons_ViewAnimation(UMBRELLA_DRAW);
+	Weapons_ViewAnimation(pl, UMBRELLA_DRAW);
 }
 
 void
-w_umbrella_holster(void)
+w_umbrella_holster(player pl)
 {
-	Weapons_ViewAnimation(UMBRELLA_HOLSTER);
+	Weapons_ViewAnimation(pl, UMBRELLA_HOLSTER);
 }
 
 void
-w_umbrella_primary(void)
+w_umbrella_primary(player pl)
 {
 	int anim = 0;
 	vector src;
-	player pl = (player)self;
 
 	if (pl.w_attack_next) {
 		return;
 	}
 
-	Weapons_MakeVectors();
+	Weapons_MakeVectors(pl);
 	src = pl.origin + pl.view_ofs;
 	traceline(src, src + (v_forward * 32), FALSE, pl);
 
@@ -108,7 +107,7 @@ w_umbrella_primary(void)
 	default:
 		anim = trace_fraction >= 1 ? UMBRELLA_ATTACK3MISS:UMBRELLA_ATTACK3HIT;
 	}
-	Weapons_ViewAnimation(anim);
+	Weapons_ViewAnimation(pl, anim);
 
 	if (trace_fraction >= 1.0) {
 		pl.w_attack_next = 0.5f;
@@ -163,26 +162,25 @@ w_umbrella_primary(void)
 }
 
 void
-w_umbrella_release(void)
+w_umbrella_release(player pl)
 {
-	player pl = (player)self;
 
 	if (pl.w_idle_next) {
 		return;
 	}
 
-	Weapons_ViewAnimation(UMBRELLA_IDLE);
+	Weapons_ViewAnimation(pl, UMBRELLA_IDLE);
 	pl.w_idle_next = 15.0f;
 }
 
 float
-w_umbrella_aimanim(void)
+w_umbrella_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
 }
 
 void
-w_umbrella_hudpic(int selected, vector pos, float a)
+w_umbrella_hudpic(player pl, int selected, vector pos, float a)
 {
 #ifdef CLIENT
 	if (selected) {
@@ -223,7 +221,7 @@ weapon_t w_umbrella =
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= w_umbrella_release,
-	.crosshair	= __NULL__,
+	.postdraw	= __NULL__,
 	.precache	= w_umbrella_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_umbrella_updateammo,

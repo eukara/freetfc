@@ -36,7 +36,7 @@ w_knife_wmodel(void)
 	return "models/w_knife.mdl";
 }
 string
-w_knife_pmodel(void)
+w_knife_pmodel(player pl)
 {
 	return "models/p_knife.mdl";
 }
@@ -48,20 +48,20 @@ w_knife_deathmsg(void)
 }
 
 void
-w_knife_draw(void)
+w_knife_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_knife.mdl");
-	Weapons_ViewAnimation(0);
+	Weapons_ViewAnimation(pl, 0);
 }
 
 float
-w_knife_aimanim(void)
+w_knife_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
 }
 
 void
-w_knife_hudpic(int selected, vector pos, float a)
+w_knife_hudpic(player pl, int selected, vector pos, float a)
 {
 #ifdef CLIENT
 	if (selected) {
@@ -102,7 +102,7 @@ weapon_t w_knife =
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= __NULL__,
-	.crosshair	= __NULL__,
+	.postdraw	= __NULL__,
 	.precache	= w_knife_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_knife_updateammo,

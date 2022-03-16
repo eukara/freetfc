@@ -50,7 +50,7 @@ string w_sbs_wmodel(void)
 {
 	return "models/ball.mdl";
 }
-string w_sbs_pmodel(void)
+string w_sbs_pmodel(player pl)
 {
 	return "models/p_shotgun.mdl";
 }
@@ -60,32 +60,30 @@ string w_sbs_deathmsg(void)
 }
 
 int
-w_sbs_pickup(int new, int startammo)
+w_sbs_pickup(player pl, int new, int startammo)
 {
 #ifdef SERVER
-	player pl = (player)self;
 	pl.mag_sbs = bound(0, pl.mag_sbs + 8, 8);
 #endif
 	return (1);
 }
 
 void
-w_sbs_draw(void)
+w_sbs_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_12gauge.mdl");
-	Weapons_ViewAnimation(SBS_DRAW);
+	Weapons_ViewAnimation(pl, SBS_DRAW);
 }
 
 void
-w_sbs_holster(void)
+w_sbs_holster(player pl)
 {
-	Weapons_ViewAnimation(SBS_HOLSTER);
+	Weapons_ViewAnimation(pl, SBS_HOLSTER);
 }
 
 void
-w_sbs_primary(void)
+w_sbs_primary(player pl)
 {
-	player pl = (player)self;
 	int s = w_baseshotgun_fire(WEAPON_SBS, player::mag_sbs, 6, 4, [0.04, 0.04, 0]);
 
 	switch (s) {
@@ -93,14 +91,14 @@ w_sbs_primary(void)
 		return;
 		break;
 	case AUTO_FIRED:
-		Weapons_ViewAnimation(SBS_FIRE1);
-		Weapons_ViewPunchAngle([-2,0,0]);
+		Weapons_ViewAnimation(pl, SBS_FIRE1);
+		Weapons_ViewPunchAngle(pl, [-2,0,0]);
 		//Weapons_Sound(pl, CHAN_WEAPON, "weapon_mossberg.fire");
 		pl.w_attack_next = 0.5f;
 		break;
 	case AUTO_LAST:
-		Weapons_ViewAnimation(SBS_FIRE1);
-		Weapons_ViewPunchAngle([-2,0,0]);
+		Weapons_ViewAnimation(pl, SBS_FIRE1);
+		Weapons_ViewPunchAngle(pl, [-2,0,0]);
 		//Weapons_Sound(pl, CHAN_WEAPON, "weapon_mossberg.fire");
 		pl.w_attack_next = 0.5f;
 		break;
@@ -114,46 +112,44 @@ w_sbs_primary(void)
 }
 
 void
-w_sbs_reload(void)
+w_sbs_reload(player pl)
 {
-	player pl = (player)self;
 	w_baseshotgun_reload(player::mag_sbs, player::m_iAmmoShells, 8);
 }
 
 void
-w_sbs_release(void)
+w_sbs_release(player pl)
 {
-	player pl = (player)self;
 	int s = w_baseshotgun_release(player::mag_sbs, player::m_iAmmoShells, 8);
 
 	switch (s) {
 	case SHOTGUN_IDLE:
 		int r = (float)input_sequence % 3;
 		if (r == 1) {
-			Weapons_ViewAnimation(SBS_IDLE1);
+			Weapons_ViewAnimation(pl, SBS_IDLE1);
 		} else if (r == 2) {
-			Weapons_ViewAnimation(SBS_IDLE2);
+			Weapons_ViewAnimation(pl, SBS_IDLE2);
 		} else {
-			Weapons_ViewAnimation(SBS_IDLE3);
+			Weapons_ViewAnimation(pl, SBS_IDLE3);
 		}
 		pl.w_idle_next = 5.0f;
 		break;
 	case SHOTGUN_BUSY:
 		break;
 	case SHOTGUN_START_RELOAD:
-		Weapons_ViewAnimation(SBS_START_RELOAD);
+		Weapons_ViewAnimation(pl, SBS_START_RELOAD);
 		break;
 	case SHOTGUN_RELOAD:
-		Weapons_ViewAnimation(SBS_ADDSHELL);
+		Weapons_ViewAnimation(pl, SBS_ADDSHELL);
 		break;
 	case SHOTGUN_END_RELOAD:
-		Weapons_ViewAnimation(SBS_PUMP);
+		Weapons_ViewAnimation(pl, SBS_PUMP);
 		break;
 	}
 }
 
 void
-w_sbs_crosshair(void)
+w_sbs_crosshair(player pl)
 {
 #ifdef CLIENT
 	static vector cross_pos;
@@ -167,13 +163,13 @@ w_sbs_crosshair(void)
 }
 
 float
-w_sbs_aimanim(void)
+w_sbs_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMSHOTGUN : ANIM_AIMSHOTGUN;
 }
 
 void
-w_sbs_hudpic(int s, vector pos, float a)
+w_sbs_hudpic(player pl, int s, vector pos, float a)
 {
 #ifdef CLIENT
 	if (s) {
@@ -196,7 +192,7 @@ weapon_t w_sbs =
 	.secondary	= w_sbs_release,
 	.reload		= w_sbs_reload,
 	.release	= w_sbs_release,
-	.crosshair	= w_sbs_crosshair,
+	.postdraw	= w_sbs_crosshair,
 	.precache	= w_sbs_precache,
 	.pickup		= w_sbs_pickup,
 	.updateammo	= w_sbs_updateammo,

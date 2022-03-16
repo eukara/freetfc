@@ -36,7 +36,7 @@ w_medkit_wmodel(void)
 	return "models/w_medkit.mdl";
 }
 string
-w_medkit_pmodel(void)
+w_medkit_pmodel(player pl)
 {
 	return "models/p_medkit.mdl";
 }
@@ -48,20 +48,20 @@ w_medkit_deathmsg(void)
 }
 
 void
-w_medkit_draw(void)
+w_medkit_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_medkit.mdl");
-	Weapons_ViewAnimation(0);
+	Weapons_ViewAnimation(pl, 0);
 }
 
 float
-w_medkit_aimanim(void)
+w_medkit_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
 }
 
 void
-w_medkit_hudpic(int selected, vector pos, float a)
+w_medkit_hudpic(player pl, int selected, vector pos, float a)
 {
 #ifdef CLIENT
 	if (selected) {
@@ -102,7 +102,7 @@ weapon_t w_medkit =
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= __NULL__,
-	.crosshair	= __NULL__,
+	.postdraw	= __NULL__,
 	.precache	= w_medkit_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_medkit_updateammo,

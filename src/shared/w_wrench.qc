@@ -51,7 +51,7 @@ w_wrench_wmodel(void)
 	return "models/ball.mdl";
 }
 string
-w_wrench_pmodel(void)
+w_wrench_pmodel(player pl)
 {
 	return "models/p_spanner.mdl";
 }
@@ -63,30 +63,29 @@ w_wrench_deathmsg(void)
 }
 
 void
-w_wrench_draw(void)
+w_wrench_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_spanner.mdl");
-	Weapons_ViewAnimation(WRENCH_DRAW);
+	Weapons_ViewAnimation(pl, WRENCH_DRAW);
 }
 
 void
-w_wrench_holster(void)
+w_wrench_holster(player pl)
 {
-	Weapons_ViewAnimation(WRENCH_HOLSTER);
+	Weapons_ViewAnimation(pl, WRENCH_HOLSTER);
 }
 
 void
-w_wrench_primary(void)
+w_wrench_primary(player pl)
 {
 	int anim = 0;
 	vector src;
-	player pl = (player)self;
 
 	if (pl.w_attack_next) {
 		return;
 	}
 
-	Weapons_MakeVectors();
+	Weapons_MakeVectors(pl);
 	src = pl.origin + pl.view_ofs;
 	traceline(src, src + (v_forward * 32), FALSE, pl);
 
@@ -98,7 +97,7 @@ w_wrench_primary(void)
 	default:
 		anim = WRENCH_ATTACK2;
 	}
-	Weapons_ViewAnimation(anim);
+	Weapons_ViewAnimation(pl, anim);
 
 	if (trace_fraction < 1.0) {
 		pl.w_attack_next = 0.25f;
@@ -153,26 +152,25 @@ w_wrench_primary(void)
 }
 
 void
-w_wrench_release(void)
+w_wrench_release(player pl)
 {
-	player pl = (player)self;
 
 	if (pl.w_idle_next) {
 		return;
 	}
 
-	Weapons_ViewAnimation(WRENCH_IDLE);
+	Weapons_ViewAnimation(pl, WRENCH_IDLE);
 	pl.w_idle_next = 15.0f;
 }
 
 float
-w_wrench_aimanim(void)
+w_wrench_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
 }
 
 void
-w_wrench_hudpic(int selected, vector pos, float a)
+w_wrench_hudpic(player pl, int selected, vector pos, float a)
 {
 #ifdef CLIENT
 	if (selected) {
@@ -213,7 +211,7 @@ weapon_t w_wrench =
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= w_wrench_release,
-	.crosshair	= __NULL__,
+	.postdraw	= __NULL__,
 	.precache	= w_wrench_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_wrench_updateammo,
