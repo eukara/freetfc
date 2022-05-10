@@ -14,7 +14,7 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-class info_player_teamspawn:CBaseTrigger
+class info_player_teamspawn:NSRenderableEntity
 {
 	void(void) info_player_teamspawn;
 };

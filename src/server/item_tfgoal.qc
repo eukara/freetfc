@@ -14,7 +14,7 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-class item_tfgoal:CBaseTrigger
+class item_tfgoal:NSRenderableEntity
 {
 	float m_dItemID;
 
@@ -40,19 +40,19 @@ class item_tfgoal:CBaseTrigger
 	string m_voxNonOwnerTeams;  /* non-owner team */
 
 	void(void) item_tfgoal;
-	virtual void(void) touch;
+	virtual void(entity) Touch;
 	virtual void(void) Respawn;
 	virtual void(string, string) SpawnKey;
 };
 
 void
-item_tfgoal::touch(void)
+item_tfgoal::Touch(entity eToucher)
 {
-	if (other.classname != "player") {
+	if (eToucher.classname != "player") {
 		return;
 	}
 
-	player pl = (player)other;
+	player pl = (player)eToucher;
 
 	/* team filter */
 	if (m_iTeamUses)
@@ -182,6 +182,7 @@ item_tfgoal::SpawnKey(string strKey, string strValue)
 		m_voxNonOwnerTeams = strValue;  /* non-owner team */
 		break;
 	default:
+		super::SpawnKey(strKey, strValue);
 		break;
 	}
 }
@@ -194,6 +195,6 @@ item_tfgoal::item_tfgoal(void)
 	}
 	precache_sound(m_strSound);
 
-	CBaseEntity::CBaseEntity();
+	super::NSRenderableEntity();
 	item_tfgoal::Respawn();
 }

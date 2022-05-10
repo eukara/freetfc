@@ -59,7 +59,7 @@ typedef enumflags
 } tfgoal_result;
 
 /* point entity version */
-class info_tfgoal:CBaseTrigger
+class info_tfgoal:NSRenderableEntity
 {
 	string m_strName;
 	string m_strActivatedSound;
@@ -387,7 +387,7 @@ info_tfgoal::SpawnKey(string strKey, string strValue)
 		m_iMedikit = stoi(strValue);
 		break;
 	default:
-		CBaseTrigger::SpawnKey(strKey, strValue);
+		super::SpawnKey(strKey, strValue);
 		break;
 	}
 }
@@ -404,7 +404,7 @@ info_tfgoal::info_tfgoal(void)
 
 	precache_sound(m_strActivatedSound);
 
-	CBaseEntity::CBaseEntity();
+	super::NSRenderableEntity();
 	info_tfgoal::Respawn();
 }
 
@@ -436,7 +436,7 @@ i_t_g::i_t_g(void)
 		SpawnKey(argv(i), argv(i+1));
 	}
 
-	CBaseEntity::CBaseEntity();
+	super::NSRenderableEntity();
 
 	precache_sound(m_strActivatedSound);
 	Respawn();
