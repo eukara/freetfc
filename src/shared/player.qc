@@ -42,7 +42,7 @@ enumflags
 	PLAYER_UNUSED2
 };
 
-class player:base_player
+class player:NSClientPlayer
 {
 	/* animation */
 	PREDICTED_INT(anim_top);
@@ -103,7 +103,7 @@ void
 player::ReceiveEntity(float new, float fl)
 {
 	/* the generic client attributes */
-	base_player::ReceiveEntity(new, fl);
+	NSClientPlayer::ReceiveEntity(new, fl);
 
 	/* animation */
 	if (fl & PLAYER_TOPFRAME) {
@@ -167,7 +167,7 @@ void
 player::PredictPreFrame(void)
 {
 	/* the generic client attributes */
-	base_player::PredictPreFrame();
+	NSClientPlayer::PredictPreFrame();
 
 	SAVE_STATE(anim_top);
 	SAVE_STATE(anim_top_delay);
@@ -200,7 +200,7 @@ void
 player::PredictPostFrame(void)
 {
 	/* the generic client attributes */
-	base_player::PredictPostFrame();
+	NSClientPlayer::PredictPostFrame();
 
 	ROLL_BACK(anim_top);
 	ROLL_BACK(anim_top_delay);
@@ -227,7 +227,7 @@ void
 player::EvaluateEntity(void)
 {
 	/* the generic client attributes */
-	base_player::EvaluateEntity();
+	NSClientPlayer::EvaluateEntity();
 
 	/* animation */
 	if (ATTR_CHANGED(anim_bottom) || ATTR_CHANGED(anim_bottom_time))
@@ -309,7 +309,7 @@ player::SendEntity(entity ePEnt, float fChanged)
 	WriteFloat(MSG_ENTITY, fChanged);
 
 	/* the generic client attributes */
-	base_player::SendEntity(ePEnt, fChanged);
+	NSClientPlayer::SendEntity(ePEnt, fChanged);
 
 	if (fChanged & PLAYER_TOPFRAME) {
 		WriteByte(MSG_ENTITY, anim_top);

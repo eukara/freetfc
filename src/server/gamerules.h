@@ -18,11 +18,11 @@ class TFCGameRules:CGameRules
 {
 	void(void) TFCGameRules;
 
-	virtual void(base_player) PlayerConnect;
-	virtual void(base_player) PlayerDisconnect;
-	virtual void(base_player) PlayerPostFrame;
-	virtual void(base_player) PlayerSpawn;
-	virtual void(base_player) PlayerKill;
+	virtual void(NSClientPlayer) PlayerConnect;
+	virtual void(NSClientPlayer) PlayerDisconnect;
+	virtual void(NSClientPlayer) PlayerPostFrame;
+	virtual void(NSClientPlayer) PlayerSpawn;
+	virtual void(NSClientPlayer) PlayerKill;
 
 	virtual void(void) LevelNewParms;
 };

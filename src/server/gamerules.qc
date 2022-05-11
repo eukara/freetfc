@@ -19,7 +19,7 @@ var int autocvar_sv_playerkeepalive = TRUE;
 /* we check what fields have changed over the course of the frame and network
  * only the ones that have actually changed */
 void
-TFCGameRules::PlayerPostFrame(base_player pp)
+TFCGameRules::PlayerPostFrame(NSClientPlayer pp)
 {
 }
 
@@ -35,14 +35,14 @@ TFCGameRules::LevelNewParms(void)
 }
 
 void
-TFCGameRules::PlayerConnect(base_player pl)
+TFCGameRules::PlayerConnect(NSClientPlayer pl)
 {
 	if (Plugin_PlayerConnect(pl) == FALSE)
 		bprint(PRINT_HIGH, sprintf("%s connected\n", pl.netname));
 }
 
 void
-TFCGameRules::PlayerDisconnect(base_player pl)
+TFCGameRules::PlayerDisconnect(NSClientPlayer pl)
 {
 	bprint(PRINT_HIGH, sprintf("%s disconnected\n", pl.netname));
 
@@ -56,14 +56,14 @@ TFCGameRules::PlayerDisconnect(base_player pl)
 }
 
 void
-TFCGameRules::PlayerKill(base_player pp)
+TFCGameRules::PlayerKill(NSClientPlayer pp)
 {
 	player pl = (player)pp;
 	Damage_Apply(pl, pl, pl.health, WEAPON_NONE, DMG_SKIP_ARMOR);
 }
 
 void
-TFCGameRules::PlayerSpawn(base_player pp)
+TFCGameRules::PlayerSpawn(NSClientPlayer pp)
 {
 	player pl = (player)pp;
 	pl.classname = "unspawned";
