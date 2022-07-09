@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2020 Marco Cawthorne <marco@icculus.org>
+ * Copyright (c) 2016-2022 Marco Cawthorne <marco@icculus.org>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,17 +14,28 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-class TFCGameRules:CGameRules
+typedef enum
 {
-	void(void) TFCGameRules;
+	CLASS_SCOUT = 1,
+	CLASS_SNIPER,
+	CLASS_SOLDIER,
+	CLASS_DEMO,
+	CLASS_MEDIC,
+	CLASS_HVYWEAPON,
+	CLASS_PYRO,
+	CLASS_SPY,
+	CLASS_ENGINEER
+} classtype_e;
 
-	virtual void(NSClientPlayer) PlayerConnect;
-	virtual void(NSClientPlayer) PlayerDisconnect;
-	virtual void(NSClientPlayer) PlayerPostFrame;
-	virtual void(NSClientPlayer) PlayerSpawn;
-	virtual void(NSClientPlayer) PlayerKill;
-	virtual void(NSClientPlayer) PlayerRespawn;
-	virtual void(NSClientPlayer) PlayerDeath;
-
-	virtual void(void) LevelNewParms;
+string g_teammodels[] = {
+	"",
+	"models/player/scout/scout2.mdl",
+	"models/player/sniper/sniper2.mdl",
+	"models/player/soldier/soldier2.mdl",
+	"models/player/demo/demo.mdl",
+	"models/player/medic/medic2.mdl",
+	"models/player/hvyweapon/hvyweapon2.mdl",
+	"models/player/pyro/pyro2.mdl",
+	"models/player/spy/spy2.mdl",
+	"models/player/engineer/engineer2.mdl"
 };

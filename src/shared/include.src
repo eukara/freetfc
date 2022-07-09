@@ -1,4 +1,8 @@
  #includelist
+defs.h
+items.h
+weapons.h
+
 ../../../valve/src/shared/flags.h
 ../../../valve/src/shared/events.h
 player.qc
@@ -16,9 +20,6 @@ player.qc
 ../../../base/src/shared/fx_spark.qc
 ../../../valve/src/shared/fx_impact.qc
 ../../../base/src/shared/fx_corpse.qc
-
-items.h
-weapons.h
 
 ../../../base/src/shared/weapon_basesemi.qc
 ../../../base/src/shared/weapon_basemelee.qc

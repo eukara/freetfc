@@ -109,20 +109,20 @@ class info_tfgoal:NSRenderableEntity
 	string m_voxNonOwnerTeams;  /* non-owner team */
 
 	void(void) info_tfgoal;
-	virtual void(void) touch;
+	virtual void(entity) Touch;
 	virtual void(void) Respawn;
 	virtual void(string, string) SpawnKey;
 };
 
 void
-info_tfgoal::touch(void)
+info_tfgoal::Touch(entity eToucher)
 {
 	item_tfgoal findme = __NULL__;
 
-	if (other.classname != "player") {
+	if (eToucher.classname != "player") {
 		return;
 	}
-	player pl = (player)other;
+	player pl = (player)eToucher;
 
 	/* check for state */
 	if (m_tfgState != TFGOAL_INACTIVE)
@@ -130,7 +130,7 @@ info_tfgoal::touch(void)
 
 	/* check for team eligibility */
 	if (m_iTeamUses)
-	if (other.team != m_iTeamUses)
+	if (eToucher.team != m_iTeamUses)
 		return;
 
 	/* check for the must-have carry */
@@ -163,7 +163,7 @@ info_tfgoal::touch(void)
 	}
 
 	sound(this, CHAN_ITEM, m_strActivatedSound, 1.0f, ATTN_NORM);
-	Logging_Pickup(other, this, m_strName);
+	Logging_Pickup(eToucher, this, m_strName);
 
 	/* here we increase/decrease funstuff */
 	pl.health += m_iHealth;

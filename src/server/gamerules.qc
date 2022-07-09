@@ -56,6 +56,14 @@ TFCGameRules::PlayerDisconnect(NSClientPlayer pl)
 }
 
 void
+TFCGameRules::PlayerDeath(NSClientPlayer pp)
+{
+	player pl = (player)pp;
+	pp.think = PlayerRespawn;
+	pp.nextthink = time + 4.0f;
+}
+
+void
 TFCGameRules::PlayerKill(NSClientPlayer pp)
 {
 	player pl = (player)pp;
@@ -63,29 +71,25 @@ TFCGameRules::PlayerKill(NSClientPlayer pp)
 }
 
 void
+TFCGameRules::PlayerRespawn(NSClientPlayer pp)
+{
+	player pl = (player)pp;
+	pl.MakeClass(pl.classtype);
+	pl.SpawnIntoGame();
+}
+
+void
 TFCGameRules::PlayerSpawn(NSClientPlayer pp)
 {
 	player pl = (player)pp;
-	pl.classname = "unspawned";
-	pl.health = 0;
-	pl.armor = 0;
-	pl.takedamage = DAMAGE_NO;
-	pl.solid = SOLID_NOT;
-	pl.movetype = MOVETYPE_NOCLIP;
-//	pl.SendEntity = Player_SendEntity;
-	pl.flags = FL_CLIENT;
-	pl.weapon = 0;
-	pl.viewzoom = 1.0f;
-	pl.model = 0;
-	setsize (pl, [-16,-16,-16], [16,16,16]);
-	pl.view_ofs = pl.velocity = [0,0,0];
-	forceinfokey(pl, "*spec", "2");
+	pl.MakeTempSpectator(); /* replace this with a non-spectator ghost */
 	Spawn_ObserverCam(pl);
 }
 
 void
 TFCGameRules::TFCGameRules(void)
 {
+	/* TODO: Make this depend on the actual spawn types */
 	forceinfokey(world, "teams", "2");
 	forceinfokey(world, "team_1", "Blue");
 	forceinfokey(world, "teamscore_1", "0");

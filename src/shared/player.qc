@@ -44,6 +44,9 @@ enumflags
 
 class player:NSClientPlayer
 {
+	/* class info */
+	PREDICTED_INT(classtype);
+
 	/* animation */
 	PREDICTED_INT(anim_top);
 	PREDICTED_FLOAT(anim_top_time);
@@ -87,6 +90,9 @@ class player:NSClientPlayer
 
 	virtual void(void) EvaluateEntity;
 	virtual float(entity, float) SendEntity;
+
+	virtual void(void) SpawnIntoGame;
+	virtual void(classtype_e) MakeClass;
 #endif
 };
 
@@ -133,6 +139,7 @@ player::ReceiveEntity(float new, float fl)
 
 	if (fl & PLAYER_AMMO3) {
 		mode_tempstate = readbyte();
+		classtype = readbyte();
 	}
 
 	setorigin(this, origin);
@@ -168,6 +175,7 @@ player::PredictPreFrame(void)
 {
 	/* the generic client attributes */
 	NSClientPlayer::PredictPreFrame();
+	SAVE_STATE(classtype);
 
 	SAVE_STATE(anim_top);
 	SAVE_STATE(anim_top_delay);
@@ -201,6 +209,7 @@ player::PredictPostFrame(void)
 {
 	/* the generic client attributes */
 	NSClientPlayer::PredictPostFrame();
+	ROLL_BACK(classtype);
 
 	ROLL_BACK(anim_top);
 	ROLL_BACK(anim_top_delay);
@@ -260,6 +269,9 @@ player::EvaluateEntity(void)
 	if (ATTR_CHANGED(mode_tempstate))
 		SendFlags |= PLAYER_AMMO3;
 
+	if (ATTR_CHANGED(classtype))
+		SendFlags |= PLAYER_AMMO3;
+
 	SAVE_STATE(mag_sbs);
 	SAVE_STATE(mag_dbs);
 	SAVE_STATE(mag_rpg);
@@ -278,6 +290,231 @@ player::EvaluateEntity(void)
 	SAVE_STATE(anim_top_time);
 	SAVE_STATE(anim_bottom);
 	SAVE_STATE(anim_bottom_time);
+	SAVE_STATE(classtype);
+}
+
+void
+player::SpawnIntoGame(void)
+{	
+	entity spot = world;
+
+	/* spawn into the world */
+	switch (team) {
+	case 1:
+		spot = Spawn_SelectRandom("info_teamspawn_blue");
+		break;
+	case 2:
+		spot = Spawn_SelectRandom("info_teamspawn_red");
+		break;
+	case 3:
+		spot = Spawn_SelectRandom("info_teamspawn_yellow");
+		break;
+	case 4:
+		spot = Spawn_SelectRandom("info_teamspawn_green");
+		break;
+	}
+
+	setorigin(this, spot.origin);
+	angles = spot.angles;
+	fixangle = TRUE;
+}
+
+void
+player::MakeClass(classtype_e class)
+{
+	health = self.max_health = 100;
+	takedamage = DAMAGE_YES;
+	solid = SOLID_SLIDEBOX;
+	movetype = MOVETYPE_WALK;
+	flags = FL_CLIENT;
+	viewzoom = 1.0;
+
+	/* select our class model */
+	model = g_teammodels[classtype];
+	setmodel(this, model);
+	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
+	velocity = [0,0,0];
+	gravity = __NULL__;
+
+	armor = activeweapon = g_items = 0;
+	iBleeds = TRUE;
+	forceinfokey(this, "*spec", "0");
+	forceinfokey(this, "*team", ftos(team));
+
+	switch (classtype) {
+	case CLASS_SCOUT:
+		Weapons_AddItem(this, WEAPON_CROWBAR, -1);
+		Weapons_AddItem(this, WEAPON_SBS, -1);
+		Weapons_AddItem(this, WEAPON_NAILGUN, -1);
+		m_iAmmoShells = 17;
+		m_iAmmoNails = 100;
+
+		m_iMaxHealth = 75;
+		m_iMaxArmor = 50;
+		health = m_iMaxHealth;
+		armor = 25;
+
+		m_iMaxShells = 50;
+		m_iMaxNails = 200;
+		m_iMaxCells = 100;
+		m_iMaxRockets = 25;
+		env_message_single(this, "HELP_SCOUT");
+		break;
+	case CLASS_SNIPER:
+		Weapons_AddItem(this, WEAPON_CROWBAR, -1);
+		Weapons_AddItem(this, WEAPON_SNIPER, -1);
+		Weapons_AddItem(this, WEAPON_AUTORIFLE, -1);
+		Weapons_AddItem(this, WEAPON_NAILGUN, -1);
+		m_iAmmoShells = 60; /* sniper rifles use shells */
+		m_iAmmoNails = 50;
+
+		m_iMaxHealth = 90;
+		m_iMaxArmor = 50;
+		health = m_iMaxHealth;
+		armor = 0;
+
+		m_iMaxShells = 75;
+		m_iMaxNails = 100;
+		m_iMaxCells = 50;
+		m_iMaxRockets = 25;
+		env_message_single(this, "HELP_SNIPER");
+		break;
+	case CLASS_SOLDIER:
+		Weapons_AddItem(this, WEAPON_CROWBAR, -1);
+		Weapons_AddItem(this, WEAPON_SBS, -1);
+		Weapons_AddItem(this, WEAPON_DBS, -1);
+		Weapons_AddItem(this, WEAPON_RPG, -1);
+		m_iAmmoShells = 26;
+		m_iAmmoRockets = 6;
+
+		m_iMaxHealth = 100;
+		m_iMaxArmor = 200;
+		health = m_iMaxHealth;
+		armor = 100;
+
+		m_iMaxShells = 100;
+		m_iMaxNails = 100;
+		m_iMaxCells = 50;
+		m_iMaxRockets = 50;
+		env_message_single(this, "HELP_SOLDIER");
+		break;
+	case CLASS_DEMO:
+		Weapons_AddItem(this, WEAPON_CROWBAR, -1);
+		Weapons_AddItem(this, WEAPON_SBS, -1);
+		Weapons_AddItem(this, WEAPON_GLAUNCHER, -1);
+		Weapons_AddItem(this, WEAPON_PIPEBOMB, -1);
+		m_iAmmoShells = 22;
+		m_iAmmoRockets = 14;
+
+		m_iMaxHealth = 90;
+		m_iMaxArmor = 100;
+		health = m_iMaxHealth;
+		armor = 50;
+
+		m_iMaxShells = 75;
+		m_iMaxNails = 50;
+		m_iMaxCells = 50;
+		m_iMaxRockets = 50;
+		env_message_single(this, "HELP_DEMOMAN");
+		break;
+	case CLASS_MEDIC:
+		Weapons_AddItem(this, WEAPON_MEDKIT, -1);
+		Weapons_AddItem(this, WEAPON_SBS, -1);
+		Weapons_AddItem(this, WEAPON_DBS, -1);
+		Weapons_AddItem(this, WEAPON_SUPERNAIL, -1);
+		m_iAmmoShells = 26;
+		m_iAmmoNails = 50;
+
+		m_iMaxHealth = 90;
+		m_iMaxArmor = 100;
+		health = m_iMaxHealth;
+		armor = 50;
+
+		m_iMaxShells = 75;
+		m_iMaxNails = 150;
+		m_iMaxCells = 50;
+		m_iMaxRockets = 25;
+		env_message_single(this, "HELP_MEDIC");
+		break;
+	case CLASS_HVYWEAPON:
+		Weapons_AddItem(this, WEAPON_CROWBAR, -1);
+		Weapons_AddItem(this, WEAPON_SBS, -1);
+		Weapons_AddItem(this, WEAPON_DBS, -1);
+		Weapons_AddItem(this, WEAPON_ASSCAN, -1);
+		m_iAmmoShells = 176; /* all of the heavy's weapons use shells */
+
+		m_iMaxHealth = 100;
+		m_iMaxArmor = 250;
+		health = m_iMaxHealth;
+		armor = 150;
+
+		m_iMaxShells = 200;
+		m_iMaxNails = 200;
+		m_iMaxCells = 50;
+		m_iMaxRockets = 25;
+		env_message_single(this, "HELP_HWGUY");
+		break;
+	case CLASS_PYRO:
+		Weapons_AddItem(this, WEAPON_CROWBAR, -1);
+		Weapons_AddItem(this, WEAPON_SBS, -1);
+		Weapons_AddItem(this, WEAPON_FLAMER, -1);
+		Weapons_AddItem(this, WEAPON_INCENDIARY, -1);
+		m_iAmmoShells = 12;
+		m_iAmmoCells = 120;
+		m_iAmmoRockets = 5;
+
+		m_iMaxHealth = 100;
+		m_iMaxArmor = 150;
+		health = m_iMaxHealth;
+		armor = 50;
+
+		m_iMaxShells = 40;
+		m_iMaxNails = 50;
+		m_iMaxCells = 200;
+		m_iMaxRockets = 60;
+		env_message_single(this, "HELP_PYRO");
+		break;
+	case CLASS_SPY:
+		Weapons_AddItem(this, WEAPON_KNIFE, -1);
+		Weapons_AddItem(this, WEAPON_TRANQUIL, -1);
+		Weapons_AddItem(this, WEAPON_DBS, -1);
+		Weapons_AddItem(this, WEAPON_NAILGUN, -1);
+		m_iAmmoShells = 24; /* tranquil and dbs use shells */
+		m_iAmmoNails = 50;
+
+		m_iMaxHealth = 90;
+		m_iMaxArmor = 100;
+		health = m_iMaxHealth;
+		armor = 25;
+
+		m_iMaxShells = 40;
+		m_iMaxNails = 50;
+		m_iMaxCells = 30;
+		m_iMaxRockets = 15;
+		env_message_single(this, "HELP_SPY");
+		break;
+	case CLASS_ENGINEER:
+		Weapons_AddItem(this, WEAPON_WRENCH, -1);
+		Weapons_AddItem(this, WEAPON_RAILGUN, -1);
+		Weapons_AddItem(this, WEAPON_DBS, -1);
+		m_iAmmoCells = 100;
+		m_iAmmoNails = 25;
+		m_iAmmoShells = 4;
+
+		m_iMaxHealth = 80;
+		m_iMaxArmor = 50;
+		health = m_iMaxHealth;
+		armor = 25;
+
+		m_iMaxShells = 50;
+		m_iMaxNails = 50;
+		m_iMaxCells = 200;
+		m_iMaxRockets = 30;
+		env_message_single(this, "HELP_ENGINEER");
+		break;
+	}
+
+	g_items |= ITEM_SUIT;
 }
 
 /*
@@ -338,6 +575,7 @@ player::SendEntity(entity ePEnt, float fChanged)
 
 	if (fChanged & PLAYER_AMMO3) {
 		WriteByte(MSG_ENTITY, mode_tempstate);
+		WriteByte(MSG_ENTITY, classtype);
 	}
 
 	return (1);
