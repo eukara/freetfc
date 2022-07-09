@@ -59,8 +59,11 @@ void
 TFCGameRules::PlayerDeath(NSClientPlayer pp)
 {
 	player pl = (player)pp;
-	pp.think = PlayerRespawn;
-	pp.nextthink = time + 4.0f;
+
+	pl.SetSolid(SOLID_NOT);
+	pl.SetMovetype(MOVETYPE_NONE);
+	pl.think = PlayerRespawn;
+	pl.nextthink = time + 4.0f;
 }
 
 void
