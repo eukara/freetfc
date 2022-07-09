@@ -1,0 +1,8 @@
+player_tfc.death
+{
+	sample player/death1.wav
+	sample player/death2.wav
+	sample player/death3.wav
+	sample player/death4.wav
+	sample player/death5.wav
+} 

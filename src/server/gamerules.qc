@@ -64,6 +64,9 @@ TFCGameRules::PlayerDeath(NSClientPlayer pp)
 	pl.SetMovetype(MOVETYPE_NONE);
 	pl.think = PlayerRespawn;
 	pl.nextthink = time + 4.0f;
+
+	/* play the iconic death sound */
+	Sound_Play(pl, CHAN_VOICE, "player_tfc.death");
 }
 
 void
