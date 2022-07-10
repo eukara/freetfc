@@ -164,15 +164,22 @@ TFCDispenser::Touch(entity eToucher)
 
 	player pl = (player)eToucher;
 
-	int r, n, c, s, a;
-	int sum = 0;
+	int r, n, c, s, a, sum;
+	r = n = c = s = a = sum = 0;
 
-	r = GrabRockets();
-	n = GrabNails();
-	c = GrabCells();
-	s = GrabShells();
-	a = GrabArmor();
+	/* only subtract what if we need anything */
+	if (pl.m_iAmmoRockets < pl.m_iMaxRockets)
+		r = GrabRockets();
+	if (pl.m_iAmmoNails < pl.m_iMaxNails)
+		n = GrabNails();
+	if (pl.m_iAmmoCells < pl.m_iMaxCells)
+		c = GrabCells();
+	if (pl.m_iAmmoShells < pl.m_iMaxShells)
+		s = GrabShells();
+	if (pl.armor < pl.m_iMaxArmor)
+		a = GrabArmor();
 
+	/* see the sum of what we picked up to determine if we'll register as a pickup */
 	sum = r + n + c + s + a;
 
 	/* check */
@@ -180,13 +187,15 @@ TFCDispenser::Touch(entity eToucher)
 		return;
 
 	sound(this, CHAN_ITEM, "weapons/scock1.wav", 1.0, ATTN_NORM);
+
+	/* add whatever it is we can get */
 	pl.m_iAmmoRockets += r;
 	pl.m_iAmmoNails += n;
 	pl.m_iAmmoCells += c;
 	pl.m_iAmmoShells += s;
 	pl.armor += a;
 
-	/* clamp */
+	/* clamp player values */
 	if (pl.m_iAmmoRockets > pl.m_iMaxRockets)
 		pl.m_iAmmoRockets = pl.m_iMaxRockets;
 	if (pl.m_iAmmoNails > pl.m_iMaxNails)
@@ -195,6 +204,8 @@ TFCDispenser::Touch(entity eToucher)
 		pl.m_iAmmoCells = pl.m_iMaxCells;
 	if (pl.m_iAmmoShells > pl.m_iMaxShells)
 		pl.m_iAmmoShells = pl.m_iMaxShells;
+	if (pl.armor > pl.m_iMaxArmor)
+		pl.armor = pl. m_iMaxArmor;
 
 	m_flNextDispense = time + 2.0f;
 }
