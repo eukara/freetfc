@@ -422,6 +422,13 @@ i_t_g::Respawn(void)
 	movetype = MOVETYPE_NONE;
 	SetModel(GetSpawnModel());
 	SetOrigin(GetSpawnOrigin());
+
+	/* TODO: Investigate instead whether or not we use a trigger texture? */
+	/*if (substring(model, 0, 1) == "*") { */
+		SetRenderMode(RM_TRIGGER);
+	/*} else {
+		SetRenderMode(RM_NORMAL);
+	}*/
 }
 
 void
