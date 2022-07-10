@@ -2,3 +2,7 @@ item_armor_tfc.pickup
 {
 	sample items/armoron_1.wav
 }
+item_healthkit_tfc.pickup
+{
+	sample items/smallmedkit1.wav
+}
