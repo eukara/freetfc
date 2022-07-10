@@ -92,13 +92,13 @@ item_armor::Touch(entity eToucher)
 	/* get the total points the armor can give */
 	switch (classname) {
 	case "item_armor1":
-		tp = 25;
+		tp = 100;
 		break;
 	case "item_armor2":
-		tp = 50;
+		tp = 150;
 		break;
 	case "item_armor3":
-		tp = 100;
+		tp = 200;
 		break;
 	default:
 		print("^1item_armor: unknown armor type\n");
