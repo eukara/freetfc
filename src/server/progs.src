@@ -35,6 +35,7 @@ info_player_teamspawn.qc
 item_tfgoal.qc
 info_tfgoal.qc
 info_areadef.qc
+item_armor.qc
 
 gamerules.qc
 client.qc
