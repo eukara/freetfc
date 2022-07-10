@@ -118,6 +118,8 @@ item_armor::Touch(entity eToucher)
 		}
 	}
 
+	Sound_Play(this, CHAN_ITEM, "item_armor_tfc.pickup");
+
 	/* hide and respawn */
 	Hide();
 	think = Respawn;
@@ -151,7 +153,8 @@ item_armor::Respawn(void)
 void
 item_armor::item_armor(void)
 {
-	
+	Sound_Precache("item_armor_tfc.pickup");
+	precache_model("models/g_armor.mdl");
 }
 
 void
