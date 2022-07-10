@@ -16,15 +16,67 @@
 
 #define TFC_DISPENSER_COST 100
 
+/* The unit has 150 health and can hold up to 400 shells, 600 nails, 300 rockets, 400 cells, and 500 armor points. */
+
 class
 TFCDispenser:NSSurfacePropEntity
 {
-
+	int m_iShells;
+	int m_iNails;
+	int m_iRockets;
+	int m_iCells;
+	int m_iArmor;
+	
 	void(void) TFCDispenser;
 
 	virtual void(player) Place;
 	virtual void(void) FinishPlacing;
+
+	virtual void(void) Replenish;
+	virtual void(void) ClampValues;
 };
+
+
+void
+TFCDispenser::ClampValues(void)
+{
+	if (m_iShells >= 400)
+		m_iShells = 400;
+
+	if (m_iNails >= 600)
+		m_iNails = 600;
+
+	if (m_iRockets >= 300)
+		m_iRockets = 300;
+
+	if (m_iCells >= 400)
+		m_iCells = 400;
+
+	if (m_iArmor >= 500)
+		m_iArmor = 500;
+}
+
+void
+TFCDispenser::Replenish(void)
+{
+	m_iShells += 5;
+	m_iNails += 5;
+	m_iRockets += 5;
+	m_iCells += 5;
+	m_iArmor += 5;
+	ClampValues();
+
+	nextthink = time + 1.0f;
+}
+
+void
+TFCDispenser::Touch(entity eToucher)
+{
+	if (team != real_owner.team)
+		return;
+
+	player pl = (player)eToucher;
+}
 
 void
 TFCDispenser::Place(player pl)
@@ -61,7 +113,7 @@ TFCDispenser::TFCDispenser(void)
 }
 
 void
-CSEv_TFC_BuildDispenser_(void)
+TFCDispenser_Build(void)
 {
 	player pl = (player)self;
 
@@ -91,4 +143,10 @@ CSEv_TFC_BuildDispenser_(void)
 	/* deploy */
 	TFCDispenser dispenser = spawn(TFCDispenser);
 	dispenser.Place(pl);
-} 
+}
+
+void
+TFCDispenser_Dismantle(void)
+{
+	
+}

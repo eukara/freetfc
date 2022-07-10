@@ -71,7 +71,7 @@ TFCSentry::TFCSentry(void)
 }
 
 void
-CSEv_TFC_BuildSentry_(void)
+TFCSentry_Build(void)
 {
 	player pl = (player)self;
 
@@ -101,4 +101,10 @@ CSEv_TFC_BuildSentry_(void)
 	/* deploy */
 	TFCSentry sentry = spawn(TFCSentry);
 	sentry.Place(pl);
-} 
+}
+
+void
+TFCSentry_Dismantle(void)
+{
+	
+}

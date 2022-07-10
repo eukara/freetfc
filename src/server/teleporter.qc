@@ -127,7 +127,7 @@ TFCTeleporterExit::TFCTeleporterExit(void)
 }
 
 void
-CSEv_TFC_BuildTele_(void)
+TFCTeleporter_Build(void)
 {
 	player pl = (player)self;
 
@@ -159,9 +159,8 @@ CSEv_TFC_BuildTele_(void)
 	start.Place(pl);
 } 
 
-
 void
-CSEv_TFC_BuildTeleExit_(void)
+TFCTeleporterExit_Build(void)
 {
 	player pl = (player)self;
 
@@ -191,4 +190,15 @@ CSEv_TFC_BuildTeleExit_(void)
 	/* deploy */
 	TFCTeleporterExit end = spawn(TFCTeleporterExit);
 	end.Place(pl);
-} 
+}
+
+void
+TFCTeleporter_Dismantle(void)
+{
+	
+}
+void
+TFCTeleporterExit_Dismantle(void)
+{
+	
+}

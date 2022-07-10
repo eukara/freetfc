@@ -19,22 +19,10 @@ ClientGame_ConsoleCommand(void)
 {
 	switch(argv(0)) {
 	case "build":
-		int type = stoi(argv(1));
-		
-		switch (type) {
-		case 1:
-			sendevent("TFC_BuildDispenser", "");
-			break;
-		case 2:
-			sendevent("TFC_BuildSentry", "");
-			break;
-		case 4:
-			sendevent("TFC_BuildTele", "");
-			break;
-		case 5:
-			sendevent("TFC_BuildTeleExit", "");
-			break;
-		}
+		sendevent("TFCBuild", "i", stoi(argv(1)));
+		break;
+	case "dismantle":
+		sendevent("TFCDismantle", "i", stoi(argv(1)));
 		break;
 	default:
 		return (0);

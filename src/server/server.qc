@@ -32,6 +32,11 @@ Game_Worldspawn(void)
 	Sound_Precache("engineer.build");
 	Sound_Precache("engineer.turret_set");
 
+	precache_model("models/base.mdl");
+	precache_model("models/dispenser.mdl");
+	precache_model("models/sentry1.mdl");
+	precache_model("models/sentry2.mdl");
+	precache_model("models/sentry3.mdl");
 	precache_model("models/player.mdl");
 	precache_model("models/w_weaponbox.mdl");
 	Weapons_Init();
@@ -41,4 +46,42 @@ Game_Worldspawn(void)
 
 void weaponbox_spawn(player pl)
 {
+}
+
+void
+CSEv_TFCBuild_i(int type)
+{
+	switch (type) {
+	case 1:
+		TFCDispenser_Build();
+		break;
+	case 2:
+		TFCSentry_Build();
+		break;
+	case 4:
+		TFCTeleporter_Build();
+		break;
+	case 5:
+		TFCTeleporterExit_Build();
+		break;
+	}
+}
+
+void
+CSEv_TFCDismantle_i(int type)
+{
+	switch (type) {
+	case 1:
+		TFCDispenser_Dismantle();
+		break;
+	case 2:
+		TFCSentry_Dismantle();
+		break;
+	case 4:
+		TFCTeleporter_Dismantle();
+		break;
+	case 5:
+		TFCTeleporterExit_Dismantle();
+		break;
+	}
 }
