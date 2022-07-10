@@ -38,7 +38,7 @@ TFCTeleporter::Touch(entity eToucher)
 	if (m_flNextTeleport > time)
 		return;
 
-	TFCTeleporter target = world;
+	TFCTeleporter target = __NULL__;
 	string exitname;
 
 	if (classname == "TFCTeleporter") 

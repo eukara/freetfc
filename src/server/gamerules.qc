@@ -29,7 +29,6 @@ TFCGameRules::DropGoalItem(NSClientPlayer pp)
 	if (!(pp.g_items & ITEM_GOALITEM))
 		return;
 
-	
 	item_tfgoal target;
 
 	for (entity e = world; (e = find(e, ::classname, "item_tfgoal"));) {
@@ -91,6 +90,13 @@ TFCGameRules::PlayerDisconnect(NSClientPlayer pl)
 }
 
 void
+TFCGameRules_PlayerRespawn(void)
+{
+	TFCGameRules rule = (TFCGameRules)g_grMode;
+	rule.PlayerRespawn((NSClientPlayer)self);
+}
+
+void
 TFCGameRules::PlayerDeath(NSClientPlayer pp)
 {
 	player pl = (player)pp;
@@ -98,7 +104,8 @@ TFCGameRules::PlayerDeath(NSClientPlayer pp)
 	DropGoalItem(pp);
 	pl.SetSolid(SOLID_NOT);
 	pl.SetMovetype(MOVETYPE_NONE);
-	pl.think = PlayerRespawn;
+
+	pl.think = TFCGameRules_PlayerRespawn;
 	pl.nextthink = time + 4.0f;
 
 	/* play the iconic death sound */
