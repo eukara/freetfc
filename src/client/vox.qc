@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Marco Cawthorne <marco@icculus.org>
+ * Copyright (c) 2016-2020 Marco Cawthorne <marco@icculus.org>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,21 +14,35 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-void
-Vox_Sentence_Broadcast(string msg)
+class
+TFCVox:NSTalkMonster
 {
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_TFC_VOXMSG);
-	WriteString(MSG_MULTICAST, msg);
-	multicast([0,0,0], MULTICAST_ALL_R);
+	void(void) TFCVox;
+	virtual void(string) SentenceSample;
+};
+
+TFCVox g_vox;
+
+void
+TFCVox::SentenceSample(string sample)
+{
+	sound(this, CHAN_VOICE, sample, 1.0, ATTN_NONE, 100, SOUNDFLAG_FOLLOW | SOUNDFLAG_NOSPACIALISE);
 }
 
 void
-Vox_Sentence_Single(entity targ, string msg)
+TFCVox::TFCVox(void)
 {
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_TFC_VOXMSG);
-	WriteString(MSG_MULTICAST, msg);
-	msg_entity = targ;
-	multicast([0,0,0], MULTICAST_ONE_R);
 }
+
+void
+Vox_Parse(void)
+{
+	string msg = readstring();
+
+	if (!g_vox)
+		g_vox = spawn(TFCVox);
+
+	print(msg);
+	print("\n");
+	g_vox.Sentence(msg);
+} 

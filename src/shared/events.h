@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Marco Cawthorne <marco@icculus.org>
+ * Copyright (c) 2016-2020 Marco Cawthorne <marco@icculus.org>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,23 +12,9 @@
  * WHATSOEVER RESULTING FROM LOSS OF MIND, USE, DATA OR PROFITS, WHETHER
  * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-*/
+ */
 
-void
-Vox_Sentence_Broadcast(string msg)
+enum
 {
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_TFC_VOXMSG);
-	WriteString(MSG_MULTICAST, msg);
-	multicast([0,0,0], MULTICAST_ALL_R);
-}
-
-void
-Vox_Sentence_Single(entity targ, string msg)
-{
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_TFC_VOXMSG);
-	WriteString(MSG_MULTICAST, msg);
-	msg_entity = targ;
-	multicast([0,0,0], MULTICAST_ONE_R);
-}
+	EV_TFC_VOXMSG = EV_SEPARATOR
+};

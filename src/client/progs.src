@@ -18,6 +18,8 @@
 ../../../src/gs-entbase/shared.src
 ../shared/include.src
 
+vox.qc
+
 ../../../valve/src/client/damage.qc
 ../../../base/src/client/draw.qc
 init.qc
@@ -25,7 +27,7 @@ init.qc
 ../../../valve/src/client/player.qc
 entities.qc
 ../../../valve/src/client/cmds.qc
-../../../valve/src/client/game_event.qc
+game_event.qc
 ../../../valve/src/client/camera.qc
 ../../../valve/src/client/viewmodel.qc
 ../../../valve/src/client/view.qc
