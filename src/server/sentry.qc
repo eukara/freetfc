@@ -106,5 +106,5 @@ TFCSentry_Build(void)
 void
 TFCSentry_Dismantle(void)
 {
-	
+	TFC_DetonateTypeForPlayer((player)self, "TFCSentry");
 }

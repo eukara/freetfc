@@ -25,6 +25,7 @@ void
 ClientGame_Init(float apilevel, string enginename, float engineversion)
 {
 	registercommand("build");
+	registercommand("dismantle");
 	Obituary_Init();
 }
 

@@ -195,10 +195,10 @@ TFCTeleporterExit_Build(void)
 void
 TFCTeleporter_Dismantle(void)
 {
-	
+	TFC_DetonateTypeForPlayer((player)self, "TFCTeleporter");
 }
 void
 TFCTeleporterExit_Dismantle(void)
 {
-	
+	TFC_DetonateTypeForPlayer((player)self, "TFCTeleporterExit");
 }

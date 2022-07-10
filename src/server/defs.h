@@ -33,3 +33,17 @@ TFC_ExistsForPlayer(entity pl, string cname)
 
 	return false;
 }
+
+void
+TFC_DetonateTypeForPlayer(entity pl, string cname)
+{
+	/* loop through all exits */
+	for (entity e = world; (e = find(e, ::classname, cname));) {
+		/* if it's not places by our owner... */
+		if (e.real_owner != pl)
+			continue;
+
+		NSSurfacePropEntity targ = (NSSurfacePropEntity)e;
+		targ.Destroy();
+	}
+}

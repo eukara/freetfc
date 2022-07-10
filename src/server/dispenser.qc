@@ -21,6 +21,8 @@
 class
 TFCDispenser:NSSurfacePropEntity
 {
+	float m_flNextDispense;
+
 	int m_iShells;
 	int m_iNails;
 	int m_iRockets;
@@ -32,10 +34,92 @@ TFCDispenser:NSSurfacePropEntity
 	virtual void(player) Place;
 	virtual void(void) FinishPlacing;
 
+	virtual void(entity) Touch;
+
 	virtual void(void) Replenish;
 	virtual void(void) ClampValues;
+
+	virtual int(void) GrabShells;
+	virtual int(void) GrabNails;
+	virtual int(void) GrabRockets;
+	virtual int(void) GrabCells;
+	virtual int(void) GrabArmor;
 };
 
+int
+TFCDispenser::GrabShells(void)
+{
+	int iOut = 20;
+
+	if (m_iShells >= 20) {
+		m_iShells -= 20;
+	} else {
+		iOut = m_iShells;
+		m_iShells = 0;
+	}
+
+	return iOut;
+}
+
+int
+TFCDispenser::GrabNails(void)
+{
+	int iOut = 20;
+
+	if (m_iNails >= 20) {
+		m_iNails -= 20;
+	} else {
+		iOut = m_iNails;
+		m_iNails = 0;
+	}
+
+	return iOut;
+}
+
+int
+TFCDispenser::GrabRockets(void)
+{
+	int iOut = 10;
+
+	if (m_iRockets >= 10) {
+		m_iRockets -= 10;
+	} else {
+		iOut = m_iRockets;
+		m_iRockets = 0;
+	}
+
+	return iOut;
+}
+
+int
+TFCDispenser::GrabCells(void)
+{
+	int iOut = 20;
+
+	if (m_iCells >= 20) {
+		m_iCells -= 20;
+	} else {
+		iOut = m_iCells;
+		m_iCells = 0;
+	}
+
+	return iOut;
+}
+
+int
+TFCDispenser::GrabArmor(void)
+{
+	int iOut = 20;
+
+	if (m_iArmor >= 20) {
+		m_iArmor -= 20;
+	} else {
+		iOut = m_iArmor;
+		m_iArmor = 0;
+	}
+
+	return iOut;
+}
 
 void
 TFCDispenser::ClampValues(void)
@@ -59,11 +143,11 @@ TFCDispenser::ClampValues(void)
 void
 TFCDispenser::Replenish(void)
 {
-	m_iShells += 5;
-	m_iNails += 5;
-	m_iRockets += 5;
-	m_iCells += 5;
-	m_iArmor += 5;
+	m_iShells += 1;
+	m_iNails += 1;
+	m_iRockets += 1;
+	m_iCells += 1;
+	m_iArmor += 1;
 	ClampValues();
 
 	nextthink = time + 1.0f;
@@ -72,10 +156,31 @@ TFCDispenser::Replenish(void)
 void
 TFCDispenser::Touch(entity eToucher)
 {
-	if (team != real_owner.team)
+	if (eToucher.team != real_owner.team)
+		return;
+
+	if (m_flNextDispense > time)
 		return;
 
 	player pl = (player)eToucher;
+
+	pl.m_iAmmoRockets += GrabRockets();
+	pl.m_iAmmoNails += GrabNails();
+	pl.m_iAmmoCells += GrabCells();
+	pl.m_iAmmoShells += GrabShells();
+	pl.armor += GrabArmor();
+
+	/* clamp */
+	if (pl.m_iAmmoRockets > pl.m_iMaxRockets)
+		pl.m_iAmmoRockets = pl.m_iMaxRockets;
+	if (pl.m_iAmmoNails > pl.m_iMaxNails)
+		pl.m_iAmmoNails = pl.m_iMaxNails;
+	if (pl.m_iAmmoCells > pl.m_iMaxCells)
+		pl.m_iAmmoCells = pl.m_iMaxCells;
+	if (pl.m_iAmmoShells > pl.m_iMaxShells)
+		pl.m_iAmmoShells = pl.m_iMaxShells;
+
+	m_flNextDispense = time + 2.0f;
 }
 
 void
@@ -101,6 +206,9 @@ TFCDispenser::FinishPlacing(void)
 {
 	env_message_single(real_owner, "#Dispenser_finish");
 	Sound_Play(this, CHAN_BODY, "engineer.turret_set");
+
+	think = Replenish;
+	nextthink = time + 1.0f;
 }
 
 void
@@ -148,5 +256,5 @@ TFCDispenser_Build(void)
 void
 TFCDispenser_Dismantle(void)
 {
-	
+	TFC_DetonateTypeForPlayer((player)self, "TFCDispenser");
 }
