@@ -26,6 +26,9 @@ dispenser.qc
 sentry.qc
 teleporter.qc
 
+func_nobuild.qc
+func_nogrenades.qc
+
 vox.qc
 ../../../valve/src/server/items.qc
 info_player_teamspawn.qc
@@ -33,7 +36,7 @@ item_tfgoal.qc
 info_tfgoal.qc
 
 gamerules.qc
-../../../valve/src/server/client.qc
+client.qc
 server.qc
 ../../../base/src/server/damage.qc
 ../../../valve/src/server/rules.qc

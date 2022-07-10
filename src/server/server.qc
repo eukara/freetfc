@@ -51,6 +51,13 @@ void weaponbox_spawn(player pl)
 void
 CSEv_TFCBuild_i(int type)
 {
+	player pl = (player)self;
+
+	if (pl.gflags & GF_NOBUILDZONE) {
+		env_message_single(pl, "#Build_nobuild");
+		return;
+	}
+
 	switch (type) {
 	case 1:
 		TFCDispenser_Build();

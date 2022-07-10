@@ -3,7 +3,7 @@ defs.h
 items.h
 weapons.h
 
-../../../valve/src/shared/flags.h
+flags.h
 events.h
 player.qc
 ../../../base/src/shared/weapon_common.h

@@ -14,27 +14,43 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-void
-Vox_Sentence_Broadcast(string msg)
+/*QUAKED func_nogrenades (0 .5 .8) ?
+
+TEAM FORTRESS (1996) ENTITY
+
+Brush volume that when entered, will not allow you to deploy any grenades.
+
+-------- KEYS --------
+"targetname"    Name
+*/
+
+class
+func_nogrenades:NSBrushTrigger
 {
-	if (!msg || msg == "")
+	void(void) func_nogrenades;
+
+	virtual void(void) Respawn;
+	virtual void(entity) Touch;
+};
+
+void
+func_nogrenades::Touch(entity eToucher)
+{
+	player pl = (player)eToucher;
+	if (!(eToucher.flags & FL_CLIENT))
 		return;
 
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_TFC_VOXMSG);
-	WriteString(MSG_MULTICAST, msg);
-	multicast([0,0,0], MULTICAST_ALL_R);
+	pl.gflags |= GF_NOGRENADEZONE;
 }
 
 void
-Vox_Sentence_Single(entity targ, string msg)
+func_nogrenades::Respawn(void)
 {
-	if (!msg || msg == "")
-		return;
+	InitBrushTrigger();
+}
 
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_TFC_VOXMSG);
-	WriteString(MSG_MULTICAST, msg);
-	msg_entity = targ;
-	multicast([0,0,0], MULTICAST_ONE_R);
+void
+func_nogrenades::func_nogrenades(void)
+{
+
 }
