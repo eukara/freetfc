@@ -18,6 +18,8 @@ class TFCGameRules:CGameRules
 {
 	void(void) TFCGameRules;
 
+	virtual bool(void) IsTeamPlay;
+
 	virtual void(NSClientPlayer) PlayerConnect;
 	virtual void(NSClientPlayer) PlayerDisconnect;
 	virtual void(NSClientPlayer) PlayerPostFrame;

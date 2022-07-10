@@ -16,6 +16,12 @@
 
 var int autocvar_sv_playerkeepalive = TRUE;
 
+bool
+TFCGameRules::IsTeamPlay(void)
+{
+	return TRUE;
+}
+
 /* we check what fields have changed over the course of the frame and network
  * only the ones that have actually changed */
 void
