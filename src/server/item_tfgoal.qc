@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2020 Marco Cawthorne <marco@icculus.org>
+ * Copyright (c) 2016-2022 Marco Cawthorne <marco@icculus.org>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -13,6 +13,40 @@
  * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+
+/*QUAKED item_tfgoal (0 0 0.8) (-16 -16 -36) (16 16 36)
+
+TEAM FORTRESS (1996) ENTITY
+
+A gameplay pickup. It generally gets picked up and held.
+
+-------- KEYS --------
+"targetname" : Name
+"noise"      : Sound sample to play when picked up
+"mdl"        : Model the pickup should use
+"goal_no"    : Identifer for this pickup, should be unique per map
+"team_no"    : Which team can use this item (0 means all)
+"owned_by"   : Which team owns this item (aka who can return it)
+"b_b"        : Message to show to all when picked up
+"message"    : Message to show to the activator when picked up
+"b_t"        : Message to show to activator's team when picked up
+"b_n"        : Message to show to non-activator's team when picked up
+"b_o"        : Message to show to owner team when picked up
+"non_owners_team_broadcast" : Message to show to everyone else?
+
+"speak"                : VOX announcement to everyone when picked up
+"AP_speak"             : VOX announcement to activator when picked up
+"team_speak"           : VOX announcement to activator's team when picked up
+"non_team_speak"       : VOX announcement to non-activator's team when picked up
+"owners_team_speak"    : VOX announcement to owner team when picked up
+"non_owners_team_speak": VOX announcement to everyone else
+
+Duplicate keys:
+"team_broadcast" : Same as b_t
+"netname_non_team_broadcast" : Same as b_n
+"owners_team_broadcast" : Same as b_o
+
+*/
 
 class item_tfgoal:NSRenderableEntity
 {
