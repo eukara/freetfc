@@ -14,7 +14,7 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-/*QUAKED item_armor1 (0 0 0.8) (-16 -16 -36) (16 16 36)
+/*QUAKED item_armor1 (0 0 0.8) (-16 -16 0) (16 16 56)
 
 TEAM FORTRESS/QUAKE (1996) ENTITY
 
@@ -28,7 +28,7 @@ It has a 100 points.
 "respawn_delay" : Time it takes to respawn after having been picked up
 */
 
-/*QUAKED item_armor2 (0 0 0.8) (-16 -16 -36) (16 16 36)
+/*QUAKED item_armor2 (0 0 0.8) (-16 -16 0) (16 16 56)
 
 TEAM FORTRESS/QUAKE (1996) ENTITY
 
@@ -42,7 +42,7 @@ It has a 150 points.
 "respawn_delay" : Time it takes to respawn after having been picked up
 */
 
-/*QUAKED item_armor3 (0 0 0.8) (-16 -16 -36) (16 16 36)
+/*QUAKED item_armor3 (0 0 0.8) (-16 -16 0) (16 16 56)
 
 TEAM FORTRESS/QUAKE (1996) ENTITY
 
@@ -147,7 +147,23 @@ item_armor::SpawnKey(string strKey, string strValue)
 void
 item_armor::Respawn(void)
 {
-	SetModel("models/g_armor.mdl");
+	/* get the total points the armor can give */
+	switch (classname) {
+	case "item_armor1":
+		SetModel("models/g_armor.mdl");
+		break;
+	case "item_armor2":
+		SetModel("models/y_armor.mdl");
+		break;
+	case "item_armor3":
+		SetModel("models/r_armor.mdl");
+		break;
+	default:
+		print("^1item_armor: unknown armor type\n");
+		Destroy();
+		return;
+	}
+
 	SetSize([-16,-16,0], [16,16,56]);
 	SetSolid(SOLID_TRIGGER);
 	SetOrigin(GetSpawnOrigin());
@@ -158,12 +174,12 @@ void
 item_armor::item_armor(void)
 {
 	Sound_Precache("item_armor_tfc.pickup");
-	precache_model("models/g_armor.mdl");
 }
 
 void
 item_armor1(void)
 {
+	precache_model("models/g_armor.mdl");
 	spawnfunc_item_armor();
 	self.classname = "item_armor1";
 	self.skin = 0;
@@ -172,6 +188,7 @@ item_armor1(void)
 void
 item_armor2(void)
 {
+	precache_model("models/y_armor.mdl");
 	spawnfunc_item_armor();
 	self.classname = "item_armor2";
 	self.skin = 1;
@@ -180,6 +197,7 @@ item_armor2(void)
 void
 item_armor3(void)
 {
+	precache_model("models/r_armor.mdl");
 	spawnfunc_item_armor();
 	self.classname = "item_armor3";
 	self.skin = 2;
