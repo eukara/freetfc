@@ -164,11 +164,27 @@ TFCDispenser::Touch(entity eToucher)
 
 	player pl = (player)eToucher;
 
-	pl.m_iAmmoRockets += GrabRockets();
-	pl.m_iAmmoNails += GrabNails();
-	pl.m_iAmmoCells += GrabCells();
-	pl.m_iAmmoShells += GrabShells();
-	pl.armor += GrabArmor();
+	int r, n, c, s, a;
+	int sum = 0;
+
+	r = GrabRockets();
+	n = GrabNails();
+	c = GrabCells();
+	s = GrabShells();
+	a = GrabArmor();
+
+	sum = r + n + c + s + a;
+
+	/* check */
+	if (sum <= 0)
+		return;
+
+	sound(this, CHAN_ITEM, "weapons/scock1.wav", 1.0, ATTN_NORM);
+	pl.m_iAmmoRockets += r;
+	pl.m_iAmmoNails += n;
+	pl.m_iAmmoCells += c;
+	pl.m_iAmmoShells += s;
+	pl.armor += a;
 
 	/* clamp */
 	if (pl.m_iAmmoRockets > pl.m_iMaxRockets)
