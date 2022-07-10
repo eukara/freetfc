@@ -44,7 +44,17 @@ TFCDispenser:NSSurfacePropEntity
 	virtual int(void) GrabRockets;
 	virtual int(void) GrabCells;
 	virtual int(void) GrabArmor;
+
+	virtual void(void) Death;
 };
+
+void
+TFCDispenser::Death(void)
+{
+	env_message_single(real_owner, "#Dispenser_destroyed");
+	FX_Explosion(origin);
+	Destroy();
+}
 
 int
 TFCDispenser::GrabShells(void)
@@ -245,6 +255,8 @@ TFCDispenser::TFCDispenser(void)
 	SetSolid(SOLID_BBOX);
 	SetMovetype(MOVETYPE_NONE);
 	SetSize([-16,-16,0], [16,16,48]);
+	SetHealth(150);
+	SetTakedamage(DAMAGE_YES);
 }
 
 void

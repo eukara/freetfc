@@ -34,6 +34,7 @@ vox.qc
 info_player_teamspawn.qc
 item_tfgoal.qc
 info_tfgoal.qc
+info_areadef.qc
 
 gamerules.qc
 client.qc
