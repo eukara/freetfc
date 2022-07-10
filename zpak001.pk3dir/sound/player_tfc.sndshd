@@ -6,3 +6,8 @@ player_tfc.death
 	sample player/death4.wav
 	sample player/death5.wav
 } 
+
+player_tfc.jump
+{
+	sample player/plyrjmp8.wav
+} 

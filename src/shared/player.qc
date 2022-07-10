@@ -70,6 +70,8 @@ class player:NSClientPlayer
 	/* ammo 3 */
 	PREDICTED_INT(mode_tempstate);
 
+	virtual void(void) Physics_Jump;
+
 #ifdef CLIENT
 	virtual void(void) draw;
 	virtual float() predraw;

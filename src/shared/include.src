@@ -9,7 +9,7 @@ player.qc
 ../../../base/src/shared/weapon_common.h
 ../../../valve/src/shared/animations.h
 ../../../valve/src/shared/animations.qc
-../../../valve/src/shared/pmove.qc
+pmove.qc
 ../../../valve/src/shared/pmove_water.qc
 
 ../../../valve/src/shared/fx_blood.qc
