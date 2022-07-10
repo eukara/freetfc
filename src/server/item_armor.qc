@@ -18,7 +18,8 @@
 
 TEAM FORTRESS/QUAKE (1996) ENTITY
 
-Armor pickup, which will also replenish metal
+Armor pickup, which will also replenish metal.
+It has a 100 points.
 
 -------- KEYS --------
 "targetname"    : Name
@@ -32,6 +33,7 @@ Armor pickup, which will also replenish metal
 TEAM FORTRESS/QUAKE (1996) ENTITY
 
 Armor pickup, which will also replenish metal
+It has a 150 points.
 
 -------- KEYS --------
 "targetname"    : Name
@@ -45,6 +47,7 @@ Armor pickup, which will also replenish metal
 TEAM FORTRESS/QUAKE (1996) ENTITY
 
 Armor pickup, which will also replenish metal
+It has a 200 points.
 
 -------- KEYS --------
 "targetname"    : Name
@@ -145,9 +148,10 @@ void
 item_armor::Respawn(void)
 {
 	SetModel("models/g_armor.mdl");
-	SetSize(VEC_HULL_MIN, VEC_HULL_MAX);
+	SetSize([-16,-16,0], [16,16,56]);
 	SetSolid(SOLID_TRIGGER);
 	SetOrigin(GetSpawnOrigin());
+	DropToFloor();
 }
 
 void
@@ -162,6 +166,7 @@ item_armor1(void)
 {
 	spawnfunc_item_armor();
 	self.classname = "item_armor1";
+	self.skin = 0;
 }
 
 void
@@ -169,6 +174,7 @@ item_armor2(void)
 {
 	spawnfunc_item_armor();
 	self.classname = "item_armor2";
+	self.skin = 1;
 }
 
 void
@@ -176,4 +182,5 @@ item_armor3(void)
 {
 	spawnfunc_item_armor();
 	self.classname = "item_armor3";
+	self.skin = 2;
 }
