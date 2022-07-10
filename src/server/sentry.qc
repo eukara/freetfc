@@ -25,7 +25,17 @@ TFCSentry:NSSurfacePropEntity
 
 	virtual void(player) Place;
 	virtual void(void) FinishPlacing;
+	virtual void(void) Think;
 };
+
+void
+TFCSentry::Think(void)
+{
+	float twist = sin(time);
+	m_eHead.SetBoneControl1(twist);
+	m_eHead.SetBoneControl2(0.5f);
+	nextthink = time + 0.1f;
+}
 
 void
 TFCSentry::Place(player pl)
@@ -56,6 +66,8 @@ TFCSentry::FinishPlacing(void)
 	m_eHead.SetSize([-16,-16,0], [16,16,32]);
 	m_eHead.SetOrigin(GetOrigin() + [0,0,20]);
 	m_eHead.colormap = colormap;
+	think = Think;
+	nextthink = time + 0.1f;
 
 	env_message_single(real_owner, "#Sentry_finish");
 	Sound_Play(this, CHAN_BODY, "engineer.turret_set");
