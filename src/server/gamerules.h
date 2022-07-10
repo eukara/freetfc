@@ -28,5 +28,7 @@ class TFCGameRules:CGameRules
 	virtual void(NSClientPlayer) PlayerRespawn;
 	virtual void(NSClientPlayer) PlayerDeath;
 
+	virtual void(NSClientPlayer) DropGoalItem;
+
 	virtual void(void) LevelNewParms;
 };

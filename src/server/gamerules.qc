@@ -22,6 +22,35 @@ TFCGameRules::IsTeamPlay(void)
 	return TRUE;
 }
 
+void
+TFCGameRules::DropGoalItem(NSClientPlayer pp)
+{
+	/* skip normal players */
+	if (!(pp.g_items & ITEM_GOALITEM))
+		return;
+
+	
+	item_tfgoal target;
+
+	for (entity e = world; (e = find(e, ::classname, "item_tfgoal"));) {
+		target = (item_tfgoal)e;
+
+		/* item is still pick-upable */
+		if (target.solid != SOLID_NOT) {
+			print("the item is not picked up. \n");
+			continue;
+		}
+
+		/* that's us, yup */
+		if (target.m_eActivator == pp) {
+			target.DropReturnable(pp);
+			return;
+		}
+	}
+
+	print("^1WARNING: ^7Player marked as having impossible goal-item\n");
+}
+
 /* we check what fields have changed over the course of the frame and network
  * only the ones that have actually changed */
 void
@@ -66,6 +95,7 @@ TFCGameRules::PlayerDeath(NSClientPlayer pp)
 {
 	player pl = (player)pp;
 
+	DropGoalItem(pp);
 	pl.SetSolid(SOLID_NOT);
 	pl.SetMovetype(MOVETYPE_NONE);
 	pl.think = PlayerRespawn;
