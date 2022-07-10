@@ -85,6 +85,17 @@ CSEv_TFC_BuildSentry_(void)
 		return;
 	}
 
+	/* can't build in the air */
+	if (!(pl.flags & FL_ONGROUND)) {
+		env_message_single(pl, "#Build_air");
+		return;
+	}
+
+	if (TFC_ExistsForPlayer(pl, "TFCSentry")) {
+		env_message_single(pl, "#Build_onesentry");
+		return;
+	}
+
 	pl.m_iAmmoCells -= TFC_SENTRY_COST;
 
 	/* deploy */

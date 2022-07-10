@@ -17,3 +17,19 @@
 #include "gamerules.h"
 #include "../../../valve/src/server/items.h"
 #include "../../../valve/src/server/flashlight.h"
+
+/* returns if a player already has a teleporter/exit built */
+bool
+TFC_ExistsForPlayer(entity pl, string cname)
+{
+	/* loop through all exits */
+	for (entity e = world; (e = find(e, ::classname, cname));) {
+		/* if it's not places by our owner... */
+		if (e.real_owner != pl)
+			continue;
+
+		return true;
+	}
+
+	return false;
+}

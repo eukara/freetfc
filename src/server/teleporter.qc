@@ -141,6 +141,17 @@ CSEv_TFC_BuildTele_(void)
 		return;
 	}
 
+	/* can't build in the air */
+	if (!(pl.flags & FL_ONGROUND)) {
+		env_message_single(pl, "#Build_air");
+		return;
+	}
+
+	if (TFC_ExistsForPlayer(pl, "TFCTeleport")) {
+		env_message_single(pl, "You can only have one teleporter.");
+		return;
+	}
+
 	pl.m_iAmmoCells -= TFC_TELEPORTER_COST;
 
 	/* deploy */
@@ -161,6 +172,17 @@ CSEv_TFC_BuildTeleExit_(void)
 	/* it costs */
 	if (pl.m_iAmmoCells < TFC_TELEPORTER_COST) {
 		env_message_single(pl, "#Build_nometal");
+		return;
+	}
+
+	/* can't build in the air */
+	if (!(pl.flags & FL_ONGROUND)) {
+		env_message_single(pl, "#Build_air");
+		return;
+	}
+
+	if (TFC_ExistsForPlayer(pl, "TFCTeleportExit")) {
+		env_message_single(pl, "You can only have one teleporter exit.");
 		return;
 	}
 

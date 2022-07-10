@@ -75,6 +75,17 @@ CSEv_TFC_BuildDispenser_(void)
 		return;
 	}
 
+	/* can't build in the air */
+	if (!(pl.flags & FL_ONGROUND)) {
+		env_message_single(pl, "#Build_air");
+		return;
+	}
+
+	if (TFC_ExistsForPlayer(pl, "TFCDispenser")) {
+		env_message_single(pl, "#Build_onedispenser");
+		return;
+	}
+
 	pl.m_iAmmoCells -= TFC_DISPENSER_COST;
 
 	/* deploy */
