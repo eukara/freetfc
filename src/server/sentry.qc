@@ -55,6 +55,7 @@ TFCSentry::FinishPlacing(void)
 	m_eHead.SetMovetype(MOVETYPE_NONE);
 	m_eHead.SetSize([-16,-16,0], [16,16,32]);
 	m_eHead.SetOrigin(GetOrigin() + [0,0,20]);
+	m_eHead.colormap = colormap;
 
 	env_message_single(real_owner, "#Sentry_finish");
 	Sound_Play(this, CHAN_BODY, "engineer.turret_set");
