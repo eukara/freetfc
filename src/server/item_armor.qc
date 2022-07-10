@@ -182,7 +182,6 @@ item_armor1(void)
 	precache_model("models/g_armor.mdl");
 	spawnfunc_item_armor();
 	self.classname = "item_armor1";
-	self.skin = 0;
 }
 
 void
@@ -191,7 +190,6 @@ item_armor2(void)
 	precache_model("models/y_armor.mdl");
 	spawnfunc_item_armor();
 	self.classname = "item_armor2";
-	self.skin = 1;
 }
 
 void
@@ -200,5 +198,4 @@ item_armor3(void)
 	precache_model("models/r_armor.mdl");
 	spawnfunc_item_armor();
 	self.classname = "item_armor3";
-	self.skin = 2;
 }
