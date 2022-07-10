@@ -26,7 +26,7 @@ init.qc
 ../../../valve/src/client/flashlight.qc
 ../../../valve/src/client/player.qc
 entities.qc
-../../../valve/src/client/cmds.qc
+cmds.qc
 game_event.qc
 ../../../valve/src/client/camera.qc
 ../../../valve/src/client/viewmodel.qc

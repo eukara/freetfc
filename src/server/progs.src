@@ -22,6 +22,10 @@ defs.h
 ../../../valve/src/server/player.qc
 ../../../valve/src/server/spectator.qc
 
+dispenser.qc
+sentry.qc
+teleporter.qc
+
 vox.qc
 ../../../valve/src/server/items.qc
 info_player_teamspawn.qc

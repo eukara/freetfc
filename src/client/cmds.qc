@@ -14,31 +14,30 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-void
-Game_InitRules(void)
+int
+ClientGame_ConsoleCommand(void)
 {
-	g_grMode = spawn(TFCGameRules);
-}
-
-void
-Game_Worldspawn(void)
-{
-	Sound_Precache("ammo.pickup");
-	Sound_Precache("ammo.respawn");
-	Sound_Precache("player.fall");
-	Sound_Precache("player.lightfall");
-	Sound_Precache("player_tfc.death");
-	Sound_Precache("player_tfc.jump");
-	Sound_Precache("engineer.build");
-	Sound_Precache("engineer.turret_set");
-
-	precache_model("models/player.mdl");
-	precache_model("models/w_weaponbox.mdl");
-	Weapons_Init();
-	Player_Precache();
-	FX_Corpse_Init();
-}
-
-void weaponbox_spawn(player pl)
-{
+	switch(argv(0)) {
+	case "build":
+		int type = stoi(argv(1));
+		
+		switch (type) {
+		case 1:
+			sendevent("TFC_BuildDispenser", "");
+			break;
+		case 2:
+			sendevent("TFC_BuildSentry", "");
+			break;
+		case 4:
+			sendevent("TFC_BuildTele", "");
+			break;
+		case 5:
+			sendevent("TFC_BuildTeleExit", "");
+			break;
+		}
+		break;
+	default:
+		return (0);
+	}
+	return (1);
 }

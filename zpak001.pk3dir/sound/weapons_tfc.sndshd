@@ -17,3 +17,13 @@ weapon_sbs.reload
 {
 	sample weapons/reload3.wav
 }
+
+engineer.build
+{
+	sample weapons/building.wav
+}
+
+engineer.turret_set
+{
+	sample weapons/turrset.wav
+}
