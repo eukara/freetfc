@@ -107,6 +107,7 @@ item_tfgoal::DropReturnable(NSClientPlayer pp)
 	/* make it available again, put it exactly where we died */
 	Respawn();
 	SetOrigin(pl.origin);
+	m_status = GISTATUS_DROPPED;
 
 	/* untag it from the player */
 	pl.g_items &= ~ITEM_GOALITEM;
@@ -215,6 +216,24 @@ item_tfgoal::Respawn(void)
 	m_eActivator = __NULL__;
 	think = __NULL__;
 	nextthink = 0.0f;
+	m_status = GISTATUS_HOME;
+	SetRenderFX(RFX_GLOWSHELL);
+
+	/* spawn into the world */
+	switch (m_iTeamOwner) {
+	case 1:
+		SetRenderColor([0,0,1]);
+		break;
+	case 2:
+		SetRenderColor([1,0,0]);
+		break;
+	case 3:
+		SetRenderColor([1,1,0]);
+		break;
+	case 4:
+		SetRenderColor([0,1,0]);
+		break;
+	}
 }
 
 void
