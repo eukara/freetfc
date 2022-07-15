@@ -11,6 +11,7 @@
 ../../../src/shared/defs.h
 ../../../valve/src/client/defs.h
 ../../../src/client/defs.h
+defs.h
 
 ../../../src/vgui/include.src
 

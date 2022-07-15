@@ -49,21 +49,15 @@ ClientGame_RendererRestart(string rstr)
 	FX_Spark_Init();
 	FX_Impact_Init();
 
-	precache_model("sprites/640hud1.spr");
-	precache_model("sprites/640hud2.spr");
-	precache_model("sprites/640hud3.spr");
-	precache_model("sprites/640hud4.spr");
-	precache_model("sprites/640hud5.spr");
-	precache_model("sprites/640hud6.spr");
-
-	precache_model("sprites/tfc_dmsg.spr");
-	precache_model("sprites/tfchud01.spr");
-	precache_model("sprites/tfchud02.spr");
-	precache_model("sprites/tfchud03.spr");
-	precache_model("sprites/tfchud04.spr");
-	precache_model("sprites/tfchud05.spr");
-	precache_model("sprites/tfchud06.spr");
-	precache_model("sprites/tfchud07.spr");
+	/* HUD selection icons */
+	g_dmsg_spr = spriteframe("sprites/tfc_dmsg.spr", 0, 0.0f);
+	g_tfchud1_spr = spriteframe("sprites/tfchud01.spr", 0, 0.0f);
+	g_tfchud2_spr = spriteframe("sprites/tfchud02.spr", 0, 0.0f);
+	g_tfchud3_spr = spriteframe("sprites/tfchud03.spr", 0, 0.0f);
+	g_tfchud4_spr = spriteframe("sprites/tfchud04.spr", 0, 0.0f);
+	g_tfchud5_spr = spriteframe("sprites/tfchud05.spr", 0, 0.0f);
+	g_tfchud6_spr = spriteframe("sprites/tfchud06.spr", 0, 0.0f);
+	g_tfchud7_spr = spriteframe("sprites/tfchud07.spr", 0, 0.0f);
 
 	/* there's also muzzleflash.spr, but that's just MUZZLE_SMALL again */
 	MUZZLE_RIFLE = (int)getmodelindex("sprites/muzzleflash1.spr");

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2016-2020 Marco Cawthorne <marco@icculus.org>
+ * Copyright (c) 2022 Gethyn ThomasQuail <xylemon@posteo.net>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -40,9 +41,7 @@ w_wrench_precache(void)
 void
 w_wrench_updateammo(player pl)
 {
-#ifdef SERVER
-	Weapons_UpdateAmmo(pl, __NULL__, __NULL__, __NULL__);
-#endif
+	Weapons_UpdateAmmo(pl, __NULL__, pl.m_iAmmoCells, __NULL__);
 }
 
 string
@@ -127,26 +126,21 @@ w_wrench_primary(player pl)
 		FX_Impact(IMPACT_MELEE, trace_endpos, trace_plane_normal);
 	}
 
+	/* don't bother with decals, we got squibs */
+	if (trace_ent.iBleeds) {
+		FX_Blood(trace_endpos, [1,0,0]);
+	} else {
+		FX_Impact(IMPACT_MELEE, trace_endpos, trace_plane_normal);
+	}
+
+	/* Damage is between 12 - 20, so let's just do 15 for now */
 	if (trace_ent.takedamage) {
-		Damage_Apply(trace_ent, self, 10, WEAPON_WRENCH, DMG_BLUNT);
-
-		if (!trace_ent.iBleeds) {
-			return;
-		}
-
-		if (random() < 0.33) {
-			sound(pl, 8, "weapons/cbar_hitbod1.wav", 1, ATTN_NORM);
-		} else if (random() < 0.66) {
-			sound(pl, 8, "weapons/cbar_hitbod2.wav", 1, ATTN_NORM);
-		} else {
-			sound(pl, 8, "weapons/cbar_hitbod3.wav", 1, ATTN_NORM);
+		Damage_Apply(trace_ent, pl, Skill_GetValue("plr_crowbar", 15), WEAPON_WRENCH, DMG_BLUNT);
+		if (trace_ent.iBleeds) {
+			Sound_Play(self, CHAN_WEAPON, "weapon_crowbar.hitbody");
 		}
 	} else {
-		if (random() < 0.5) {
-			sound(pl, 8, "weapons/cbar_hit1.wav", 1, ATTN_NORM);
-		} else {
-			sound(pl, 8, "weapons/cbar_hit2.wav", 1, ATTN_NORM);
-		}
+		Sound_Play(self, CHAN_WEAPON, "weapon_crowbar.hit");
 	}
 #endif
 }
@@ -163,13 +157,36 @@ w_wrench_release(player pl)
 	pl.w_idle_next = 15.0f;
 }
 
+void
+w_wrench_crosshair(player pl)
+{
+#ifdef CLIENT
+	vector aicon_pos;
+
+	aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];
+
+	drawsubpic(
+		aicon_pos,
+		[24,24],
+		g_hud7_spr,
+		[0,96/128],
+		[24/256,24/128],
+		g_hud_color,
+		pSeatLocal->m_flAmmo2Alpha,
+		DRAWFLAG_ADDITIVE
+	);
+
+	HUD_DrawAmmo2();
+#endif
+}
+
 float
 w_wrench_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
 }
 
-void
+void 
 w_wrench_hudpic(player pl, int selected, vector pos, float a)
 {
 #ifdef CLIENT
@@ -177,7 +194,7 @@ w_wrench_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud04.spr_0.tga",
+			g_tfchud4_spr,
 			[0,180/256],
 			[170/256,45/256],
 			g_hud_color,
@@ -188,7 +205,7 @@ w_wrench_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud03.spr_0.tga",
+			g_tfchud3_spr,
 			[0,135/256],
 			[170/256,45/256],
 			g_hud_color,
@@ -196,6 +213,8 @@ w_wrench_hudpic(player pl, int selected, vector pos, float a)
 			DRAWFLAG_ADDITIVE
 		);
 	}
+
+	HUD_DrawAmmoBar(pos, pl.m_iAmmoCells, MAX_A_CELLS, a);
 #endif
 }
 
@@ -211,7 +230,7 @@ weapon_t w_wrench =
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= w_wrench_release,
-	.postdraw	= __NULL__,
+	.postdraw	= w_wrench_crosshair,
 	.precache	= w_wrench_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_wrench_updateammo,
