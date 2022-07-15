@@ -119,29 +119,37 @@ w_wrench_primary(player pl)
 		return;
 	}
 
-	/* don't bother with decals, we got squibs */
-	if (trace_ent.iBleeds) {
-		FX_Blood(trace_endpos, [1,0,0]);
+	if (trace_ent.classname == "TFCSentry") {
+		TFCSentry sentry = (TFCSentry)trace_ent;
+		/* todo 
+	} else if (trace_ent.classname == "TFCDispenser") {
+		TFCDispenser dispenser = (TFCDispenser)trace_ent;
+		todo
+	} else if (trace_ent.classname == "TFCTeleporter") {
+		TFCTeleporter teleporter = (TFCTeleporter)trace_ent;
+		todo
+	} else if (trace_ent.classname == "TFCTeleporterExit") {
+		TFCTeleporterExit teleporterexit = (TFCTeleporterExit)trace_ent;
+		todo */
 	} else {
-		FX_Impact(IMPACT_MELEE, trace_endpos, trace_plane_normal);
-	}
-
-	/* don't bother with decals, we got squibs */
-	if (trace_ent.iBleeds) {
-		FX_Blood(trace_endpos, [1,0,0]);
-	} else {
-		FX_Impact(IMPACT_MELEE, trace_endpos, trace_plane_normal);
-	}
-
-	/* Damage is between 12 - 20, so let's just do 15 for now */
-	if (trace_ent.takedamage) {
-		Damage_Apply(trace_ent, pl, Skill_GetValue("plr_crowbar", 15), WEAPON_WRENCH, DMG_BLUNT);
+		/* don't bother with decals, we got squibs */
 		if (trace_ent.iBleeds) {
-			Sound_Play(self, CHAN_WEAPON, "weapon_crowbar.hitbody");
+			FX_Blood(trace_endpos, [1,0,0]);
+		} else {
+			FX_Impact(IMPACT_MELEE, trace_endpos, trace_plane_normal);
 		}
-	} else {
-		Sound_Play(self, CHAN_WEAPON, "weapon_crowbar.hit");
+
+		/* Damage without armor is between 12 - 20, so let's just do 15 for now */
+		if (trace_ent.takedamage) {
+			Damage_Apply(trace_ent, pl, Skill_GetValue("plr_wrench", 15), WEAPON_WRENCH, DMG_BLUNT);
+			if (trace_ent.iBleeds) {
+				Sound_Play(self, CHAN_WEAPON, "weapon_crowbar.hitbody");
+			}
+		} else {
+			Sound_Play(self, CHAN_WEAPON, "weapon_crowbar.hit");
+		}
 	}
+
 #endif
 }
 
