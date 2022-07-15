@@ -22,7 +22,7 @@ defs.h
 vox.qc
 
 ../../../valve/src/client/damage.qc
-../../../base/src/client/draw.qc
+draw.qc
 init.qc
 ../../../valve/src/client/flashlight.qc
 ../../../valve/src/client/player.qc

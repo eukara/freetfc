@@ -17,6 +17,7 @@
 #include "gamerules.h"
 #include "../../../valve/src/server/items.h"
 #include "../../../valve/src/server/flashlight.h"
+#include "sentry.h"
 
 /* returns if a player already has a teleporter/exit built */
 bool

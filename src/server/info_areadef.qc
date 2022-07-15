@@ -38,7 +38,17 @@ info_areadef:NSPointTrigger
 
 	virtual void(void) Respawn;
 	virtual void(string,string) SpawnKey;
+	virtual void(entity) Touch;
 };
+
+void
+info_areadef::Touch(entity eToucher)
+{
+	if (!(eToucher.flags & FL_CLIENT))
+		return;
+
+	forceinfokey(eToucher, "*areadef", strtoupper(m_strDescription));
+}
 
 void
 info_areadef::SpawnKey(string strKey, string strValue)
@@ -71,5 +81,5 @@ info_areadef::Respawn(void)
 void
 info_areadef::info_areadef(void)
 {
-
+	forceinfokey(world, "areadefs", "1");
 }

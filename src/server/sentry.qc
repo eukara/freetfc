@@ -14,31 +14,62 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#define TFC_SENTRY_COST 130
-
-class
-TFCSentry:NSSurfacePropEntity
-{
-	NSSurfacePropEntity m_eHead;
-
-	void(void) TFCSentry;
-
-	virtual void(player) Place;
-	virtual void(void) FinishPlacing;
-	virtual void(void) Think;
-};
-
 void
 TFCSentry::Think(void)
 {
-	float twist = sin(time);
-	m_eHead.SetBoneControl1(twist);
-	m_eHead.SetBoneControl2(0.5f);
 	nextthink = time + 0.1f;
+
+	/* searching */
+	entity t = world;
+	{
+		for (entity p = world; (p = find(p, ::classname, "player"));) {
+			/* out of range */
+			if (vlen(origin - p.origin) > 1024)
+				continue;
+
+			/* find them */
+			traceline(origin, p.origin, MOVE_NORMAL, this);
+			if (trace_ent == p) {
+				t = p;
+				break;
+			}
+		}
+	}
+
+	if (m_state == SENTRY_SEARCHING) {
+		float twist = sin(time);
+		m_eHead.SetBoneControl1(twist);
+		m_eHead.SetBoneControl2(0.5f);
+
+		if (m_flNextIdleSound < time) {
+			sound(this, CHAN_VOICE, "weapons/turridle.wav", 1.0f, ATTN_NORM);
+			m_flNextIdleSound = time + 10.0f;
+		}
+
+		if (t)
+			m_state = SENTRY_ALERTED;
+	} else if (m_state == SENTRY_ALERTED) {
+		sound(this, CHAN_VOICE, "weapons/turrspot.wav", 1.0f, ATTN_NORM);
+		m_state = SENTRY_SHOOTING;
+	} else if (m_state == SENTRY_SHOOTING) {
+		// shoot things
+		if (!t)
+			m_state = SENTRY_SEARCHING;
+		else {
+			makevectors([0, angles[1], 0]);
+			m_flWantAngle = dotproduct(normalize(origin - t.origin), v_right);
+			m_flCurrAngle = Math_Lerp(m_flCurrAngle, m_flWantAngle, 0.25f);
+			m_eHead.SetBoneControl1(m_flCurrAngle);
+
+			/* fire bullets */
+			v_angle = vectoangles(normalize(origin - t.origin));
+			TraceAttack_FireBullets(1, origin, 5, [0.025,0.025], WEAPON_NONE);
+		}
+	}
 }
 
 void
-TFCSentry::Place(player pl)
+TFCSentry::Place(NSClientPlayer pl)
 {
 	SetAngles(pl.GetAngles());
 
@@ -68,6 +99,8 @@ TFCSentry::FinishPlacing(void)
 	m_eHead.colormap = colormap;
 	think = Think;
 	nextthink = time + 0.1f;
+	m_state = SENTRY_SEARCHING;
+	m_flNextIdleSound = time + 5.0f;
 
 	env_message_single(real_owner, "#Sentry_finish");
 	Sound_Play(this, CHAN_BODY, "engineer.turret_set");
@@ -81,6 +114,12 @@ TFCSentry::TFCSentry(void)
 	SetSolid(SOLID_BBOX);
 	SetMovetype(MOVETYPE_NONE);
 	SetSize([-16,-16,0], [16,16,20]);
+
+	SetTakedamage(DAMAGE_YES);
+	SetHealth(100);
+	m_eHead.SetTakedamage(DAMAGE_YES);
+	m_eHead.SetHealth(100);
+	m_state = SENTRY_IDLE;
 }
 
 void
