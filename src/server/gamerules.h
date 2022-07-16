@@ -18,7 +18,7 @@ class TFCGameRules:CGameRules
 {
 	void(void) TFCGameRules;
 
-	virtual bool(void) IsTeamPlay;
+	virtual bool(void) IsTeamplay;
 
 	virtual void(NSClientPlayer) PlayerConnect;
 	virtual void(NSClientPlayer) PlayerDisconnect;
