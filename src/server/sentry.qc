@@ -42,14 +42,14 @@ TFCSentry::Think(void)
 		m_eHead.SetBoneControl2(0.5f);
 
 		if (m_flNextIdleSound < time) {
-			sound(this, CHAN_VOICE, "weapons/turridle.wav", 1.0f, ATTN_NORM);
+			Sound_Play(this, CHAN_VOICE, "turret_tfc.idle_noise");
 			m_flNextIdleSound = time + 10.0f;
 		}
 
 		if (t)
 			m_state = SENTRY_ALERTED;
 	} else if (m_state == SENTRY_ALERTED) {
-		sound(this, CHAN_VOICE, "weapons/turrspot.wav", 1.0f, ATTN_NORM);
+		Sound_Play(this, CHAN_VOICE, "turret_tfc.target_spotted");
 		m_state = SENTRY_SHOOTING;
 	} else if (m_state == SENTRY_SHOOTING) {
 		// shoot things

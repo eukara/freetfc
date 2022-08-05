@@ -24,6 +24,8 @@ void
 Game_Worldspawn(void)
 {
 	forceinfokey(world, "areadefs", "0");
+	Sound_Precache("turret_tfc.idle_noise");
+	Sound_Precache("turret_tfc.target_spotted");
 	Sound_Precache("ammo.pickup");
 	Sound_Precache("ammo.respawn");
 	Sound_Precache("player.fall");

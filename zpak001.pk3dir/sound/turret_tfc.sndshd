@@ -1,0 +1,9 @@
+turret_tfc.idle_noise
+{
+    sample "weapons/turridle.wav"
+}
+
+turret_tfc.target_spotted
+{
+    sample "weapons/turrspot.wav"
+}

@@ -87,7 +87,7 @@ item_armor::Touch(entity eToucher)
 		return;
 
 	int ap;
-	int tp;
+	int tp = 0;
 
 	/* get remaining points */
 	ap = pl.m_iMaxArmor - pl.armor;
