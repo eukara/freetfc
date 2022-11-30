@@ -30,37 +30,34 @@ enumflags
 class player:NSClientPlayer
 {
 	/* class info */
-	PREDICTED_INT(classtype);
+	PREDICTED_INT(classtype)
 
 	/* animation */
-	PREDICTED_INT(anim_top);
-	PREDICTED_FLOAT(anim_top_time);
-	PREDICTED_FLOAT(anim_top_delay);
-	PREDICTED_INT(anim_bottom);
-	PREDICTED_FLOAT(anim_bottom_time);
+	PREDICTED_INT(anim_top)
+	PREDICTED_FLOAT(anim_top_time)
+	PREDICTED_FLOAT(anim_top_delay)
+	PREDICTED_INT(anim_bottom)
+	PREDICTED_FLOAT(anim_bottom_time)
 
 	/* ammo 1 */
-	PREDICTED_INT(mag_sbs);
-	PREDICTED_INT(mag_dbs);
-	PREDICTED_INT(mag_rpg);
+	PREDICTED_INT(mag_sbs)
+	PREDICTED_INT(mag_dbs)
+	PREDICTED_INT(mag_rpg)
 
 	/* ammo 2 */
-	PREDICTED_INT(m_iAmmoRockets);
-	PREDICTED_INT(m_iAmmoNails);
-	PREDICTED_INT(m_iAmmoCells);
-	PREDICTED_INT(m_iAmmoShells);
-	PREDICTED_INT(m_iAmmoDetpack);
-	PREDICTED_INT(m_iAmmoMedikit);
+	PREDICTED_INT(m_iAmmoRockets)
+	PREDICTED_INT(m_iAmmoNails)
+	PREDICTED_INT(m_iAmmoCells)
+	PREDICTED_INT(m_iAmmoShells)
+	PREDICTED_INT(m_iAmmoDetpack)
+	PREDICTED_INT(m_iAmmoMedikit)
 
 	/* ammo 3 */
-	PREDICTED_INT(mode_tempstate);
+	PREDICTED_INT(mode_tempstate)
 
 	virtual void(void) Physics_Jump;
 
 #ifdef CLIENT
-	virtual void(void) draw;
-	virtual float() predraw;
-	virtual void(void) postdraw;
 	virtual void(float,float) ReceiveEntity;
 	virtual void(void) PredictPreFrame;
 	virtual void(void) PredictPostFrame;

@@ -24,7 +24,6 @@ Game_RunClientCommand(void)
 	pl.gflags &= ~GF_NOBUILDZONE;
 	pl.gflags &= ~GF_NOGRENADEZONE;
 
-	Footsteps_Update();
 	pl.Physics_Run();
 }
 
