@@ -75,9 +75,8 @@ TFCTeleporter::Place(player pl)
 	makevectors([0, pl.v_angle[1], 0]);
 	SetOrigin(pl.origin + (v_forward * 48));
 	DropToFloor();
+	ScheduleThink(FinishPlacing, 5.0f);
 
-	think = FinishPlacing;
-	nextthink = time + 5.0f;
 	real_owner = pl;
 	colormap = pl.colormap;
 

@@ -63,9 +63,8 @@ item_healthkit::Touch(entity eToucher)
 	Sound_Play(this, CHAN_ITEM, "item_healthkit_tfc.pickup");
 
 	/* hide and respawn */
-	Hide();
-	think = Respawn;
-	nextthink = time + m_flRespawnDelay;
+	Disappear();
+	ScheduleThink(Respawn, m_flRespawnDelay);
 }
 
 void

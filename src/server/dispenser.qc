@@ -159,8 +159,7 @@ TFCDispenser::Replenish(void)
 	m_iCells += 1;
 	m_iArmor += 1;
 	ClampValues();
-
-	nextthink = time + 1.0f;
+	ScheduleThink(Replenish, 1.0f);
 }
 
 void
@@ -229,8 +228,7 @@ TFCDispenser::Place(player pl)
 	SetOrigin(pl.origin + (v_forward * 48));
 	DropToFloor();
 
-	think = FinishPlacing;
-	nextthink = time + 5.0f;
+	ScheduleThink(FinishPlacing, 5.0f);
 	real_owner = pl;
 	colormap = pl.colormap;
 
@@ -243,9 +241,7 @@ TFCDispenser::FinishPlacing(void)
 {
 	env_message_single(real_owner, "#Dispenser_finish");
 	Sound_Play(this, CHAN_BODY, "engineer.turret_set");
-
-	think = Replenish;
-	nextthink = time + 1.0f;
+	ScheduleThink(Replenish, 1.0f);
 }
 
 void

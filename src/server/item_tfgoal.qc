@@ -113,8 +113,7 @@ item_tfgoal::DropReturnable(NSClientPlayer pp)
 	pl.g_items &= ~ITEM_GOALITEM;
 
 	/* return after N secs */
-	think = TeamOwnerReturns;
-	nextthink = time + m_flPausetime;
+	ScheduleThink(TeamOwnerReturns, m_flPausetime);
 }
 
 void
@@ -153,11 +152,10 @@ item_tfgoal::Touch(entity eToucher)
 		if (m_iTeamUses != pl.team)
 			return;
 
-	Hide();
+	Disappear();
 	pl.g_items |= ITEM_GOALITEM;
 	m_eActivator = pl;
-	think = __NULL__;
-	nextthink = 0.0f;
+	ReleaseThink();
 
 	sound(this, CHAN_ITEM, m_strSound, 1.0f, ATTN_NONE);
 
@@ -214,8 +212,7 @@ item_tfgoal::Respawn(void)
 	SetSolid(SOLID_TRIGGER);
 	SetOrigin(GetSpawnOrigin());
 	m_eActivator = __NULL__;
-	think = __NULL__;
-	nextthink = 0.0f;
+	ReleaseThink();
 	m_status = GISTATUS_HOME;
 	SetRenderFX(RFX_GLOWSHELL);
 

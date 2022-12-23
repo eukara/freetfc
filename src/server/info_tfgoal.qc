@@ -253,11 +253,8 @@ info_tfgoal::Touch(entity eToucher)
 	
 	/* remove? */
 	if (m_tfgResult & TFRESULT_REMOVE) {
-		Hide();
-		if (m_dRespawn) {
-			think = Respawn;
-			nextthink = time + m_dRespawn;
-		}
+		Disappear();
+		ScheduleThink(Respawn, m_dRespawn);
 	}
 }
 
@@ -418,17 +415,10 @@ class i_t_g:info_tfgoal
 void
 i_t_g::Respawn(void)
 {
-	solid = SOLID_BSPTRIGGER;
-	movetype = MOVETYPE_NONE;
+	SetSolid(SOLID_BSPTRIGGER);
+	SetMovetype(MOVETYPE_NONE);
 	SetModel(GetSpawnModel());
 	SetOrigin(GetSpawnOrigin());
-
-	/* TODO: Investigate instead whether or not we use a trigger texture? */
-	/*if (substring(model, 0, 1) == "*") { */
-		SetRenderMode(RM_TRIGGER);
-	/*} else {
-		SetRenderMode(RM_NORMAL);
-	}*/
 }
 
 void

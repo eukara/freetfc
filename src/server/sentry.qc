@@ -17,7 +17,7 @@
 void
 TFCSentry::Think(void)
 {
-	nextthink = time + 0.1f;
+	ScheduleThink(Think 0.1f);
 
 	/* searching */
 	entity t = world;
@@ -77,8 +77,7 @@ TFCSentry::Place(NSClientPlayer pl)
 	SetOrigin(pl.origin + (v_forward * 48));
 	DropToFloor();
 
-	think = FinishPlacing;
-	nextthink = time + 5.0f;
+	ScheduleThink(FinishPlacing, 5.0f);
 	real_owner = pl;
 	colormap = pl.colormap;
 
@@ -97,8 +96,8 @@ TFCSentry::FinishPlacing(void)
 	m_eHead.SetSize([-16,-16,0], [16,16,32]);
 	m_eHead.SetOrigin(GetOrigin() + [0,0,20]);
 	m_eHead.colormap = colormap;
-	think = Think;
-	nextthink = time + 0.1f;
+
+	ScheduleThink(Think, 0.1f);
 	m_state = SENTRY_SEARCHING;
 	m_flNextIdleSound = time + 5.0f;
 
