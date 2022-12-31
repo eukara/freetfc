@@ -21,7 +21,6 @@ defs.h
 ../shared/include.src
 
 ../../../valve/src/server/player.qc
-../../../valve/src/server/spectator.qc
 
 dispenser.qc
 sentry.qc

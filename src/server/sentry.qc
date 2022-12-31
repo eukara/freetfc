@@ -17,7 +17,7 @@
 void
 TFCSentry::Think(void)
 {
-	ScheduleThink(Think 0.1f);
+	ScheduleThink(Think, 0.1f);
 
 	/* searching */
 	entity t = world;
