@@ -33,6 +33,7 @@ w_nailgun_precache(void)
 	precache_model("models/w_nailgun.mdl");
 	precache_model("models/p_nailgun.mdl");
 	precache_model("models/nail.mdl");
+	Sound_Precache("weapon_nailgun.fire");
 }
 
 void
@@ -75,18 +76,25 @@ void
 w_nailgun_shootnail(player pl)
 {
 	static void w_rpg_shootrocket_touch(void) {
+		#ifndef CLIENT
+		/* impact per bullet */
+		if (trace_ent.iBleeds == 0) {
+			DecalGroups_Place("Impact.BigShot", trace_endpos + (v_forward * -2));
+			SurfData_Impact(trace_ent, trace_surfaceflagsi, trace_endpos, trace_plane_normal);
+		}
+		#endif
 		remove(self);
 	}
 
 	Weapons_MakeVectors(pl);
 	entity p = spawn();
 	setmodel(p, "models/nail.mdl");
-	setorigin(p, Weapons_GetCameraPos(pl) + (v_forward * 8));
+	setorigin(p, Weapons_GetCameraPos(pl) + (v_forward * 14) + (v_up * -4) + (v_right * 2));
 	p.owner = self;
 	p.movetype = MOVETYPE_FLYMISSILE;
 	p.solid = SOLID_BBOX;
 	p.gravity = 0.5f;
-	p.velocity = (v_forward * 1000);
+	p.velocity = (v_forward * 1000) + (v_up * 4) + (v_right * -2);
 	p.angles = vectoangles(p.velocity);
 	p.touch = w_rpg_shootrocket_touch;
 	p.think = Util_Destroy;
@@ -114,6 +122,9 @@ w_nailgun_primary(player pl)
 		}
 		Weapons_ViewAnimation(pl, NAILGUN_SHOOT2);
 		Weapons_ViewPunchAngle(pl, [-1,0,0]);
+		#ifndef CLIENT
+		Sound_Play(pl, CHAN_WEAPON, "weapon_nailgun.fire");
+		#endif
 		pl.w_attack_next = 0.1f;
 		break;
 	case AUTO_EMPTY:
