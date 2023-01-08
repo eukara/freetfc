@@ -14,20 +14,32 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+enum
+{
+	SNIPER_IDLE,
+	SNIPER_AIM,
+	SNIPER_FIRE,
+	SNIPER_DRAW,
+	SNIPER_HOLSTER,
+	SNIPER_AUTOIDLE,
+	SNIPER_AUTOFIRE,
+	SNIPER_AUTODRAW,
+	SNIPER_AUTOHOLSTER,
+};
+
 void
 w_autorifle_precache(void)
 {
 	precache_model("models/v_tfc_sniper.mdl");
 	precache_model("models/w_autorifle.mdl");
 	precache_model("models/p_autorifle.mdl");
+	Sound_Precache("weapon_sniper.fire");
 }
 
 void
 w_autorifle_updateammo(player pl)
 {
-#ifdef SERVER
-	Weapons_UpdateAmmo(pl, __NULL__, __NULL__, __NULL__);
-#endif
+	Weapons_UpdateAmmo(pl, __NULL__, pl.m_iAmmoShells, __NULL__);
 }
 
 string
@@ -48,16 +60,85 @@ w_autorifle_deathmsg(void)
 }
 
 void
+w_autorifle_release(player pl)
+{
+	Weapons_ViewAnimation(pl, SNIPER_AUTOIDLE);
+}
+
+void
 w_autorifle_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_sniper.mdl");
-	Weapons_ViewAnimation(pl, 0);
+	Weapons_ViewAnimation(pl, SNIPER_AUTOIDLE);
 }
 
 float
 w_autorifle_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+}
+
+void
+w_autorifle_primary(player pl)
+{
+	int s = w_baseauto_fire(pl, player::m_iAmmoShells, 8, [0,0]);
+
+	switch (s) {
+	case AUTO_FIRE_FAILED:
+		return;
+		break;
+	case AUTO_FIRED:
+	case AUTO_LAST:
+		Weapons_ViewAnimation(pl, SNIPER_AUTOFIRE);
+		#ifdef CLIENT
+		View_SetMuzzleflash(MUZZLE_WEIRD);
+		#else
+		Sound_Play(pl, CHAN_WEAPON, "weapon_sniper.fire");
+		#endif
+		pl.w_attack_next = 0.1f;
+		break;
+	case AUTO_EMPTY:
+		pl.w_attack_next = 0.2f;
+		break;
+	}
+
+	pl.w_idle_next = 1.5f;
+}
+
+void
+w_autorifle_hud(player pl)
+{
+#ifdef CLIENT
+	vector cross_pos;
+	vector aicon_pos;
+
+	/* crosshair/laser */
+	cross_pos = g_hudmins + (g_hudres / 2) + [-12,-12];
+	drawsubpic(
+		cross_pos,
+		[24,24],
+		g_cross_spr,
+		[0.1875,0],
+		[0.1875, 0.1875],
+		[1,1,1],
+		1.0f,
+		DRAWFLAG_NORMAL
+	);
+
+	HUD_DrawAmmo2();
+
+	aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];
+	drawsubpic(
+		aicon_pos,
+		[24,24],
+		g_hud7_spr,
+		[0,72/128],
+		[24/256, 24/128],
+		g_hud_color,
+		pSeatLocal->m_flAmmo2Alpha,
+		DRAWFLAG_ADDITIVE
+	);
+#endif
 }
 
 void
@@ -98,11 +179,11 @@ weapon_t w_autorifle =
 	.slot_pos	= 0,
 	.draw		= w_autorifle_draw,
 	.holster	= __NULL__,
-	.primary	= __NULL__,
+	.primary	= w_autorifle_primary,
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
-	.release	= __NULL__,
-	.postdraw	= __NULL__,
+	.release	= w_autorifle_release,
+	.postdraw	= w_autorifle_hud,
 	.precache	= w_autorifle_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_autorifle_updateammo,

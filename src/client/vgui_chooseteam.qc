@@ -28,6 +28,7 @@ void
 VGUI_TeamJoin(float i)
 {
 	sendevent("TeamJoin", "f", i);
+	winCTTeam.Hide();
 }
 
 void
