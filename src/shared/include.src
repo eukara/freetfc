@@ -19,11 +19,11 @@ pmove.qc
 ../../../valve/src/shared/fx_impact.qc
 ../../../base/src/shared/fx_corpse.qc
 
-../../../base/src/shared/weapon_basesemi.qc
-../../../base/src/shared/weapon_basemelee.qc
-../../../base/src/shared/weapon_baseshotgun.qc
-../../../base/src/shared/weapon_baseprojectile.qc
-../../../base/src/shared/weapon_baseautomatic.qc
+weapon_basesemi.qc
+weapon_basemelee.qc
+weapon_baseshotgun.qc
+weapon_baseprojectile.qc
+weapon_baseautomatic.qc
 
 w_asscan.qc
 w_autorifle.qc
