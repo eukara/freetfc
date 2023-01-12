@@ -47,5 +47,4 @@ w_umbrella.qc
 w_wrench.qc
 weapons.qc
 ../../../base/src/shared/weapon_common.qc
-../../../base/src/shared/input.qc
 #endlist
