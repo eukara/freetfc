@@ -14,6 +14,19 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+enum
+{
+	TRANQUIL_IDLE1,
+	TRANQUIL_IDLE2,
+	TRANQUIL_IDLE3,
+	TRANQUIL_SHOOT,
+	TRANQUIL_SHOOT_EMPTY,
+	TRANQUIL_RELOAD_EMPTY,
+	TRANQUIL_RELOAD,
+	TRANQUIL_DRAW,
+	TRANQUIL_HOLSTER
+};
+
 void
 w_tranquil_precache(void)
 {
@@ -25,9 +38,7 @@ w_tranquil_precache(void)
 void
 w_tranquil_updateammo(player pl)
 {
-#ifdef SERVER
-	Weapons_UpdateAmmo(pl, __NULL__, __NULL__, __NULL__);
-#endif
+	Weapons_UpdateAmmo(pl, __NULL__, pl.m_iAmmoShells, __NULL__);
 }
 
 string
@@ -44,20 +55,93 @@ w_tranquil_pmodel(player pl)
 string
 w_tranquil_deathmsg(void)
 {
-	return "%s was assaulted by %s's Assault Cannon.";
+	return "%s is put to sleep by %s.";
 }
 
 void
 w_tranquil_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_pistol.mdl");
-	Weapons_ViewAnimation(pl, 0);
+	Weapons_ViewAnimation(pl, TRANQUIL_DRAW);
+	Weapons_SetGeomset("geomset 2 2\n");
+}
+
+void
+w_tranquil_shootdart(player pl)
+{
+	static void w_rpg_shootrocket_touch(void) {
+		#ifndef CLIENT
+		/* impact per bullet */
+		if (trace_ent.iBleeds == 0) {
+			DecalGroups_Place("Impact.BigShot", trace_endpos + (v_forward * -2));
+			SurfData_Impact(trace_ent, trace_surfaceflagsi, trace_endpos, trace_plane_normal);
+		}
+		#endif
+		remove(self);
+	}
+
+	Weapons_MakeVectors(pl);
+	entity p = spawn();
+	setmodel(p, "models/nail.mdl");
+	setorigin(p, Weapons_GetCameraPos(pl) + (v_forward * 14) + (v_up * -4) + (v_right * 2));
+	p.owner = self;
+	p.movetype = MOVETYPE_FLYMISSILE;
+	p.solid = SOLID_BBOX;
+	p.gravity = 0.5f;
+	p.velocity = (v_forward * 1000) + (v_up * 4) + (v_right * -2);
+	p.angles = vectoangles(p.velocity);
+	p.touch = w_rpg_shootrocket_touch;
+	p.think = Util_Destroy;
+	p.nextthink = time + 5.0f;
+}
+
+void
+w_tranquil_primary(player pl)
+{
+	int s = w_baseprojectile_fire(pl, WEAPON_TRANQUIL, player::m_iAmmoShells, w_tranquil_shootdart);
+
+	switch (s) {
+	case AUTO_FIRE_FAILED:
+		return;
+		break;
+	case AUTO_FIRED:
+	case AUTO_LAST:
+		Weapons_ViewAnimation(pl, TRANQUIL_SHOOT);
+		Weapons_ViewPunchAngle(pl, [-2,0,0]);
+		#ifndef CLIENT
+		Sound_Play(pl, CHAN_WEAPON, "weapon_tranquilizer.fire");
+		#endif
+		pl.w_attack_next = 1.5f;
+		break;
+	case AUTO_EMPTY:
+		pl.w_attack_next = 0.2f;
+		break;
+	}
+
+	pl.w_idle_next = 2.5f;
 }
 
 float
 w_tranquil_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+}
+
+void
+w_tranquil_hud(player pl)
+{
+#ifdef CLIENT
+	vector aicon_pos;
+
+	aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];
+
+	Cross_DrawSub(g_cross_spr, [24,24], [0.1875,0], [0.1875, 0.1875]);
+
+	HUD_DrawAmmo2();
+
+
+	drawsubpic(aicon_pos, [24,24], g_hud7_spr, [72/256,72/128], [24/256, 24/128], g_hud_color, pSeatLocal->m_flAmmo2Alpha, DRAWFLAG_ADDITIVE);
+#endif
 }
 
 void
@@ -98,11 +182,11 @@ weapon_t w_tranquil =
 	.slot_pos	= 2,
 	.draw		= w_tranquil_draw,
 	.holster	= __NULL__,
-	.primary	= __NULL__,
+	.primary	= w_tranquil_primary,
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= __NULL__,
-	.postdraw	= __NULL__,
+	.postdraw	= w_tranquil_hud,
 	.precache	= w_tranquil_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_tranquil_updateammo,
