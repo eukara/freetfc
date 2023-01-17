@@ -46,3 +46,29 @@ w_baseprojectile_fire(player pl, int w, .int mag, void(player) spawnfunc)
 	else
 		return (SEMI_FIRED);
 }
+
+int
+w_baseprojectile_fire_num(player pl, int w, .int mag, void(player) spawnfunc, int num)
+{
+	if (pl.w_attack_next > 0.0) {
+		return (SEMI_FIRE_FAILED);
+	}
+	if (pl.gflags & GF_SEMI_TOGGLED) {
+		return (SEMI_FIRE_FAILED);
+	}
+	if ((pl.(mag) - num) < 0) {
+		return (SEMI_EMPTY);
+	}
+
+	pl.(mag) -= num;
+
+#ifdef SERVER
+	spawnfunc(pl);
+#endif
+
+	if (pl.(mag) == 0)
+		return (SEMI_LAST);
+	else
+		return (SEMI_FIRED);
+}
+

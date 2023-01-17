@@ -14,20 +14,35 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+enum
+{
+	NAILGUN_IDLE,
+	NAILGUN_FIDGET1,
+	NAILGUN_UNUSED1,
+	NAILGUN_UNUSED2,
+	NAILGUN_DEPLOY,
+	NAILGUN_SHOOT1,
+	NAILGUN_SHOOT2,
+	NAILGUN_SHOOT3,
+};
+
 void
 w_supernail_precache(void)
 {
+#ifdef CLIENT
 	precache_model("models/v_tfc_supernailgun.mdl");
+#else
 	precache_model("models/w_supernail.mdl");
 	precache_model("models/p_supernail.mdl");
+	precache_model("models/nail.mdl");
+	Sound_Precache("weapon_nailgun.fire");
+#endif
 }
 
 void
 w_supernail_updateammo(player pl)
 {
-#ifdef SERVER
-	Weapons_UpdateAmmo(pl, __NULL__, __NULL__, __NULL__);
-#endif
+	Weapons_UpdateAmmo(pl, __NULL__, pl.m_iAmmoNails, __NULL__);
 }
 
 string
@@ -51,13 +66,112 @@ void
 w_supernail_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_supernailgun.mdl");
-	Weapons_ViewAnimation(pl, 0);
+	Weapons_ViewAnimation(pl, NAILGUN_DEPLOY);
 }
 
 float
 w_supernail_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+}
+
+void
+w_supernail_shootnail(player pl)
+{
+	static void w_rpg_shootrocket_touch(void) {
+		#ifndef CLIENT
+		/* impact per bullet */
+		if (trace_ent.iBleeds == 0) {
+			DecalGroups_Place("Impact.BigShot", trace_endpos + (v_forward * -2));
+			SurfData_Impact(trace_ent, trace_surfaceflagsi, trace_endpos, trace_plane_normal);
+		}
+		#endif
+		remove(self);
+	}
+
+	Weapons_MakeVectors(pl);
+	entity p = spawn();
+	setmodel(p, "models/nail.mdl");
+	setorigin(p, Weapons_GetCameraPos(pl) + (v_forward * 14) + (v_up * -4) + (v_right * 2));
+	p.owner = self;
+	p.movetype = MOVETYPE_FLYMISSILE;
+	p.solid = SOLID_BBOX;
+	p.gravity = 0.5f;
+	p.velocity = (v_forward * 1000) + (v_up * 4) + (v_right * -2);
+	p.angles = vectoangles(p.velocity);
+	p.touch = w_rpg_shootrocket_touch;
+	p.think = Util_Destroy;
+	p.nextthink = time + 5.0f;
+}
+
+void
+w_supernail_primary(player pl)
+{
+	int s = w_baseprojectile_fire_num(pl, WEAPON_NAILGUN, player::m_iAmmoNails, w_supernail_shootnail, 2);
+
+	switch (s) {
+	case AUTO_FIRE_FAILED:
+		return;
+		break;
+	case AUTO_FIRED:
+	case AUTO_LAST:
+		int r = (float)input_sequence % 3;
+		if (r == 1) {
+			Weapons_ViewAnimation(pl, NAILGUN_SHOOT1);
+		} else if (r == 2) {
+			Weapons_ViewAnimation(pl, NAILGUN_SHOOT2);
+		} else {
+			Weapons_ViewAnimation(pl, NAILGUN_SHOOT3);
+		}
+		Weapons_ViewAnimation(pl, NAILGUN_SHOOT2);
+		Weapons_ViewPunchAngle(pl, [-1,0,0]);
+		#ifndef CLIENT
+		Sound_Play(pl, CHAN_WEAPON, "weapon_nailgun.fire");
+		#endif
+		pl.w_attack_next = 0.1f;
+		break;
+	case AUTO_EMPTY:
+		pl.w_attack_next = 0.2f;
+		break;
+	}
+
+	pl.w_idle_next = 1.5f;
+}
+
+void
+w_supernail_hud(player pl)
+{
+#ifdef CLIENT
+	vector cross_pos;
+	vector aicon_pos;
+
+	/* crosshair/laser */
+	cross_pos = g_hudmins + (g_hudres / 2) + [-12,-12];
+	drawsubpic(
+		cross_pos,
+		[24,24],
+		g_cross_spr,
+		[0.1875,0],
+		[0.1875, 0.1875],
+		[1,1,1],
+		1.0f,
+		DRAWFLAG_NORMAL
+	);
+
+	HUD_DrawAmmo2();
+
+	aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];
+	drawsubpic(
+		aicon_pos,
+		[24,24],
+		g_hud7_spr,
+		[0,72/128],
+		[24/256, 24/128],
+		g_hud_color,
+		pSeatLocal->m_flAmmo2Alpha,
+		DRAWFLAG_ADDITIVE
+	);
+#endif
 }
 
 void
@@ -98,11 +212,11 @@ weapon_t w_supernail =
 	.slot_pos	= 2,
 	.draw		= w_supernail_draw,
 	.holster	= __NULL__,
-	.primary	= __NULL__,
+	.primary	= w_supernail_primary,
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= __NULL__,
-	.postdraw	= __NULL__,
+	.postdraw	= w_supernail_hud,
 	.precache	= w_supernail_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_supernail_updateammo,
