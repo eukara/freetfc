@@ -132,6 +132,42 @@ TFCGameRules::PlayerSpawn(NSClientPlayer pp)
 	Spawn_ObserverCam(pl);
 }
 
+bool
+TFCGameRules::ImpulseCommand(NSClient bp, float num)
+{
+	switch (num) {
+	case 101:
+		player pl = (player)bp;
+		if (cvar("sv_cheats") > 0) {
+		Weapons_AddItem(pl, WEAPON_CROWBAR, -1);
+		Weapons_AddItem(pl, WEAPON_MEDKIT, -1);
+		Weapons_AddItem(pl, WEAPON_KNIFE, -1);
+		Weapons_AddItem(pl, WEAPON_WRENCH, -1);
+		Weapons_AddItem(pl, WEAPON_UMBRELLA, -1);
+		Weapons_AddItem(pl, WEAPON_SBS, -1);
+		Weapons_AddItem(pl, WEAPON_SNIPER, -1);
+		Weapons_AddItem(pl, WEAPON_TRANQUIL, -1);
+		Weapons_AddItem(pl, WEAPON_RAILGUN, -1);
+		Weapons_AddItem(pl, WEAPON_AUTORIFLE, -1);
+		Weapons_AddItem(pl, WEAPON_DBS, -1);
+		Weapons_AddItem(pl, WEAPON_NAILGUN, -1);
+		Weapons_AddItem(pl, WEAPON_GLAUNCHER, -1);
+		Weapons_AddItem(pl, WEAPON_SUPERNAIL, -1);
+		Weapons_AddItem(pl, WEAPON_FLAMER, -1);
+		Weapons_AddItem(pl, WEAPON_RPG, -1);
+		Weapons_AddItem(pl, WEAPON_PIPEBOMB, -1);
+		Weapons_AddItem(pl, WEAPON_ASSCAN, -1);
+		Weapons_AddItem(pl, WEAPON_INCENDIARY, -1);
+		Weapons_AddItem(pl, WEAPON_GRAPPLE, -1);
+		}
+		break;
+	default:
+		return super::ImpulseCommand(bp, num);
+	}
+
+	return true;
+}
+
 void
 TFCGameRules::TFCGameRules(void)
 {

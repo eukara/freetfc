@@ -30,5 +30,7 @@ class TFCGameRules:CGameRules
 
 	virtual void(NSClientPlayer) DropGoalItem;
 
+	virtual float ImpulseCommand(NSClient, float);
+
 	virtual void(void) LevelNewParms;
 };

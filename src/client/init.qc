@@ -26,6 +26,10 @@ ClientGame_Init(float apilevel, string enginename, float engineversion)
 {
 	registercommand("build");
 	registercommand("dismantle");
+	registercommand("+gren1");
+	registercommand("-gren1");
+	registercommand("+gren2");
+	registercommand("-gren2");
 	Obituary_Init();
 }
 
