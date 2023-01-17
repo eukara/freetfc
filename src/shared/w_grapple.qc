@@ -110,5 +110,6 @@ weapon_t w_grapple =
 	.pmodel		= w_grapple_pmodel,
 	.deathmsg	= w_grapple_deathmsg,
 	.aimanim	= w_grapple_aimanim,
-	.hudpic		= w_grapple_hudpic
+	.hudpic		= w_grapple_hudpic,
+	.isempty	= w_asscan_isempty
 };

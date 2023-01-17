@@ -211,5 +211,6 @@ weapon_t w_dbs =
 	.pmodel		= w_dbs_pmodel,
 	.deathmsg	= w_dbs_deathmsg,
 	.aimanim	= w_dbs_aimanim,
-	.hudpic		= w_dbs_hudpic
+	.hudpic		= w_dbs_hudpic,
+	.isempty	= w_asscan_isempty
 };

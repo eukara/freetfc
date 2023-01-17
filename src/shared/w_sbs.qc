@@ -200,5 +200,6 @@ weapon_t w_sbs =
 	.pmodel		= w_sbs_pmodel,
 	.deathmsg	= w_sbs_deathmsg,
 	.aimanim	= w_sbs_aimanim,
-	.hudpic		= w_sbs_hudpic
+	.hudpic		= w_sbs_hudpic,
+	.isempty	= w_asscan_isempty
 };

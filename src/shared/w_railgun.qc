@@ -110,5 +110,6 @@ weapon_t w_railgun =
 	.pmodel		= w_railgun_pmodel,
 	.deathmsg	= w_railgun_deathmsg,
 	.aimanim	= w_railgun_aimanim,
-	.hudpic		= w_railgun_hudpic
+	.hudpic		= w_railgun_hudpic,
+	.isempty	= w_asscan_isempty
 };

@@ -110,5 +110,6 @@ weapon_t w_knife =
 	.pmodel		= w_knife_pmodel,
 	.deathmsg	= w_knife_deathmsg,
 	.aimanim	= w_knife_aimanim,
-	.hudpic		= w_knife_hudpic
+	.hudpic		= w_knife_hudpic,
+	.isempty	= w_asscan_isempty
 };

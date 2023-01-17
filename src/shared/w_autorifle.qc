@@ -191,5 +191,6 @@ weapon_t w_autorifle =
 	.pmodel		= w_autorifle_pmodel,
 	.deathmsg	= w_autorifle_deathmsg,
 	.aimanim	= w_autorifle_aimanim,
-	.hudpic		= w_autorifle_hudpic
+	.hudpic		= w_autorifle_hudpic,
+	.isempty	= w_asscan_isempty
 };

@@ -110,5 +110,6 @@ weapon_t w_flamer =
 	.pmodel		= w_flamer_pmodel,
 	.deathmsg	= w_flamer_deathmsg,
 	.aimanim	= w_flamer_aimanim,
-	.hudpic		= w_flamer_hudpic
+	.hudpic		= w_flamer_hudpic,
+	.isempty	= w_asscan_isempty
 };

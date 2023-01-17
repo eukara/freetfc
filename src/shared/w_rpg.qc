@@ -246,5 +246,6 @@ weapon_t w_rpg =
 	.pmodel		= w_rpg_pmodel,
 	.deathmsg	= w_rpg_deathmsg,
 	.aimanim	= w_rpg_aimanim,
-	.hudpic		= w_rpg_hudpic
+	.hudpic		= w_rpg_hudpic,
+	.isempty	= w_asscan_isempty
 };

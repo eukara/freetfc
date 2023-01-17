@@ -223,5 +223,6 @@ weapon_t w_crowbar =
 	.pmodel		= w_crowbar_pmodel,
 	.deathmsg	= w_crowbar_deathmsg,
 	.aimanim	= w_crowbar_aimanim,
-	.hudpic		= w_crowbar_hudpic
+	.hudpic		= w_crowbar_hudpic,
+	.isempty	= w_asscan_isempty
 };

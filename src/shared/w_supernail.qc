@@ -110,5 +110,6 @@ weapon_t w_supernail =
 	.pmodel		= w_supernail_pmodel,
 	.deathmsg	= w_supernail_deathmsg,
 	.aimanim	= w_supernail_aimanim,
-	.hudpic		= w_supernail_hudpic
+	.hudpic		= w_supernail_hudpic,
+	.isempty	= w_asscan_isempty
 };

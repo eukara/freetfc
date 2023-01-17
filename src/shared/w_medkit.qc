@@ -110,5 +110,6 @@ weapon_t w_medkit =
 	.pmodel		= w_medkit_pmodel,
 	.deathmsg	= w_medkit_deathmsg,
 	.aimanim	= w_medkit_aimanim,
-	.hudpic		= w_medkit_hudpic
+	.hudpic		= w_medkit_hudpic,
+	.isempty	= w_asscan_isempty
 };

@@ -111,5 +111,6 @@ weapon_t w_pipebomb =
 	.pmodel		= w_pipebomb_pmodel,
 	.deathmsg	= w_pipebomb_deathmsg,
 	.aimanim	= w_pipebomb_aimanim,
-	.hudpic		= w_pipebomb_hudpic
+	.hudpic		= w_pipebomb_hudpic,
+	.isempty	= w_asscan_isempty
 };

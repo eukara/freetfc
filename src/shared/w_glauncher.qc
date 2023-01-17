@@ -110,5 +110,6 @@ weapon_t w_glauncher =
 	.pmodel		= w_glauncher_pmodel,
 	.deathmsg	= w_glauncher_deathmsg,
 	.aimanim	= w_glauncher_aimanim,
-	.hudpic		= w_glauncher_hudpic
+	.hudpic		= w_glauncher_hudpic,
+	.isempty	= w_asscan_isempty
 };

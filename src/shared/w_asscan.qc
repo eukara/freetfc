@@ -88,6 +88,12 @@ w_asscan_hudpic(player pl, int selected, vector pos, float a)
 #endif
 }
 
+int
+w_asscan_isempty(player pl)
+{
+	return 0;
+}
+
 weapon_t w_asscan =
 {
 	.name		= "asscan",
@@ -108,5 +114,6 @@ weapon_t w_asscan =
 	.pmodel		= w_asscan_pmodel,
 	.deathmsg	= w_asscan_deathmsg,
 	.aimanim	= w_asscan_aimanim,
-	.hudpic		= w_asscan_hudpic
+	.hudpic		= w_asscan_hudpic,
+	.isempty	= w_asscan_isempty
 };

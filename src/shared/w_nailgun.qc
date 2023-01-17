@@ -221,5 +221,6 @@ weapon_t w_nailgun =
 	.pmodel		= w_nailgun_pmodel,
 	.deathmsg	= w_nailgun_deathmsg,
 	.aimanim	= w_nailgun_aimanim,
-	.hudpic		= w_nailgun_hudpic
+	.hudpic		= w_nailgun_hudpic,
+	.isempty	= w_asscan_isempty
 };

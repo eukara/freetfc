@@ -110,5 +110,6 @@ weapon_t w_sniper =
 	.pmodel		= w_sniper_pmodel,
 	.deathmsg	= w_sniper_deathmsg,
 	.aimanim	= w_sniper_aimanim,
-	.hudpic		= w_sniper_hudpic
+	.hudpic		= w_sniper_hudpic,
+	.isempty	= w_asscan_isempty
 };

@@ -246,5 +246,6 @@ weapon_t w_wrench =
 	.pmodel		= w_wrench_pmodel,
 	.deathmsg	= w_wrench_deathmsg,
 	.aimanim	= w_wrench_aimanim,
-	.hudpic		= w_wrench_hudpic
+	.hudpic		= w_wrench_hudpic,
+	.isempty	= w_asscan_isempty
 };

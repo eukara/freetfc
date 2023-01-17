@@ -110,5 +110,6 @@ weapon_t w_tranquil =
 	.pmodel		= w_tranquil_pmodel,
 	.deathmsg	= w_tranquil_deathmsg,
 	.aimanim	= w_tranquil_aimanim,
-	.hudpic		= w_tranquil_hudpic
+	.hudpic		= w_tranquil_hudpic,
+	.isempty	= w_asscan_isempty
 };

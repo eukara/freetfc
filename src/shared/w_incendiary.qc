@@ -110,5 +110,6 @@ weapon_t w_incendiary =
 	.pmodel		= w_incendiary_pmodel,
 	.deathmsg	= w_incendiary_deathmsg,
 	.aimanim	= w_incendiary_aimanim,
-	.hudpic		= w_incendiary_hudpic
+	.hudpic		= w_incendiary_hudpic,
+	.isempty	= w_asscan_isempty
 };

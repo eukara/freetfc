@@ -229,5 +229,6 @@ weapon_t w_umbrella =
 	.pmodel		= w_umbrella_pmodel,
 	.deathmsg	= w_umbrella_deathmsg,
 	.aimanim	= w_umbrella_aimanim,
-	.hudpic		= w_umbrella_hudpic
+	.hudpic		= w_umbrella_hudpic,
+	.isempty	= w_asscan_isempty
 };
