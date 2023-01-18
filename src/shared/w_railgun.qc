@@ -111,9 +111,7 @@ w_railgun_primary(player pl)
 		int r = (float)input_sequence % 3;
 		Weapons_ViewAnimation(pl, RAILGUN_SHOOT);
 		Weapons_ViewPunchAngle(pl, [-1,0,0]);
-		#ifndef CLIENT
-		Sound_Play(pl, CHAN_WEAPON, "weapon_railgun.fire");
-		#endif
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_railgun.fire");
 		pl.w_attack_next = 0.4f;
 		break;
 	case AUTO_EMPTY:
