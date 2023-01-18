@@ -17,17 +17,30 @@
 void
 w_pipebomb_precache(void)
 {
-	precache_model("models/v_tfgl.mdl");
+#ifdef SERVER
+	Sound_Precache("weapon_handgrenade.bounce");
+	Sound_Precache("weapon_mp5.gl");
 	precache_model("models/w_pipebomb.mdl");
 	precache_model("models/p_pipebomb.mdl");
+	precache_model("models/pipebomb.mdl");
+#else
+	precache_model("models/v_tfgl.mdl");
+#endif
 }
 
 void
 w_pipebomb_updateammo(player pl)
 {
+	Weapons_UpdateAmmo(pl, pl.mag_pipebomb, pl.m_iAmmoRockets, __NULL__);
+}
+
+int
+w_pipebomb_pickup(player pl, int new, int startammo)
+{
 #ifdef SERVER
-	Weapons_UpdateAmmo(pl, __NULL__, __NULL__, __NULL__);
+	pl.mag_pipebomb = bound(0, pl.mag_pipebomb + 6, 6);
 #endif
+	return (1);
 }
 
 string
@@ -35,7 +48,6 @@ w_pipebomb_wmodel(void)
 {
 	return "models/w_pipebomb.mdl";
 }
-
 string
 w_pipebomb_pmodel(player pl)
 {
@@ -52,7 +64,120 @@ void
 w_pipebomb_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfgl.mdl");
-	Weapons_ViewAnimation(pl, 0);
+	Weapons_ViewAnimation(pl, GLAUNCHER_PDRAW);
+}
+
+void
+w_pipebomb_shootnade(player pl)
+{
+	vector vecNadeVelocity;
+
+	static void w_pipebomb_shootnade_touch(void) {
+		Sound_Play(self, CHAN_BODY, "weapon_handgrenade.bounce");
+
+		if (vlen(self.velocity))
+			self.avelocity = g_vec_null;
+	}
+
+	Weapons_MakeVectors(pl);
+	vecNadeVelocity = v_forward * 600 + v_up * 200 + crandom() * v_right * 10 + crandom() * v_up * 10;
+
+	NSRenderableEntity eNade = spawn(NSRenderableEntity);
+	eNade.SetModel("models/pipebomb.mdl");
+	eNade.SetOrigin(Weapons_GetCameraPos(pl) + (v_forward * 14) + (v_up * -4) + (v_right * 2));
+	eNade.SetOwner(pl);
+	eNade.SetMovetype(MOVETYPE_BOUNCE);
+	eNade.SetSolid(SOLID_BBOX);
+	eNade.SetGravity(1.0f);
+	eNade.SetVelocity(vecNadeVelocity);
+	eNade.SetAngularVelocity([300, 300, 300]);
+	eNade.SetAngles(vectoangles(eNade.GetVelocity()));
+	eNade.SetSkin(0);
+
+	eNade.touch = w_pipebomb_shootnade_touch;
+	
+	Sound_Play(pl, CHAN_WEAPON, "weapon_mp5.gl");
+
+	//eNade.traileffectnum = particleeffectnum("weapon_rpg.trail");
+}
+
+void
+w_pipebomb_reload(player pl)
+{
+	w_baseshotgun_reload(player::mag_pipebomb, player::m_iAmmoRockets, 6);
+}
+
+void
+w_pipebomb_release(player pl)
+{
+	int s = w_baseshotgun_release(player::mag_pipebomb, player::m_iAmmoRockets, 6);
+
+	switch (s) {
+	case SHOTGUN_IDLE:
+		Weapons_ViewAnimation(pl, GLAUNCHER_PIDLE);
+		pl.w_idle_next = 5.0f;
+		break;
+	case SHOTGUN_BUSY:
+		break;
+	case SHOTGUN_START_RELOAD:
+		Weapons_ViewAnimation(pl, GLAUNCHER_PRELOAD1);
+		break;
+	case SHOTGUN_RELOAD:
+		break;
+	case SHOTGUN_END_RELOAD:
+		Weapons_ViewAnimation(pl, GLAUNCHER_PRELOAD2);
+		break;
+	}
+}
+
+void
+w_pipebomb_primary(player pl)
+{
+	int s = w_baseprojectile_fire(pl, WEAPON_PIPEBOMB, player::mag_pipebomb, w_pipebomb_shootnade);
+
+	switch (s) {
+	case AUTO_FIRE_FAILED:
+		w_pipebomb_release(pl);
+		return;
+		break;
+	case AUTO_FIRED:
+	case AUTO_LAST:
+		Weapons_ViewAnimation(pl, GLAUNCHER_PFIRE);
+		Weapons_ViewPunchAngle(pl, [-1,0,0]);
+		pl.w_attack_next = 0.6f;
+		break;
+	case AUTO_EMPTY:
+		Weapons_ViewAnimation(pl, GLAUNCHER_PIDLE);
+		pl.w_attack_next = 0.2f;
+		break;
+	}
+
+	pl.w_idle_next = 0.6f;
+}
+
+void
+w_pipebomb_postdraw(player pl)
+{
+#ifdef CLIENT
+	vector aicon_pos;
+
+	/* ammo counters */
+	HUD_DrawAmmo1();
+	HUD_DrawAmmo2();
+
+	/* ammo icon */
+	aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];
+	drawsubpic(
+		aicon_pos,
+		[24,24],
+		"sprites/640hud7.spr_0.tga",
+		[120/256,72/128],
+		[24/256, 24/128],
+		g_hud_color,
+		pSeatLocal->m_flAmmo2Alpha,
+		DRAWFLAG_ADDITIVE
+	);
+#endif
 }
 
 float
@@ -99,13 +224,13 @@ weapon_t w_pipebomb =
 	.slot_pos	= 1,
 	.draw		= w_pipebomb_draw,
 	.holster	= __NULL__,
-	.primary	= __NULL__,
+	.primary	= w_pipebomb_primary,
 	.secondary	= __NULL__,
-	.reload		= __NULL__,
-	.release	= __NULL__,
-	.postdraw	= __NULL__,
+	.reload		= w_pipebomb_reload,
+	.release	= w_pipebomb_release,
+	.postdraw	= w_pipebomb_postdraw,
 	.precache	= w_pipebomb_precache,
-	.pickup		= __NULL__,
+	.pickup		= w_pipebomb_pickup,
 	.updateammo	= w_pipebomb_updateammo,
 	.wmodel		= w_pipebomb_wmodel,
 	.pmodel		= w_pipebomb_pmodel,

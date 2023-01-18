@@ -80,13 +80,7 @@ void
 w_glauncher_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfgl.mdl");
-	Weapons_ViewAnimation(pl, 0);
-}
-
-float
-crandom(void)
-{
-	return ((random() - 0.5f) * 2.0f);
+	Weapons_ViewAnimation(pl, GLAUNCHER_GDRAW);
 }
 
 void
