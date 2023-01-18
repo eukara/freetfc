@@ -1,7 +1,25 @@
+
+
 weapon_dbs.fire
 {
 	sample weapons/shotgn2.wav
 }
+
+weapon_dbs.fire
+{
+	sample weapons/shotgn2.wav
+}
+
+weapon_dbs.cock
+{
+	sample weapons/scock1.wav
+}
+
+weapon_dbs.reload
+{
+	sample weapons/reload3.wav
+}
+
 
 weapon_sbs.cock
 {

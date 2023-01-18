@@ -93,17 +93,17 @@ w_sbs_primary(player pl)
 	case AUTO_FIRED:
 		Weapons_ViewAnimation(pl, SBS_FIRE1);
 		Weapons_ViewPunchAngle(pl, [-2,0,0]);
-		//Weapons_Sound(pl, CHAN_WEAPON, "weapon_mossberg.fire");
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_sbs.fire");
 		pl.w_attack_next = 0.5f;
 		break;
 	case AUTO_LAST:
 		Weapons_ViewAnimation(pl, SBS_FIRE1);
 		Weapons_ViewPunchAngle(pl, [-2,0,0]);
-		//Weapons_Sound(pl, CHAN_WEAPON, "weapon_mossberg.fire");
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_sbs.fire");
 		pl.w_attack_next = 0.5f;
 		break;
 	case AUTO_EMPTY:
-		//Weapons_Sound(pl, CHAN_WEAPON, "weapon_mossberg.fire_empty");
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_sbs.fire_empty");
 		pl.w_attack_next = 0.2f;
 		break;
 	}
@@ -141,9 +141,11 @@ w_sbs_release(player pl)
 		break;
 	case SHOTGUN_RELOAD:
 		Weapons_ViewAnimation(pl, SBS_ADDSHELL);
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_sbs.reload");
 		break;
 	case SHOTGUN_END_RELOAD:
 		Weapons_ViewAnimation(pl, SBS_PUMP);
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_sbs.cock");
 		break;
 	}
 }

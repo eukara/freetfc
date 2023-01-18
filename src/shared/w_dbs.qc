@@ -34,10 +34,11 @@ w_dbs_precache(void)
 	precache_model("models/v_tfc_shotgun.mdl");
 	precache_model("models/w_shot2.mdl");
 	precache_model("models/p_shot2.mdl");
-	precache_sound("weapons/sbarrel1.wav");
-	precache_sound("weapons/dbarrel1.wav");
-	precache_sound("weapons/reload3.wav");
-	precache_sound("weapons/scock1.wav");
+#ifdef SERVER
+	Sound_Precache("weapon_dbs.cock");
+	Sound_Precache("weapon_dbs.fire");
+	Sound_Precache("weapon_dbs.reload");
+#endif
 }
 
 void
@@ -104,17 +105,17 @@ w_dbs_primary(player pl)
 		pl.mag_dbs--;
 		Weapons_ViewAnimation(pl, DBS_FIRE1);
 		Weapons_ViewPunchAngle(pl, [-2,0,0]);
-		//Weapons_Sound(pl, CHAN_WEAPON, "weapon_mossberg.fire");
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_dbs.fire");
 		pl.w_attack_next = 0.7f;
 		break;
 	case AUTO_LAST:
 		Weapons_ViewAnimation(pl, DBS_FIRE1);
 		Weapons_ViewPunchAngle(pl, [-2,0,0]);
-		//Weapons_Sound(pl, CHAN_WEAPON, "weapon_mossberg.fire");
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_dbs.fire");
 		pl.w_attack_next = 0.7f;
 		break;
 	case AUTO_EMPTY:
-		//Weapons_Sound(pl, CHAN_WEAPON, "weapon_mossberg.fire_empty");
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_dbs.fire_empty");
 		pl.w_attack_next = 0.2f;
 		break;
 	}
@@ -152,9 +153,11 @@ w_dbs_release(player pl)
 		break;
 	case SHOTGUN_RELOAD:
 		Weapons_ViewAnimation(pl, DBS_ADDSHELL);
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_dbs.reload");
 		break;
 	case SHOTGUN_END_RELOAD:
 		Weapons_ViewAnimation(pl, DBS_PUMP);
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_dbs.cock");
 		break;
 	}
 }
