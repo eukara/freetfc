@@ -23,6 +23,11 @@ weapon_nailgun.fire
 	sample weapons/airgun_1.wav
 }
 
+weapon_railgun.fire
+{
+	sample weapons/railgun.wav
+}
+
 weapon_sniper.fire
 {
 	sample weapons/sniper.wav

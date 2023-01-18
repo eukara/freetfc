@@ -136,38 +136,13 @@ w_nailgun_primary(player pl)
 }
 
 void
-w_nailgun_hud(player pl)
+w_nailgun_crosshair(player pl)
 {
 #ifdef CLIENT
-	vector cross_pos;
-	vector aicon_pos;
-
-	/* crosshair/laser */
-	cross_pos = g_hudmins + (g_hudres / 2) + [-12,-12];
-	drawsubpic(
-		cross_pos,
-		[24,24],
-		g_cross_spr,
-		[0.1875,0],
-		[0.1875, 0.1875],
-		[1,1,1],
-		1.0f,
-		DRAWFLAG_NORMAL
-	);
-
+	Cross_DrawSub(g_cross_spr, [24,24], [0.1875,0], [0.1875, 0.1875]);
 	HUD_DrawAmmo2();
-
-	aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];
-	drawsubpic(
-		aicon_pos,
-		[24,24],
-		g_hud7_spr,
-		[0,72/128],
-		[24/256, 24/128],
-		g_hud_color,
-		pSeatLocal->m_flAmmo2Alpha,
-		DRAWFLAG_ADDITIVE
-	);
+	vector aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];
+	drawsubpic(aicon_pos, [24,24], g_hud7_spr, [0,72/128],[24/256, 24/128], g_hud_color, pSeatLocal->m_flAmmo2Alpha, DRAWFLAG_ADDITIVE);
 #endif
 }
 
@@ -213,7 +188,7 @@ weapon_t w_nailgun =
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= __NULL__,
-	.postdraw	= w_nailgun_hud,
+	.postdraw	= w_nailgun_crosshair,
 	.precache	= w_nailgun_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_nailgun_updateammo,

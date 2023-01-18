@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016-2020 Marco Cawthorne <marco@icculus.org>
+ * Copyright (c) 2016-2023 Marco Cawthorne <marco@icculus.org>
+ * Copyright (c) 2023 Gethyn ThomasQuail <xylemon@posteo.net>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,20 +15,27 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+enum
+{
+	RAILGUN_IDLE,
+	RAILGUN_SHOOT,
+	RAILGUN_DRAW,
+	RAILGUN_HOLSTER,
+};
+
 void
 w_railgun_precache(void)
 {
 	precache_model("models/v_tfc_railgun.mdl");
 	precache_model("models/w_railgun.mdl");
 	precache_model("models/p_railgun.mdl");
+	Sound_Precache("weapon_railgun.fire");
 }
 
 void
 w_railgun_updateammo(player pl)
 {
-#ifdef SERVER
-	Weapons_UpdateAmmo(pl, __NULL__, __NULL__, __NULL__);
-#endif
+	Weapons_UpdateAmmo(pl, __NULL__, pl.m_iAmmoNails, __NULL__);
 }
 
 string
@@ -44,7 +52,7 @@ w_railgun_pmodel(player pl)
 string
 w_railgun_deathmsg(void)
 {
-	return "%s was assaulted by %s's Assault Cannon.";
+	return "%s was assaulted by %s's railgun.";
 }
 
 void
@@ -57,7 +65,74 @@ w_railgun_draw(player pl)
 float
 w_railgun_aimanim(player pl)
 {
-	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+	return pl.flags & FL_CROUCHING ? ANIM_CR_AIM1HAND : ANIM_AIM1HAND;
+}
+
+void
+w_railgun_shootbeam(player pl)
+{
+	static void w_railgun_shootbeam_touch(void) {
+		#ifndef CLIENT
+		/* impact per bullet */
+		if (trace_ent.iBleeds == 0) {
+			DecalGroups_Place("Impact.BigShot", trace_endpos + (v_forward * -2));
+			SurfData_Impact(trace_ent, trace_surfaceflagsi, trace_endpos, trace_plane_normal);
+		}
+		#endif
+		remove(self);
+	}
+
+	Weapons_MakeVectors(pl);
+	entity p = spawn();
+	setmodel(p, "models/nail.mdl");
+	setorigin(p, Weapons_GetCameraPos(pl) + (v_forward * 14) + (v_up * -4) + (v_right * 2));
+	p.owner = self;
+	p.movetype = MOVETYPE_FLYMISSILE;
+	p.solid = SOLID_BBOX;
+	p.gravity = 0.5f;
+	p.velocity = (v_forward * 1000) + (v_up * 4) + (v_right * -2);
+	p.angles = vectoangles(p.velocity);
+	p.touch = w_railgun_shootbeam_touch;
+	p.think = Util_Destroy;
+	p.nextthink = time + 5.0f;
+}
+
+void
+w_railgun_primary(player pl)
+{
+	int s = w_baseprojectile_fire(pl, WEAPON_RAILGUN, player::m_iAmmoNails, w_railgun_shootbeam);
+
+	switch (s) {
+	case AUTO_FIRE_FAILED:
+		return;
+		break;
+	case AUTO_FIRED:
+	case AUTO_LAST:
+		int r = (float)input_sequence % 3;
+		Weapons_ViewAnimation(pl, RAILGUN_SHOOT);
+		Weapons_ViewPunchAngle(pl, [-1,0,0]);
+		#ifndef CLIENT
+		Sound_Play(pl, CHAN_WEAPON, "weapon_railgun.fire");
+		#endif
+		pl.w_attack_next = 0.4f;
+		break;
+	case AUTO_EMPTY:
+		pl.w_attack_next = 0.2f;
+		break;
+	}
+
+	pl.w_idle_next = 1.5f;
+}
+
+void
+w_railgun_crosshair(player pl)
+{
+#ifdef CLIENT
+	Cross_DrawSub(g_cross_spr, [24,24], [48/128,24/128], [0.1875, 0.1875]);
+	HUD_DrawAmmo2();
+	vector aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];
+	drawsubpic(aicon_pos, [24,24], g_hud7_spr, [0,72/128],[24/256, 24/128], g_hud_color, pSeatLocal->m_flAmmo2Alpha, DRAWFLAG_ADDITIVE);
+#endif
 }
 
 void
@@ -98,11 +173,11 @@ weapon_t w_railgun =
 	.slot_pos	= 3,
 	.draw		= w_railgun_draw,
 	.holster	= __NULL__,
-	.primary	= __NULL__,
+	.primary	= w_railgun_primary,
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= __NULL__,
-	.postdraw	= __NULL__,
+	.postdraw	= w_railgun_crosshair,
 	.precache	= w_railgun_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_railgun_updateammo,
