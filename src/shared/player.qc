@@ -44,7 +44,6 @@ class player:NSClientPlayer
 	PREDICTED_INT(mag_dbs)
 	PREDICTED_INT(mag_rpg)
 	PREDICTED_INT(mag_glauncher)
-	PREDICTED_INT(mag_pipebomb)
 
 	/* ammo 2 */
 	PREDICTED_INT(m_iAmmoRockets)
@@ -113,7 +112,6 @@ player::ReceiveEntity(float new, float fl)
 		mag_dbs = readbyte();
 		mag_rpg = readbyte();
 		mag_glauncher = readbyte();
-		mag_pipebomb = readbyte();
 	}
 	
 	if (fl & PLAYER_AMMO2) {
@@ -175,7 +173,6 @@ player::PredictPreFrame(void)
 	SAVE_STATE(mag_dbs);
 	SAVE_STATE(mag_rpg);
 	SAVE_STATE(mag_glauncher);
-	SAVE_STATE(mag_pipebomb);
 
 	SAVE_STATE(m_iAmmoRockets);
 	SAVE_STATE(m_iAmmoNails);
@@ -211,7 +208,6 @@ player::PredictPostFrame(void)
 	ROLL_BACK(mag_dbs);
 	ROLL_BACK(mag_rpg);
 	ROLL_BACK(mag_glauncher);
-	ROLL_BACK(mag_pipebomb);
 
 	ROLL_BACK(m_iAmmoRockets);
 	ROLL_BACK(m_iAmmoNails);
@@ -245,8 +241,6 @@ player::EvaluateEntity(void)
 		SendFlags |= PLAYER_AMMO1;
 	else if (ATTR_CHANGED(mag_glauncher))
 		SendFlags |= PLAYER_AMMO1;
-	else if (ATTR_CHANGED(mag_pipebomb))
-		SendFlags |= PLAYER_AMMO1;
 
 	/* ammo 2 type updates */
 	if (ATTR_CHANGED(m_iAmmoRockets))
@@ -272,7 +266,6 @@ player::EvaluateEntity(void)
 	SAVE_STATE(mag_dbs);
 	SAVE_STATE(mag_rpg);
 	SAVE_STATE(mag_glauncher);
-	SAVE_STATE(mag_pipebomb);
 
 	SAVE_STATE(m_iAmmoRockets);
 	SAVE_STATE(m_iAmmoNails);
@@ -552,7 +545,6 @@ player::SendEntity(entity ePEnt, float flChanged)
 		WriteByte(MSG_ENTITY, mag_dbs);
 		WriteByte(MSG_ENTITY, mag_rpg);
 		WriteByte(MSG_ENTITY, mag_glauncher);
-		WriteByte(MSG_ENTITY, mag_pipebomb);
 	}
 
 	if (flChanged & PLAYER_AMMO2) {

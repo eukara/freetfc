@@ -31,14 +31,14 @@ w_pipebomb_precache(void)
 void
 w_pipebomb_updateammo(player pl)
 {
-	Weapons_UpdateAmmo(pl, pl.mag_pipebomb, pl.m_iAmmoRockets, __NULL__);
+	Weapons_UpdateAmmo(pl, pl.mag_glauncher, pl.m_iAmmoRockets, __NULL__);
 }
 
 int
 w_pipebomb_pickup(player pl, int new, int startammo)
 {
 #ifdef SERVER
-	pl.mag_pipebomb = bound(0, pl.mag_pipebomb + 6, 6);
+	pl.mag_glauncher = bound(0, pl.mag_glauncher + 6, 6);
 #endif
 	return (1);
 }
@@ -104,13 +104,13 @@ w_pipebomb_shootnade(player pl)
 void
 w_pipebomb_reload(player pl)
 {
-	w_baseshotgun_reload(player::mag_pipebomb, player::m_iAmmoRockets, 6);
+	w_baseshotgun_reload(player::mag_glauncher, player::m_iAmmoRockets, 6);
 }
 
 void
 w_pipebomb_release(player pl)
 {
-	int s = w_baseshotgun_release(player::mag_pipebomb, player::m_iAmmoRockets, 6);
+	int s = w_baseshotgun_release(player::mag_glauncher, player::m_iAmmoRockets, 6);
 
 	switch (s) {
 	case SHOTGUN_IDLE:
@@ -133,7 +133,7 @@ w_pipebomb_release(player pl)
 void
 w_pipebomb_primary(player pl)
 {
-	int s = w_baseprojectile_fire(pl, WEAPON_PIPEBOMB, player::mag_pipebomb, w_pipebomb_shootnade);
+	int s = w_baseprojectile_fire(pl, WEAPON_PIPEBOMB, player::mag_glauncher, w_pipebomb_shootnade);
 
 	switch (s) {
 	case AUTO_FIRE_FAILED:
