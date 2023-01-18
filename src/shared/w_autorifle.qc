@@ -92,9 +92,8 @@ w_autorifle_primary(player pl)
 		Weapons_ViewAnimation(pl, SNIPER_AUTOFIRE);
 		#ifdef CLIENT
 		View_SetMuzzleflash(MUZZLE_WEIRD);
-		#else
-		Sound_Play(pl, CHAN_WEAPON, "weapon_sniper.fire");
 		#endif
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_sniper.fire");
 		pl.w_attack_next = 0.1f;
 		break;
 	case AUTO_EMPTY:
@@ -106,38 +105,19 @@ w_autorifle_primary(player pl)
 }
 
 void
-w_autorifle_hud(player pl)
+w_autorifle_postdraw(player pl)
 {
 #ifdef CLIENT
-	vector cross_pos;
-	vector aicon_pos;
-
-	/* crosshair/laser */
-	cross_pos = g_hudmins + (g_hudres / 2) + [-12,-12];
-	drawsubpic(
-		cross_pos,
-		[24,24],
-		g_cross_spr,
-		[0.1875,0],
-		[0.1875, 0.1875],
-		[1,1,1],
-		1.0f,
-		DRAWFLAG_NORMAL
-	);
-
+	// crosshair
+	if (pl.viewzoom == 1) {
+		Cross_DrawSub(g_cross_spr, [24,24], [72/128,0], [0.1875, 0.1875]);
+	} else {
+		Cross_DrawSub(g_cross_spr, [104,16], [24/128,96/128], [104/128, 16/128]);
+	}
+	// ammo counter
 	HUD_DrawAmmo2();
-
-	aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];
-	drawsubpic(
-		aicon_pos,
-		[24,24],
-		g_hud7_spr,
-		[0,72/128],
-		[24/256, 24/128],
-		g_hud_color,
-		pSeatLocal->m_flAmmo2Alpha,
-		DRAWFLAG_ADDITIVE
-	);
+	vector aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];
+	drawsubpic(aicon_pos, [24,24], "sprites/640hud7.spr_0.tga", [72/256,72/128], [24/256, 24/128], g_hud_color, pSeatLocal->m_flAmmo2Alpha, DRAWFLAG_ADDITIVE);
 #endif
 }
 
@@ -183,7 +163,7 @@ weapon_t w_autorifle =
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= w_autorifle_release,
-	.postdraw	= w_autorifle_hud,
+	.postdraw	= w_autorifle_postdraw,
 	.precache	= w_autorifle_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_autorifle_updateammo,
