@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016-2020 Marco Cawthorne <marco@icculus.org>
+ * Copyright (c) 2016-2023 Marco Cawthorne <marco@icculus.org>
+ * Copyright (c) 2023 Gethyn ThomasQuail <xylemon@posteo.net>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,6 +15,24 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#define TFC_RPG_ROCKET_SPEED 900.0f
+
+enum
+{
+	INC_IDLE1,
+	INC_FIDGET1,
+	INC_FIRE,
+	INC_HOLSTER1,
+	INC_DRAW1,
+	INC_HOLSTER2,
+	INC_DRAW2,
+	INC_RELOAD_START,
+	INC_RELOAD,
+	INC_RELOAD_END,
+	INC_IDLE2,
+	INC_FIDGET2
+};
+
 void
 w_incendiary_precache(void)
 {
@@ -25,9 +44,7 @@ w_incendiary_precache(void)
 void
 w_incendiary_updateammo(player pl)
 {
-#ifdef SERVER
-	Weapons_UpdateAmmo(pl, __NULL__, __NULL__, __NULL__);
-#endif
+	Weapons_UpdateAmmo(pl, __NULL__, pl.m_iAmmoRockets, __NULL__);
 }
 
 string
@@ -44,7 +61,10 @@ w_incendiary_pmodel(player pl)
 string
 w_incendiary_deathmsg(void)
 {
-	return "%s was assaulted by %s's Assault Cannon.";
+	return "%s gets well done by %s's incendiary rocket.";
+
+	// TODO
+	// Has special birthday and suicide death messages
 }
 
 void
@@ -54,10 +74,73 @@ w_incendiary_draw(player pl)
 	Weapons_ViewAnimation(pl, 0);
 }
 
+void
+w_incendiary_shootrocket(player pl)
+{
+	static void w_incendiary_shootrocket_touch(void) {
+		FX_Explosion(self.origin);
+		remove(self);
+	}
+
+	Weapons_MakeVectors(pl);
+	entity p = spawn();
+	setmodel(p, "models/rpgrocket.mdl");
+	setorigin(p, Weapons_GetCameraPos(pl) + (v_forward * 8));
+	p.owner = self;
+	p.movetype = MOVETYPE_FLYMISSILE;
+	p.solid = SOLID_BBOX;
+	p.gravity = 0.5f;
+	p.velocity = (v_forward * TFC_RPG_ROCKET_SPEED);
+	p.angles = vectoangles(p.velocity);
+	p.touch = w_incendiary_shootrocket_touch;
+	p.think = Util_Destroy;
+	p.nextthink = time + 5.0f;
+}
+
+void
+w_incendiary_primary(player pl)
+{
+	int s = w_baseprojectile_fire(pl, WEAPON_INCENDIARY, player::m_iAmmoRockets, w_incendiary_shootrocket);
+
+	switch (s) {
+	case AUTO_FIRE_FAILED:
+		return;
+		break;
+	case AUTO_FIRED:
+		Weapons_ViewAnimation(pl, INC_FIRE);
+		Weapons_ViewPunchAngle(pl, [-2,0,0]);
+		pl.w_attack_next = 0.8f;
+		break;
+	case AUTO_LAST:
+		Weapons_ViewAnimation(pl, INC_FIRE);
+		Weapons_ViewPunchAngle(pl, [-2,0,0]);
+		pl.w_attack_next = 0.8f;
+		break;
+	case AUTO_EMPTY:
+		pl.w_attack_next = 0.2f;
+		break;
+	}
+
+	pl.w_idle_next = 1.5f;
+}
+
 float
 w_incendiary_aimanim(player pl)
 {
 	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+}
+
+void
+w_incendiary_postdraw(player pl)
+{
+#ifdef CLIENT
+	// crosshair
+	Cross_DrawSub(g_cross_spr, [24,24], [24/128,48/128], [0.1875, 0.1875]);
+	// ammo counter
+	HUD_DrawAmmo2();
+	vector aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];
+	drawsubpic(aicon_pos, [24,24], g_hud7_spr, [120/256,72/128],[24/256, 24/128], g_hud_color, pSeatLocal->m_flAmmo2Alpha, DRAWFLAG_ADDITIVE);
+#endif
 }
 
 void
@@ -98,11 +181,11 @@ weapon_t w_incendiary =
 	.slot_pos	= 3,
 	.draw		= w_incendiary_draw,
 	.holster	= __NULL__,
-	.primary	= __NULL__,
+	.primary	= w_incendiary_primary,
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= __NULL__,
-	.postdraw	= __NULL__,
+	.postdraw	= w_incendiary_postdraw,
 	.precache	= w_incendiary_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_incendiary_updateammo,

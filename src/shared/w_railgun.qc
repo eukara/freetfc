@@ -125,10 +125,12 @@ w_railgun_primary(player pl)
 }
 
 void
-w_railgun_crosshair(player pl)
+w_railgun_postdraw(player pl)
 {
 #ifdef CLIENT
+	// crosshair
 	Cross_DrawSub(g_cross_spr, [24,24], [48/128,24/128], [0.1875, 0.1875]);
+	// ammo counter
 	HUD_DrawAmmo2();
 	vector aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];
 	drawsubpic(aicon_pos, [24,24], g_hud7_spr, [0,72/128],[24/256, 24/128], g_hud_color, pSeatLocal->m_flAmmo2Alpha, DRAWFLAG_ADDITIVE);
@@ -177,7 +179,7 @@ weapon_t w_railgun =
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= __NULL__,
-	.postdraw	= w_railgun_crosshair,
+	.postdraw	= w_railgun_postdraw,
 	.precache	= w_railgun_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_railgun_updateammo,

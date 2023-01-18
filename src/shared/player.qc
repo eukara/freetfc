@@ -462,7 +462,7 @@ player::MakeClass(classtype_e class)
 		m_iMaxShells = 40;
 		m_iMaxNails = 50;
 		m_iMaxCells = 200;
-		m_iMaxRockets = 60;
+		m_iMaxRockets = 20;
 		env_message_single(this, "HELP_PYRO");
 		break;
 	case CLASS_SPY:
