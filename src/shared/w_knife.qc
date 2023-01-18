@@ -14,9 +14,22 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+enum
+{
+	KNIFE_IDLE,
+	KNIFE_IDLE2,
+	KNIFE_SLASH,
+	KNIFE_STAB,
+	KNIFE_DRAW,
+	KNIFE_HOLSTER
+};
+
 void
 w_knife_precache(void)
 {
+	Sound_Precache("weapon_crowbar.hit");
+	Sound_Precache("weapon_crowbar.miss");
+	Sound_Precache("weapon_crowbar.hitbody");
 	precache_model("models/v_tfc_knife.mdl");
 	precache_model("models/w_knife.mdl");
 	precache_model("models/p_knife.mdl");
@@ -51,7 +64,70 @@ void
 w_knife_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_knife.mdl");
-	Weapons_ViewAnimation(pl, 0);
+	Weapons_ViewAnimation(pl, KNIFE_DRAW);
+}
+
+void
+w_knife_holster(player pl)
+{
+	Weapons_ViewAnimation(pl, KNIFE_HOLSTER);
+}
+
+void
+w_knife_primary(player pl)
+{
+	int anim = 0;
+	vector src;
+
+	if (pl.w_attack_next) {
+		return;
+	}
+
+	Weapons_MakeVectors(pl);
+	src = pl.origin + pl.view_ofs;
+
+	/* make sure we can gib corpses */
+	int oldhitcontents = self.hitcontentsmaski;
+	self.hitcontentsmaski = CONTENTBITS_POINTSOLID | CONTENTBIT_CORPSE;
+	traceline(src, src + (v_forward * 32), FALSE, pl);
+	self.hitcontentsmaski = oldhitcontents;
+
+	pl.w_attack_next = 0.4f;
+
+	pl.w_idle_next = 2.5f;
+
+	Weapons_ViewAnimation(pl, KNIFE_SLASH);
+
+	if (self.flags & FL_CROUCHING)
+		Animation_PlayerTop(pl, ANIM_CR_SHOOTCROWBAR, 0.41f);
+	else
+		Animation_PlayerTop(pl, ANIM_SHOOTCROWBAR, 0.5f);
+
+#ifdef SERVER
+	Sound_Play(self, CHAN_WEAPON, "weapon_crowbar.miss");
+
+	if (trace_fraction >= 1.0) {
+		return;
+	}
+
+	/* don't bother with decals, we got squibs */
+	if (trace_ent.iBleeds) {
+		FX_Blood(trace_endpos, [1,0,0]);
+	} else {
+		FX_Impact(IMPACT_MELEE, trace_endpos, trace_plane_normal);
+	}
+
+	// TODO
+	// Backstab detection
+	if (trace_ent.takedamage) {
+		Damage_Apply(trace_ent, pl, Skill_GetValue("plr_crowbar", 10), WEAPON_CROWBAR, DMG_BLUNT);
+		if (trace_ent.iBleeds) {
+			Sound_Play(self, CHAN_WEAPON, "weapon_crowbar.hitbody");
+		}
+	} else {
+		Sound_Play(self, CHAN_WEAPON, "weapon_crowbar.hit");
+	}
+#endif
 }
 
 float
@@ -97,8 +173,8 @@ weapon_t w_knife =
 	.slot		= 0,
 	.slot_pos	= 2,
 	.draw		= w_knife_draw,
-	.holster	= __NULL__,
-	.primary	= __NULL__,
+	.holster	= w_knife_holster,
+	.primary	= w_knife_primary,
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
 	.release	= __NULL__,
