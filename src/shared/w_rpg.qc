@@ -39,6 +39,7 @@ w_rpg_precache(void)
 	precache_model("models/w_rpg.mdl");
 	precache_model("models/p_rpg.mdl");
 	precache_model("models/rpgrocket.mdl");
+	Sound_Precache("weapon_rpg.fire");
 }
 
 int
@@ -116,11 +117,13 @@ w_rpg_primary(player pl)
 	case AUTO_FIRED:
 		Weapons_ViewAnimation(pl, RPG_FIRE);
 		Weapons_ViewPunchAngle(pl, [-2,0,0]);
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_rpg.fire");
 		pl.w_attack_next = 0.8f;
 		break;
 	case AUTO_LAST:
 		Weapons_ViewAnimation(pl, RPG_FIRE);
 		Weapons_ViewPunchAngle(pl, [-2,0,0]);
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_rpg.fire");
 		pl.w_attack_next = 0.8f;
 		break;
 	case AUTO_EMPTY:

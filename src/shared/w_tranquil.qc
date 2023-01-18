@@ -33,6 +33,7 @@ w_tranquil_precache(void)
 	precache_model("models/v_tfc_pistol.mdl");
 	precache_model("models/w_tranquil.mdl");
 	precache_model("models/p_tranquil.mdl");
+	Sound_Precache("weapon_tranquilizer.fire");
 }
 
 void
@@ -108,9 +109,7 @@ w_tranquil_primary(player pl)
 	case AUTO_LAST:
 		Weapons_ViewAnimation(pl, TRANQUIL_SHOOT);
 		Weapons_ViewPunchAngle(pl, [-2,0,0]);
-		#ifndef CLIENT
-		Sound_Play(pl, CHAN_WEAPON, "weapon_tranquilizer.fire");
-		#endif
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_tranquilizer.fire");
 		pl.w_attack_next = 1.5f;
 		break;
 	case AUTO_EMPTY:

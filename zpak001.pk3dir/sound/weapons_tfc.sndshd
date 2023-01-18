@@ -1,4 +1,28 @@
+weapon_asscan.fire
+{
+	pitch 1.15
+	sample weapons/asscan2.wav
+}
 
+weapon_asscan.reload
+{
+	sample weapons/.wav
+}
+
+weapon_asscan.spin
+{
+	sample weapons/asscan4.wav
+}
+
+weapon_asscan.spindown
+{
+	sample weapons/asscan3.wav
+}
+
+weapon_asscan.spinup
+{
+	sample weapons/asscan1.wav
+}
 
 weapon_dbs.fire
 {
@@ -20,6 +44,15 @@ weapon_dbs.reload
 	sample weapons/reload3.wav
 }
 
+weapon_flame.fire
+{
+	sample weapons/flmfire2.wav
+}
+
+weapon_incendiary.fire
+{
+	sample weapons/sgun1.wav
+}
 
 weapon_sbs.cock
 {
@@ -41,6 +74,11 @@ weapon_nailgun.fire
 	sample weapons/airgun_1.wav
 }
 
+weapon_rpg.fire
+{
+	sample weapons/rocketfire1.wav
+}
+
 weapon_railgun.fire
 {
 	sample weapons/railgun.wav
@@ -49,6 +87,11 @@ weapon_railgun.fire
 weapon_sniper.fire
 {
 	sample weapons/sniper.wav
+}
+
+weapon_tranquilizer.fire
+{
+	sample weapons/dartgun.wav
 }
 
 engineer.build

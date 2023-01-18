@@ -39,6 +39,7 @@ w_incendiary_precache(void)
 	precache_model("models/v_tfc_rpg.mdl");
 	precache_model("models/w_incendiary.mdl");
 	precache_model("models/p_incendiary.mdl");
+	Sound_Precache("weapon_incendiary.fire");
 }
 
 void
@@ -108,11 +109,13 @@ w_incendiary_primary(player pl)
 		break;
 	case AUTO_FIRED:
 		Weapons_ViewAnimation(pl, INC_FIRE);
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_incendiary.fire");
 		Weapons_ViewPunchAngle(pl, [-2,0,0]);
 		pl.w_attack_next = 0.8f;
 		break;
 	case AUTO_LAST:
 		Weapons_ViewAnimation(pl, INC_FIRE);
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_incendiary.fire");
 		Weapons_ViewPunchAngle(pl, [-2,0,0]);
 		pl.w_attack_next = 0.8f;
 		break;
