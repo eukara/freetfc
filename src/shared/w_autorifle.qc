@@ -31,8 +31,7 @@ void
 w_autorifle_precache(void)
 {
 	precache_model("models/v_tfc_sniper.mdl");
-	precache_model("models/w_autorifle.mdl");
-	precache_model("models/p_autorifle.mdl");
+	precache_model("models/p_sniper2.mdl");
 	Sound_Precache("weapon_sniper.fire");
 }
 
@@ -45,12 +44,12 @@ w_autorifle_updateammo(player pl)
 string
 w_autorifle_wmodel(void)
 {
-	return "models/w_autorifle.mdl";
+	return "";
 }
 string
 w_autorifle_pmodel(player pl)
 {
-	return "models/p_autorifle.mdl";
+	return "models/p_sniper2.mdl";
 }
 
 string
@@ -167,7 +166,7 @@ weapon_t w_autorifle =
 	.precache	= w_autorifle_precache,
 	.pickup		= __NULL__,
 	.updateammo	= w_autorifle_updateammo,
-	.wmodel		= w_autorifle_wmodel,
+	.wmodel		= __NULL__,
 	.pmodel		= w_autorifle_pmodel,
 	.deathmsg	= w_autorifle_deathmsg,
 	.aimanim	= w_autorifle_aimanim,
