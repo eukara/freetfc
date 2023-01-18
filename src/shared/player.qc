@@ -56,12 +56,15 @@ class player:NSClientPlayer
 	/* ammo 3 */
 	PREDICTED_INT(mode_tempstate)
 
-	virtual void(void) Physics_Jump;
+	virtual void Physics_Jump(void);
+	virtual float Physics_MaxSpeed(void);
 
 #ifdef CLIENT
-	virtual void(float,float) ReceiveEntity;
-	virtual void(void) PredictPreFrame;
-	virtual void(void) PredictPostFrame;
+	virtual void ReceiveEntity(float,float);
+	virtual void PredictPreFrame(void);
+	virtual void PredictPostFrame(void);
+	virtual void UpdateAliveCam(void);
+
 #else
 	int m_iMaxHealth;
 	int m_iMaxArmor;
@@ -73,11 +76,12 @@ class player:NSClientPlayer
 	int m_iMaxDetpack;
 	int m_iMaxMedikit;
 
-	virtual void(void) EvaluateEntity;
-	virtual float(entity, float) SendEntity;
+	virtual void EvaluateEntity(void);
+	virtual float SendEntity(entity, float);
 
-	virtual void(void) SpawnIntoGame;
-	virtual void(classtype_e) MakeClass;
+	virtual void SpawnIntoGame(void);
+	virtual void MakeClass(classtype_e);
+
 #endif
 };
 
@@ -85,6 +89,39 @@ class player:NSClientPlayer
 void Weapons_AmmoUpdate(entity);
 void HUD_AmmoNotify_Check(player pl);
 void HUD_ItemNotify_Check(player pl);
+void Camera_RunPosBob(vector angles, __inout vector camera_pos);
+void Camera_StrafeRoll(__inout vector camera_angle);
+void Shake_Update(NSClientPlayer);
+
+void
+player::UpdateAliveCam(void)
+{
+	vector cam_pos = GetEyePos();
+	Camera_RunPosBob(view_angles, cam_pos);
+
+	g_view.SetCameraOrigin(cam_pos);
+	Camera_StrafeRoll(view_angles);
+	g_view.SetCameraAngle(view_angles);
+
+	if (vehicle) {
+		NSVehicle veh = (NSVehicle)vehicle;
+
+		if (veh.UpdateView)
+			veh.UpdateView();
+	} else if (health) {
+		if (autocvar_pm_thirdPerson == TRUE) {
+			makevectors(view_angles);
+			vector vStart = [pSeat->m_vecPredictedOrigin[0], pSeat->m_vecPredictedOrigin[1], pSeat->m_vecPredictedOrigin[2] + 16] + (v_right * 4);
+			vector vEnd = vStart + (v_forward * -48) + [0,0,16] + (v_right * 4);
+			traceline(vStart, vEnd, FALSE, this);
+			g_view.SetCameraOrigin(trace_endpos + (v_forward * 5));
+		}
+	}
+
+	Shake_Update(this);
+	g_view.AddPunchAngle(punchangle);
+}
+
 /*
 =================
 player::ReceiveEntity
@@ -462,7 +499,7 @@ player::MakeClass(classtype_e class)
 		m_iMaxShells = 40;
 		m_iMaxNails = 50;
 		m_iMaxCells = 200;
-		m_iMaxRockets = 20;
+		m_iMaxRockets = 60;
 		env_message_single(this, "HELP_PYRO");
 		break;
 	case CLASS_SPY:

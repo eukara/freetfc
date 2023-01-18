@@ -49,3 +49,48 @@ player::Physics_Jump(void)
 		}
 	}
 }
+
+float
+player::Physics_MaxSpeed(void)
+{
+	float maxspeed = serverkeyfloat("phy_maxspeed");
+	float desiredspeed;
+
+	/* values courtesy of https://wiki.teamfortress.com/ */
+	switch (classtype) {
+	case CLASS_SCOUT:
+		desiredspeed = 400.0f;
+		break;
+	case CLASS_SNIPER:
+		desiredspeed = 300.0f;
+		break;
+	case CLASS_SOLDIER:
+		desiredspeed = 240.0f;
+		break;
+	case CLASS_DEMO:
+		desiredspeed = 280.0f;
+		break;
+	case CLASS_MEDIC:
+		desiredspeed = 320.0f;
+		break;
+	case CLASS_HVYWEAPON:
+		desiredspeed = 228.0f;
+		break;
+	case CLASS_PYRO:
+		desiredspeed = 300.0f;
+		break;
+	case CLASS_SPY:
+		desiredspeed = 300.0f;
+		break;
+	case CLASS_ENGINEER:
+		desiredspeed = 300.0f;
+		break;
+	default:
+		desiredspeed = 300.0f;
+	}
+
+	if (GetFlags() & FL_CROUCHING)
+		desiredspeed /= 3;
+
+	return min(desiredspeed, maxspeed);
+}
