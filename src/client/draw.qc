@@ -17,7 +17,21 @@
 void
 ClientGame_PreDraw(void) 
 {
-
+	/* color the HUD according to the team we're on */
+	switch (getplayerkeyfloat(player_localnum, "*team")) {
+	case 1:
+		g_hud_color = [0.15, 0.15, 1.0];
+		break;
+	case 2:
+		g_hud_color = [1, 0.15, 0.15];
+		break;
+	case 3:
+		g_hud_color = [1.0, 1.0, 0.15];
+		break;
+	case 4:
+		g_hud_color = [0.15, 1.0, 0.15];
+		break;
+	}
 }
 
 void
