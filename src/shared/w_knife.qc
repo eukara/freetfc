@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016-2020 Marco Cawthorne <marco@icculus.org>
+ * Copyright (c) 2016-2023 Marco Cawthorne <marco@icculus.org>
+ * Copyright (c) 2023 Gethyn ThomasQuail <xylemon@posteo.net>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -103,8 +104,9 @@ w_knife_primary(player pl)
 	else
 		Animation_PlayerTop(pl, ANIM_SHOOTCROWBAR, 0.5f);
 
+	Weapons_Sound(pl, CHAN_WEAPON, "weapon_crowbar.miss");
+
 #ifdef SERVER
-	Sound_Play(self, CHAN_WEAPON, "weapon_crowbar.miss");
 
 	if (trace_fraction >= 1.0) {
 		return;
@@ -117,15 +119,24 @@ w_knife_primary(player pl)
 		FX_Impact(IMPACT_MELEE, trace_endpos, trace_plane_normal);
 	}
 
-	// TODO
 	// Backstab detection
 	if (trace_ent.takedamage) {
-		Damage_Apply(trace_ent, pl, Skill_GetValue("plr_crowbar", 10), WEAPON_CROWBAR, DMG_BLUNT);
-		if (trace_ent.iBleeds) {
-			Sound_Play(self, CHAN_WEAPON, "weapon_crowbar.hitbody");
+		int damage = 10;
+		damageType_t dmgtype = DMG_BLUNT;
+
+		if (trace_ent.classname == "player") {
+			player otherpl = (player) trace_ent;
+			if (otherpl.IsFacing(pl) == false) {
+				damage = 500;
+				dmgtype = DMG_CRUSH;
+			}
 		}
-	} else {
-		Sound_Play(self, CHAN_WEAPON, "weapon_crowbar.hit");
+		Damage_Apply(trace_ent, pl, damage, WEAPON_KNIFE, dmgtype);
+		if (trace_ent.iBleeds) {
+			Weapons_Sound(pl, CHAN_WEAPON, "weapon_crowbar.hitbody");
+		} else {
+			Weapons_Sound(pl, CHAN_WEAPON, "weapon_crowbar.hit");
+		}
 	}
 #endif
 }
