@@ -261,10 +261,10 @@ info_tfgoal::Touch(entity eToucher)
 void
 info_tfgoal::Respawn(void)
 {
-	solid = SOLID_TRIGGER;
-	movetype = MOVETYPE_NONE;
+	SetSolid(SOLID_TRIGGER);
+	SetMovetype(MOVETYPE_NONE);
 	SetModel(GetSpawnModel());
-	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
+	SetSize(VEC_HULL_MIN, VEC_HULL_MAX);
 	SetOrigin(GetSpawnOrigin());
 }
 
@@ -419,6 +419,7 @@ i_t_g::Respawn(void)
 	SetMovetype(MOVETYPE_NONE);
 	SetModel(GetSpawnModel());
 	SetOrigin(GetSpawnOrigin());
+	Hide();
 }
 
 void
