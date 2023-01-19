@@ -122,6 +122,9 @@ w_nailgun_primary(player pl)
 		}
 		Weapons_ViewAnimation(pl, NAILGUN_SHOOT2);
 		Weapons_ViewPunchAngle(pl, [-1,0,0]);
+		#ifdef CLIENT
+		View_SetMuzzleflash(MUZZLE_RIFLE);
+		#endif
 		#ifndef CLIENT
 		Sound_Play(pl, CHAN_WEAPON, "weapon_nailgun.fire");
 		#endif

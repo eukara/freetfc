@@ -25,3 +25,5 @@ var string g_tfchud4_spr;
 var string g_tfchud5_spr;
 var string g_tfchud6_spr;
 var string g_tfchud7_spr;
+
+var int MUZZLE_ROUND;

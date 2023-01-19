@@ -125,6 +125,9 @@ w_supernail_primary(player pl)
 		}
 		Weapons_ViewAnimation(pl, NAILGUN_SHOOT2);
 		Weapons_ViewPunchAngle(pl, [-1,0,0]);
+		#ifdef CLIENT
+		View_SetMuzzleflash(MUZZLE_RIFLE);
+		#endif
 		#ifndef CLIENT
 		Sound_Play(pl, CHAN_WEAPON, "weapon_nailgun.fire");
 		#endif
@@ -142,22 +145,9 @@ void
 w_supernail_hud(player pl)
 {
 #ifdef CLIENT
-	vector cross_pos;
 	vector aicon_pos;
 
-	/* crosshair/laser */
-	cross_pos = g_hudmins + (g_hudres / 2) + [-12,-12];
-	drawsubpic(
-		cross_pos,
-		[24,24],
-		g_cross_spr,
-		[0.1875,0],
-		[0.1875, 0.1875],
-		[1,1,1],
-		1.0f,
-		DRAWFLAG_NORMAL
-	);
-
+	Cross_DrawSub(g_cross_spr, [24,24], [0.1875,0], [0.1875, 0.1875]);
 	HUD_DrawAmmo2();
 
 	aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];

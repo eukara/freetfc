@@ -161,6 +161,8 @@ w_pipebomb_postdraw(player pl)
 #ifdef CLIENT
 	vector aicon_pos;
 
+	Cross_DrawSub(g_cross_spr, [24,24], [24/128,48/128], [0.1875, 0.1875]);
+
 	/* ammo counters */
 	HUD_DrawAmmo1();
 	HUD_DrawAmmo2();

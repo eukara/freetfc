@@ -101,16 +101,14 @@ w_dbs_primary(player pl)
 	case AUTO_FIRE_FAILED:
 		return;
 		break;
+	case AUTO_LAST:
 	case AUTO_FIRED:
 		pl.mag_dbs--;
 		Weapons_ViewAnimation(pl, DBS_FIRE1);
 		Weapons_ViewPunchAngle(pl, [-2,0,0]);
-		Weapons_Sound(pl, CHAN_WEAPON, "weapon_dbs.fire");
-		pl.w_attack_next = 0.7f;
-		break;
-	case AUTO_LAST:
-		Weapons_ViewAnimation(pl, DBS_FIRE1);
-		Weapons_ViewPunchAngle(pl, [-2,0,0]);
+		#ifdef CLIENT
+		View_SetMuzzleflash(MUZZLE_ROUND);
+		#endif
 		Weapons_Sound(pl, CHAN_WEAPON, "weapon_dbs.fire");
 		pl.w_attack_next = 0.7f;
 		break;
@@ -166,9 +164,7 @@ void
 w_dbs_crosshair(player pl)
 {
 #ifdef CLIENT
-	static vector cross_pos;
-	cross_pos = (g_hudres / 2) + [-12,-12];
-	drawsubpic(cross_pos, [24,24], "sprites/crosshairs.spr_0.tga", [48/128,24/128], [0.1875, 0.1875], [1,1,1], 1, DRAWFLAG_NORMAL);
+	Cross_DrawSub(g_cross_spr, [24,24], [48/128,24/128], [0.1875, 0.1875]);
 	HUD_DrawAmmo1();
 	HUD_DrawAmmo2();
 	vector aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];

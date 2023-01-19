@@ -67,10 +67,13 @@ w_asscan_precache(void)
 	Sound_Precache("weapon_asscan.reload");
 	Sound_Precache("weapon_asscan.spindown");
 	Sound_Precache("weapon_asscan.spinup");
-#endif
-	precache_model("models/v_tfac.mdl");
 	precache_model("models/w_tfac.mdl");
 	precache_model("models/p_tfac.mdl");
+#endif
+
+#ifdef CLIENT
+	precache_model("models/v_tfac.mdl");
+#endif
 }
 
 int
@@ -132,9 +135,7 @@ w_asscan_release(player pl)
 	/* end firing */
 	if (pl.mode_tempstate == 1) {
 		pl.mode_tempstate = 0;
-#ifdef SERVER
-		Sound_Play(pl, CHAN_WEAPON, "weapon_asscan.spindown");
-#endif
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_asscan.spindown");
 		Weapons_ViewAnimation(pl, ASSCAN_SPINDOWN);
 		pl.w_attack_next = 1.0f;
 		pl.w_idle_next = pl.w_attack_next;
@@ -158,16 +159,16 @@ w_asscan_primary(player pl)
 		return;
 
 	/* ammo check */
-	if (pl.m_iAmmoShells <= 0)
+	if (pl.m_iAmmoShells <= 0) {
+		w_asscan_release(pl);
 		return;
+	}
 
 	/* spin up first */
 	if (pl.mode_tempstate == 0) {
 		pl.mode_tempstate = 1;
 		Weapons_ViewAnimation(pl, ASSCAN_SPINUP);
-#ifdef SERVER
-		Sound_Play(pl, CHAN_WEAPON, "weapon_asscan.spinup");
-#endif
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_asscan.spinup");
 		pl.w_attack_next = 0.5f;
 		pl.w_idle_next = pl.w_attack_next;
 		return;
@@ -176,13 +177,13 @@ w_asscan_primary(player pl)
 
 	Weapons_ViewAnimation(pl, ASSCAN_FIRE);
 	Weapons_ViewPunchAngle(pl, [random(-2, 2),0,0]);
+	Weapons_Sound(pl, CHAN_WEAPON, "weapon_asscan.fire");
 
 #ifdef CLIENT
 	View_AddEvent(w_asscan_ejectshell, 0.0f);
-	View_SetMuzzleflash(MUZZLE_RIFLE);
+	View_SetMuzzleflash(MUZZLE_WEIRD);
 #else
 	TraceAttack_FireBullets(1, Weapons_GetCameraPos(pl), 8, [0.15,0.15], WEAPON_ASSCAN);
-	Sound_Play(pl, CHAN_WEAPON, "weapon_asscan.fire");
 #endif
 
 	pl.w_attack_next = 0.1f;
@@ -197,7 +198,7 @@ w_asscan_hud(player pl)
 
 	aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];
 
-	Cross_DrawSub(g_cross_spr, [24,24], [0.1875,0], [0.1875, 0.1875]);
+	Cross_DrawSub(g_cross_spr, [24,24], [48/128,24/128], [0.1875, 0.1875]);
 
 	HUD_DrawAmmo2();
 
@@ -254,7 +255,6 @@ w_asscan_hudpic(player pl, int selected, vector pos, float a)
 int
 w_asscan_isempty(player pl)
 {
-
 	if (pl.m_iAmmoShells <= 0)
 		return 1;
 

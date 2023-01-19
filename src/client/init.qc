@@ -67,4 +67,5 @@ ClientGame_RendererRestart(string rstr)
 	MUZZLE_RIFLE = (int)getmodelindex("sprites/muzzleflash1.spr");
 	MUZZLE_SMALL = (int)getmodelindex("sprites/muzzleflash2.spr");
 	MUZZLE_WEIRD = (int)getmodelindex("sprites/muzzleflash3.spr");
+	MUZZLE_ROUND = (int)getmodelindex("sprites/muzzleflash.spr");
 }

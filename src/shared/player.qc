@@ -198,7 +198,6 @@ player::PredictPreFrame(void)
 {
 	/* the generic client attributes */
 	NSClientPlayer::PredictPreFrame();
-	SAVE_STATE(classtype);
 
 	SAVE_STATE(anim_top);
 	SAVE_STATE(anim_top_delay);
@@ -219,6 +218,7 @@ player::PredictPreFrame(void)
 	SAVE_STATE(m_iAmmoMedikit);
 
 	SAVE_STATE(mode_tempstate);
+	SAVE_STATE(classtype);
 }
 
 /*
@@ -233,7 +233,6 @@ player::PredictPostFrame(void)
 {
 	/* the generic client attributes */
 	NSClientPlayer::PredictPostFrame();
-	ROLL_BACK(classtype);
 
 	ROLL_BACK(anim_top);
 	ROLL_BACK(anim_top_delay);
@@ -254,6 +253,7 @@ player::PredictPostFrame(void)
 	ROLL_BACK(m_iAmmoMedikit);
 
 	ROLL_BACK(mode_tempstate);
+	ROLL_BACK(classtype);
 }
 
 #else
@@ -312,13 +312,13 @@ player::EvaluateEntity(void)
 	SAVE_STATE(m_iAmmoMedikit);
 
 	SAVE_STATE(mode_tempstate);
+	SAVE_STATE(classtype);
 
 	SAVE_STATE(anim_top);
 	SAVE_STATE(anim_top_delay);
 	SAVE_STATE(anim_top_time);
 	SAVE_STATE(anim_bottom);
 	SAVE_STATE(anim_bottom_time);
-	SAVE_STATE(classtype);
 }
 
 void

@@ -90,7 +90,7 @@ w_autorifle_primary(player pl)
 	case AUTO_LAST:
 		Weapons_ViewAnimation(pl, SNIPER_AUTOFIRE);
 		#ifdef CLIENT
-		View_SetMuzzleflash(MUZZLE_WEIRD);
+		View_SetMuzzleflash(MUZZLE_RIFLE);
 		#endif
 		Weapons_Sound(pl, CHAN_WEAPON, "weapon_sniper.fire");
 		pl.w_attack_next = 0.1f;

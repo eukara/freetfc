@@ -1,6 +1,6 @@
 weapon_asscan.fire
 {
-	pitch 1.15
+	//pitch 1.15
 	sample weapons/asscan2.wav
 }
 

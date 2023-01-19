@@ -92,7 +92,7 @@ w_sniper_primary(player pl)
 	w_baseauto_fire(pl, player::m_iAmmoShells, 8, [0,0]);
 	Weapons_ViewAnimation(pl, SNIPER_FIRE);
 	#ifdef CLIENT
-	View_SetMuzzleflash(MUZZLE_WEIRD);
+	View_SetMuzzleflash(MUZZLE_RIFLE);
 	#endif
 	Weapons_Sound(pl, CHAN_WEAPON, "weapon_sniper.fire");
 	pl.w_attack_next = 2.0f;

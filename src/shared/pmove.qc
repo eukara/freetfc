@@ -53,7 +53,6 @@ player::Physics_Jump(void)
 float
 player::Physics_MaxSpeed(void)
 {
-	float maxspeed = serverkeyfloat("phy_maxspeed");
 	float desiredspeed;
 
 	/* values courtesy of https://wiki.teamfortress.com/ */
@@ -92,5 +91,5 @@ player::Physics_MaxSpeed(void)
 	if (GetFlags() & FL_CROUCHING)
 		desiredspeed /= 3;
 
-	return min(desiredspeed, maxspeed);
+	return desiredspeed;
 }
