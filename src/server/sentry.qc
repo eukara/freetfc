@@ -27,6 +27,11 @@ TFCSentry::Think(void)
 			if (vlen(origin - p.origin) > 1024)
 				continue;
 
+			print(sprintf("Is Facing? %d\n", IsFacing(p)));
+
+			if (IsFacing(p) == false)
+				continue;
+
 			/* find them */
 			traceline(origin, p.origin, MOVE_NORMAL, this);
 			if (trace_ent == p) {
@@ -71,7 +76,9 @@ TFCSentry::Think(void)
 void
 TFCSentry::Place(NSClientPlayer pl)
 {
-	SetAngles(pl.GetAngles());
+	vector newAngles = pl.GetAngles();
+	newAngles[0] = newAngles[2] = 0;
+	SetAngles(newAngles);
 
 	makevectors([0, pl.v_angle[1], 0]);
 	SetOrigin(pl.origin + (v_forward * 48));

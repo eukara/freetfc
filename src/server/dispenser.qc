@@ -222,7 +222,9 @@ TFCDispenser::Touch(entity eToucher)
 void
 TFCDispenser::Place(player pl)
 {
-	SetAngles(pl.GetAngles());
+	vector newAngles = pl.GetAngles();
+	newAngles[0] = newAngles[2] = 0;
+	SetAngles(newAngles);
 
 	makevectors([0, pl.v_angle[1], 0]);
 	SetOrigin(pl.origin + (v_forward * 48));
