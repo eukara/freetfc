@@ -59,12 +59,6 @@ w_sniper_deathmsg(void)
 }
 
 void
-w_sniper_release(player pl)
-{
-	Weapons_ViewAnimation(pl, SNIPER_IDLE);
-}
-
-void
 w_sniper_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_sniper.mdl");
@@ -78,27 +72,45 @@ w_sniper_aimanim(player pl)
 }
 
 void
-w_sniper_primary(player pl)
+w_sniper_release(player pl)
 {
-
-//pl.mode_still = 1 - pl.mode_still;
-
-// TODO
-// Below should be in the release, we need to detect whether we are still and then create the "dot"
-
 	if (pl.w_attack_next > 0.0)
 		return;
 
-	w_baseauto_fire(pl, player::m_iAmmoShells, 8, [0,0]);
-	Weapons_ViewAnimation(pl, SNIPER_FIRE);
-	#ifdef CLIENT
-	View_SetMuzzleflash(MUZZLE_RIFLE);
-	#endif
-	Weapons_Sound(pl, CHAN_WEAPON, "weapon_sniper.fire");
-	pl.w_attack_next = 2.0f;
+	if (pl.mode_tempstate > 0) {
+		float dmg = bound(75, (pl.mode_tempstate/2) * 75, 375);
+		w_baseauto_fire(pl, player::m_iAmmoShells, dmg, [0,0]);
+		Weapons_ViewAnimation(pl, SNIPER_FIRE);
+		#ifdef CLIENT
+		View_SetMuzzleflash(MUZZLE_RIFLE);
+		#endif
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_sniper.fire");
+		pl.w_attack_next = 2.0f;
+		pl.w_idle_next = 1.5f;
+		pl.mode_tempstate = 0;
+	}
+}
 
-	pl.w_idle_next = 1.5f;
+void
+w_sniper_primary(player pl)
+{
+	/* when moving, immediately release */
+	if (vlen(pl.velocity) > 0) {
+		w_sniper_release(pl);
+		return;
+	}
 
+	/* weapon speed check */
+	if (pl.w_attack_next > 0.0)
+		return;
+
+	/* if we aren't already, 'aim' down... */
+	if (pl.mode_tempstate == 0) {
+		Weapons_ViewAnimation(pl, SNIPER_AIM);
+	}
+
+	pl.mode_tempstate += 1;
+	pl.w_attack_next = 1.0f;
 }
 
 void
@@ -113,30 +125,10 @@ w_sniper_secondary(player pl)
 	} else {
 		pl.viewzoom = 1.0f;
 	}
+
 	pl.w_attack_next = 0.5f;
 }
 
-/*
-void
-w_sniper_release(player pl)
-{
-	if (pl.w_attack_next > 0.0)
-		return;
-
-// Can't fire if moving
-//if (pl.mode_still == 1) {
-	w_baseauto_fire(pl, player::m_iAmmoShells, 8, [0,0]);
-	Weapons_ViewAnimation(pl, SNIPER_FIRE);
-	#ifdef CLIENT
-	View_SetMuzzleflash(MUZZLE_WEIRD);
-	#else
-	Sound_Play(pl, CHAN_WEAPON, "weapon_sniper.fire");
-	#endif
-	pl.w_attack_next = 2.0f;
-//}
-	pl.w_idle_next = 1.5f;
-}
-*/
 void
 w_sniper_postdraw(player pl)
 {
@@ -147,6 +139,31 @@ w_sniper_postdraw(player pl)
 	} else {
 		Cross_DrawSub(g_cross_spr, [104,16], [24/128,96/128], [104/128, 16/128]);
 	}
+
+	if (pl.mode_tempstate) {
+		vector laser_pos;
+		float lerp;
+		vector jitter = [0.0f, 0.0f, 0.0f];
+		Weapons_MakeVectors(pl);
+		vector src = pl.origin + pl.view_ofs;
+		traceline(src, src + (v_forward * 256), FALSE, pl);
+		lerp = Math_Lerp(18,6, trace_fraction);
+		jitter[0] = (random(0,2) - 2) * (1 - trace_fraction);
+		jitter[1] = (random(0,2) - 2) * (1 - trace_fraction);
+		laser_pos = g_hudmins + (g_hudres / 2) + ([-lerp,-lerp] / 2);
+
+		drawsubpic(
+			laser_pos + jitter,
+			[lerp,lerp],
+			g_laser_spr,
+			[0,0],
+			[1.0, 1.0],
+			[1,1,1],
+			1.0f,
+			DRAWFLAG_ADDITIVE
+		);
+	}
+
 	// ammo counter
 	HUD_DrawAmmo2();
 	vector aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];
@@ -195,7 +212,7 @@ weapon_t w_sniper =
 	.primary	= w_sniper_primary,
 	.secondary	= w_sniper_secondary,
 	.reload		= __NULL__,
-	.release	= __NULL__,
+	.release	= w_sniper_release,
 	.postdraw	= w_sniper_postdraw,
 	.precache	= w_sniper_precache,
 	.pickup		= __NULL__,
