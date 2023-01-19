@@ -81,7 +81,7 @@ class player:NSClientPlayer
 
 	virtual void SpawnIntoGame(void);
 	virtual void MakeClass(classtype_e);
-
+	virtual void ServerInputFrame(void);
 #endif
 };
 
@@ -257,6 +257,14 @@ player::PredictPostFrame(void)
 }
 
 #else
+void
+player::ServerInputFrame(void)
+{
+	super::ServerInputFrame();
+	gflags &= ~GF_NOBUILDZONE;
+	gflags &= ~GF_NOGRENADEZONE;
+}
+
 void
 player::EvaluateEntity(void)
 {
