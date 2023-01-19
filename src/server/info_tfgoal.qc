@@ -160,6 +160,10 @@ info_tfgoal::Touch(entity eToucher)
 			/* unset the activator and make it reappear */
 			findme.Respawn();
 		}
+
+		/* mark as removed on the player end, too. */
+		pl.g_items &= ~ITEM_GOALITEM;
+		forceinfokey(pl, "*goalitem_t", "");
 	}
 
 	sound(this, CHAN_ITEM, m_strActivatedSound, 1.0f, ATTN_NORM);

@@ -111,6 +111,7 @@ item_tfgoal::DropReturnable(NSClientPlayer pp)
 
 	/* untag it from the player */
 	pl.g_items &= ~ITEM_GOALITEM;
+	forceinfokey(pl, "*goalitem_t", "");
 
 	/* return after N secs */
 	ScheduleThink(TeamOwnerReturns, m_flPausetime);
@@ -154,6 +155,8 @@ item_tfgoal::Touch(entity eToucher)
 
 	Disappear();
 	pl.g_items |= ITEM_GOALITEM;
+	forceinfokey(pl, "*goalitem_t", itos(m_iTeamOwner));
+
 	m_eActivator = pl;
 	ReleaseThink();
 

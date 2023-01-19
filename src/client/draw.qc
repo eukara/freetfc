@@ -14,22 +14,27 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#define TFC_HUD_TEAM_COLOR_RED [1, 0.15, 0.15]
+#define TFC_HUD_TEAM_COLOR_BLUE [0.15, 0.15, 1.0]
+#define TFC_HUD_TEAM_COLOR_GREEN [0.15, 1.0, 0.15]
+#define TFC_HUD_TEAM_COLOR_YELLOW [1.0, 1.0, 0.15]
+
 void
 ClientGame_PreDraw(void) 
 {
 	/* color the HUD according to the team we're on */
 	switch (getplayerkeyfloat(player_localnum, "*team")) {
 	case 1:
-		g_hud_color = [0.15, 0.15, 1.0];
+		g_hud_color = TFC_HUD_TEAM_COLOR_BLUE;
 		break;
 	case 2:
-		g_hud_color = [1, 0.15, 0.15];
+		g_hud_color = TFC_HUD_TEAM_COLOR_RED;
 		break;
 	case 3:
-		g_hud_color = [1.0, 1.0, 0.15];
+		g_hud_color = TFC_HUD_TEAM_COLOR_YELLOW;
 		break;
 	case 4:
-		g_hud_color = [0.15, 1.0, 0.15];
+		g_hud_color = TFC_HUD_TEAM_COLOR_GREEN;
 		break;
 	}
 }
@@ -37,6 +42,61 @@ ClientGame_PreDraw(void)
 void
 ClientGame_PostDraw(void)
 {
+	player pl = (player)pSeat->m_ePlayer;
+
 	if (serverkeyfloat("areadefs") == 1)
 		Font_DrawText([16,16], getplayerkeyvalue(player_localnum, "*areadef"), FONT_CON);
+
+	if (pl.g_items & ITEM_GOALITEM) {
+		vector vecGoalItemPos;
+		int iGoalItemTeam = (int)getplayerkeyfloat(player_localnum, "*goalitem_t");
+
+		vecGoalItemPos = g_hudmins + [16, (g_hudres[1] / 2) - 32];
+
+		if (iGoalItemTeam == 1) { /* blue */
+			drawsubpic(
+				vecGoalItemPos,
+				[64,64],
+				g_tfchud1_spr,
+				[192/256,0/256],
+				[64/256, 64/256],
+				TFC_HUD_TEAM_COLOR_BLUE,
+				1.0f,
+				DRAWFLAG_ADDITIVE
+			);
+		} else if (iGoalItemTeam == 2) { /* red */
+			drawsubpic(
+				vecGoalItemPos,
+				[64,64],
+				g_tfchud1_spr,
+				[192/256, 62/256],
+				[64/256, 64/256],
+				TFC_HUD_TEAM_COLOR_RED,
+				1.0f,
+				DRAWFLAG_ADDITIVE
+			);
+		} else if (iGoalItemTeam == 3) { /* yellow */
+			drawsubpic(
+				vecGoalItemPos,
+				[64,64],
+				g_tfchud6_spr,
+				[192/256, 62/256],
+				[64/256, 136/256],
+				TFC_HUD_TEAM_COLOR_YELLOW,
+				1.0f,
+				DRAWFLAG_ADDITIVE
+			);
+		} else { /* green */
+			drawsubpic(
+				vecGoalItemPos,
+				[64,64],
+				g_tfchud1_spr,
+				[0/256,136/256],
+				[64/256, 64/256],
+				TFC_HUD_TEAM_COLOR_GREEN,
+				1.0f,
+				DRAWFLAG_ADDITIVE
+			);
+		}
+	}
 }
