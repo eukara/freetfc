@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016-2020 Marco Cawthorne <marco@icculus.org>
+ * Copyright (c) 2016-2023 Marco Cawthorne <marco@icculus.org>
+ * Copyright (c) 2023 Gethyn ThomasQuail <xylemon@posteo.net>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -13,6 +14,15 @@
  * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+enum
+{
+	MEDKIT_IDLE1,
+	MEDKIT_IDLE2,
+	MEDKIT_USE,
+	MEDKIT_UNUSED,
+	MEDKIT_HOLSTER,
+	MEDKIT_DRAW
+};
 
 void
 w_medkit_precache(void)
@@ -52,6 +62,70 @@ w_medkit_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_medkit.mdl");
 	Weapons_ViewAnimation(pl, 0);
+}
+
+void
+w_medkit_primary(player pl)
+{
+	vector src;
+
+	if (pl.w_attack_next > 0.0)
+		return;
+
+ // cast our traceline
+	Weapons_MakeVectors(pl);
+	src = pl.origin + pl.view_ofs;
+
+	traceline(src, src + (v_forward * 64), FALSE, pl);
+
+	Weapons_ViewAnimation(pl, MEDKIT_USE);
+
+	if (self.flags & FL_CROUCHING)
+		Animation_PlayerTop(pl, ANIM_SHOOT1HAND, 0.45f);
+	else
+		Animation_PlayerTop(pl, ANIM_CR_SHOOT1HAND, 0.45f);
+
+	if (trace_ent.classname == "player") {
+		player otherpl = (player) trace_ent;
+
+	#ifdef SERVER
+		if (otherpl.GetTeam() == pl.GetTeam()) {
+			/* Don't give the player more than 100% health */
+			if (otherpl.health < otherpl.m_iMaxHealth) {
+				/* We want to only give health to our teammate & skip armor */
+				otherpl.health = bound(0, otherpl.health + 15, otherpl.m_iMaxHealth);
+			}
+		} else {
+			/* Poison the enemey */
+			// TODO
+			// Needs to last for 10+ seconds and spread to others
+			Damage_Apply(otherpl, pl, 15, WEAPON_MEDKIT, DMG_GENERIC);
+		}
+		Weapons_Sound(pl, CHAN_WEAPON, "weapon_medkit.heal");
+	#endif
+	}
+	pl.w_attack_next = 0.4f;
+	pl.w_idle_next = 5.0f;
+}
+
+void
+w_medkit_release(player pl)
+{
+
+	if (pl.w_idle_next > 0.0)
+		return;
+
+	int r = (float)input_sequence % 2;
+	switch (r) {
+	case 0:
+		Weapons_ViewAnimation(pl, MEDKIT_IDLE1);
+		pl.w_idle_next = 1.16f;
+		break;
+	default:
+		Weapons_ViewAnimation(pl, MEDKIT_IDLE2);
+		pl.w_idle_next = 2.36f;
+		break;
+	}
 }
 
 float
@@ -98,10 +172,10 @@ weapon_t w_medkit =
 	.slot_pos	= 1,
 	.draw		= w_medkit_draw,
 	.holster	= __NULL__,
-	.primary	= __NULL__,
+	.primary	= w_medkit_primary,
 	.secondary	= __NULL__,
 	.reload		= __NULL__,
-	.release	= __NULL__,
+	.release	= w_medkit_release,
 	.postdraw	= __NULL__,
 	.precache	= w_medkit_precache,
 	.pickup		= __NULL__,

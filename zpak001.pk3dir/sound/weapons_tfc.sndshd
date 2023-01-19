@@ -54,6 +54,11 @@ weapon_incendiary.fire
 	sample weapons/sgun1.wav
 }
 
+weapon_medkit.heal
+{
+	sample items/smallmedkit1.wav
+}
+
 weapon_sbs.cock
 {
 	sample weapons/scock1.wav
