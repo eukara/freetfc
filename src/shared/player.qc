@@ -480,7 +480,7 @@ player::MakeClass(classtype_e class)
 		m_iAmmoShells = 176; /* all of the heavy's weapons use shells */
 
 		m_iMaxHealth = 100;
-		m_iMaxArmor = 250;
+		m_iMaxArmor = 300;
 		health = m_iMaxHealth;
 		armor = 150;
 
