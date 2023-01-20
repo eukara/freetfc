@@ -18,19 +18,17 @@ class TFCGameRules:CGameRules
 {
 	void(void) TFCGameRules;
 
-	virtual bool(void) IsTeamplay;
+	virtual bool IsTeamplay(void);
 
-	virtual void(NSClientPlayer) PlayerConnect;
-	virtual void(NSClientPlayer) PlayerDisconnect;
-	virtual void(NSClientPlayer) PlayerPostFrame;
-	virtual void(NSClientPlayer) PlayerSpawn;
-	virtual void(NSClientPlayer) PlayerKill;
-	virtual void(NSClientPlayer) PlayerRespawn;
-	virtual void(NSClientPlayer) PlayerDeath;
-
-	virtual void(NSClientPlayer) DropGoalItem;
-
+	virtual void PlayerConnect(NSClientPlayer);
+	virtual void PlayerDisconnect(NSClientPlayer);
+	virtual void PlayerPostFrame(NSClientPlayer);
+	virtual void PlayerSpawn(NSClientPlayer);
+	virtual void PlayerKill(NSClientPlayer);
+	virtual void PlayerRespawn(NSClientPlayer);
+	virtual void PlayerDeath(NSClientPlayer);
+	virtual void DropGoalItem(NSClientPlayer);
 	virtual float ImpulseCommand(NSClient, float);
-
-	virtual void(void) LevelNewParms;
+	virtual void LevelNewParms(void);
+	virtual void InitPostEnts(void);
 };

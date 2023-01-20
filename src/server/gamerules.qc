@@ -169,12 +169,56 @@ TFCGameRules::ImpulseCommand(NSClient bp, float num)
 }
 
 void
+TFCGameRules::InitPostEnts(void)
+{
+	int team_count = 0i;
+	entity e = __NULL__;
+
+	super::InitPostEnts();
+
+	/* populate the serverinfo field with the teams we have on the map */
+	e = find(world, ::classname, "info_teamspawn_blue");
+	if (e) {
+		team_count += 1;
+		forceinfokey(world, sprintf("team_%i", team_count), "Blue");
+		forceinfokey(world, sprintf("teamscore_%i", team_count), "0");
+	}
+
+	e = find(world, ::classname, "info_teamspawn_red");
+	if (e) {
+		team_count += 1;
+		forceinfokey(world, sprintf("team_%i", team_count), "Red");
+		forceinfokey(world, sprintf("teamscore_%i", team_count), "0");
+	}
+
+	e = find(world, ::classname, "info_teamspawn_green");
+	if (e) {
+		team_count += 1;
+		forceinfokey(world, sprintf("team_%i", team_count), "Green");
+		forceinfokey(world, sprintf("teamscore_%i", team_count), "0");
+	}
+
+	e = find(world, ::classname, "info_teamspawn_yellow");
+	if (e) {
+		team_count += 1;
+		forceinfokey(world, sprintf("team_%i", team_count), "Yellow");
+		forceinfokey(world, sprintf("teamscore_%i", team_count), "0");
+	}
+
+	forceinfokey(world, "teams", itos(team_count));
+}
+
+void
 TFCGameRules::TFCGameRules(void)
 {
-	/* TODO: Make this depend on the actual spawn types */
-	forceinfokey(world, "teams", "2");
-	forceinfokey(world, "team_1", "Blue");
-	forceinfokey(world, "teamscore_1", "0");
-	forceinfokey(world, "team_2", "Red");
-	forceinfokey(world, "teamscore_2", "0");
+	/* wipe the serverinfo clean */
+	forceinfokey(world, "teams", "0");
+	forceinfokey(world, "team_1", "");
+	forceinfokey(world, "team_2", "");
+	forceinfokey(world, "team_3", "");
+	forceinfokey(world, "team_4", "");
+	forceinfokey(world, "teamscore_1", "");
+	forceinfokey(world, "teamscore_2", "");
+	forceinfokey(world, "teamscore_3", "");
+	forceinfokey(world, "teamscore_4", "");
 }
