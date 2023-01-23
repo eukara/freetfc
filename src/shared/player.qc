@@ -59,6 +59,13 @@ class player:NSClientPlayer
 	virtual void Physics_Jump(void);
 	virtual float Physics_MaxSpeed(void);
 
+	virtual void ProcessInput(void);
+
+	nonvirtual void TFC_CookGren1(void);
+	nonvirtual void TFC_CookGren2(void);
+	nonvirtual void TFC_ReleaseGren1(void);
+	nonvirtual void TFC_ReleaseGren2(void);
+
 #ifdef CLIENT
 	virtual void ReceiveEntity(float,float);
 	virtual void PredictPreFrame(void);
@@ -66,6 +73,9 @@ class player:NSClientPlayer
 	virtual void UpdateAliveCam(void);
 
 #else
+	NSTimer gren1;
+	NSTimer gren2;
+
 	int m_iMaxHealth;
 	int m_iMaxArmor;
 
@@ -82,8 +92,127 @@ class player:NSClientPlayer
 	virtual void SpawnIntoGame(void);
 	virtual void MakeClass(classtype_e);
 	virtual void ServerInputFrame(void);
+
+	nonvirtual void TFC_FragSelf(void);
+	nonvirtual void TFC_FragSelf(void);
 #endif
 };
+
+#ifdef SERVER
+
+void TFCNade_ThrowCaltrop(player);
+void TFCNade_ThrowHandGrenade(player);
+void TFCNade_ThrowSecondary(player);
+void TFCNade_SelfExplode(player);
+
+void
+player::TFC_FragSelf(void)
+{
+	print("Primary exploded in your hand!\n");
+	TFCNade_SelfExplode(this);
+}
+
+void
+player::TFC_ThrowSecondary(void)
+{
+	print("Secondary exploded in your hand!\n");
+	TFCNade_ThrowSecondary(this);
+}
+#endif
+
+void
+player::TFC_CookGren1(void)
+{
+	/* we're already cooking it */
+	if (gflags & GF_GREN1COOK)
+		return;
+
+	if (classtype == CLASS_SCOUT) {
+		/* caltrop sound */
+#ifdef SERVER
+		StartSound("weapons/tink1.wav", CHAN_AUTO, 0, true);
+#endif
+	} else {
+		/* grenade timer sound */
+#ifdef SERVER
+		StartSound("weapons/timer.wav", CHAN_AUTO, 0, true);
+		gren1 = gren1.SetupTimer(this, TFC_FragSelf, 3.75f, false);
+		gren1.RunTimer();
+#endif
+	}
+
+	gflags |= GF_GREN1COOK;
+}
+
+void
+player::TFC_ReleaseGren1(void)
+{
+	if (!(gflags & GF_GREN1COOK))
+		return;
+
+	if (classtype == CLASS_SCOUT) {
+		/* release caltrop */
+#ifdef SERVER
+		TFCNade_ThrowCaltrop(this);
+#endif
+	} else {
+		/* release the nade! */
+#ifdef SERVER
+		TFCNade_ThrowHandGrenade(this);
+		gren1.StopTimer();
+#endif
+	}
+
+	gflags &= ~GF_GREN1COOK;
+}
+
+void
+player::TFC_CookGren2(void)
+{
+	if (gflags & GF_GREN2COOK)
+		return;
+
+	if (classtype == CLASS_SNIPER)
+		return;
+
+#ifdef SERVER
+	StartSound("weapons/timer.wav", CHAN_AUTO, 0, true);
+	gren2 = gren2.SetupTimer(this, TFC_ThrowSecondary, 3.75f, false);
+	gren2.RunTimer();
+#endif
+
+	gflags |= GF_GREN2COOK;
+}
+
+void
+player::TFC_ReleaseGren2(void)
+{
+	if (!(gflags & GF_GREN2COOK))
+		return;
+
+#ifdef SERVER
+	TFCNade_ThrowSecondary(this);
+	gren2.StopTimer();
+#endif
+
+	gflags &= ~GF_GREN2COOK;
+}
+
+void
+player::ProcessInput(void)
+{
+	super::ProcessInput();
+
+	if (input_buttons & INPUT_BUTTON6)
+		TFC_CookGren1();
+	else
+		TFC_ReleaseGren1();
+
+	if (input_buttons & INPUT_BUTTON7)
+		TFC_CookGren2();
+	else
+		TFC_ReleaseGren2();
+}
 
 #ifdef CLIENT
 void Weapons_AmmoUpdate(entity);

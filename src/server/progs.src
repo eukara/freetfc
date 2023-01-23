@@ -37,6 +37,7 @@ info_tfgoal.qc
 info_areadef.qc
 item_armor.qc
 item_healthkit.qc
+nades.qc
 
 gamerules.qc
 client.qc

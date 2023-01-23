@@ -34,6 +34,19 @@ ClientGame_ConsoleCommand(void)
 	case "changeteam":
 		VGUI_ChooseTeam();
 		break;
+
+	case "+gren1":
+		pSeat->m_iInputExtra1 = TRUE;
+		break;
+	case "-gren1":
+		pSeat->m_iInputExtra1 = FALSE;
+		break;
+	case "+gren2":
+		pSeat->m_iInputExtra2 = TRUE;
+		break;
+	case "-gren2":
+		pSeat->m_iInputExtra2 = FALSE;
+		break;
 	default:
 		return (0);
 	}
