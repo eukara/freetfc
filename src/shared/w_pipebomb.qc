@@ -67,10 +67,25 @@ w_pipebomb_draw(player pl)
 	Weapons_ViewAnimation(pl, GLAUNCHER_PDRAW);
 }
 
+#ifdef SERVER
+void w_pipebomb_explode(void)
+{
+	float dmg = 100;
+
+	FX_Explosion(self.origin);
+	//Damage_Radius(self.origin, self.owner, dmg, dmg * 2.5f, TRUE, WEAPON_GLAUNCHER);
+	sound(self, CHAN_WEAPON, sprintf("weapons/explode%d.wav", floor(random() * 2) + 3), 1, ATTN_NORM);
+	NSEntity::Destroy();
+}
+#endif
+
 void
 w_pipebomb_shootnade(player pl)
 {
 	vector vecNadeVelocity;
+	NSEntity first_nade;
+	int known_nades = 0i;
+	float oldest_time = 0.0f;
 
 	static void w_pipebomb_shootnade_touch(void) {
 		Sound_Play(self, CHAN_BODY, "weapon_handgrenade.bounce");
@@ -83,6 +98,7 @@ w_pipebomb_shootnade(player pl)
 	vecNadeVelocity = v_forward * 600 + v_up * 200 + crandom() * v_right * 10 + crandom() * v_up * 10;
 
 	NSRenderableEntity eNade = spawn(NSRenderableEntity);
+	eNade.classname = "pipebomb";
 	eNade.SetModel("models/pipebomb.mdl");
 	eNade.SetOrigin(Weapons_GetCameraPos(pl) + (v_forward * 14) + (v_up * -4) + (v_right * 2));
 	eNade.SetOwner(pl);
@@ -97,6 +113,27 @@ w_pipebomb_shootnade(player pl)
 	eNade.touch = w_pipebomb_shootnade_touch;
 	
 	Sound_Play(pl, CHAN_WEAPON, "weapon_mp5.gl");
+
+#ifdef SERVER
+	/* iterate through and mark the first nade we own */
+	for (entity e = world; (e = find(e, ::classname, "pipebomb"));) {
+		NSEntity pb = (NSEntity)e;
+
+		if (pb.GetOwner() == pl) {
+			if (pb.GetSpawnAge() > oldest_time) {
+				first_nade = pb;
+				oldest_time = pb.GetSpawnAge();
+			}
+
+			known_nades++;
+		}
+	}
+
+	/* if we have more than 8, destroy the first one we placed */
+	if (known_nades > 8) {
+		first_nade.ScheduleThink(w_pipebomb_explode, 0.0f);
+	}
+#endif
 
 	//eNade.traileffectnum = particleeffectnum("weapon_rpg.trail");
 }
@@ -153,6 +190,28 @@ w_pipebomb_primary(player pl)
 	}
 
 	pl.w_idle_next = 0.6f;
+}
+
+void
+w_pipebomb_secondary(player pl)
+{
+	float pb_timer = 0.0f;
+
+	if (pl.w_attack_next > 0)
+		return;
+
+#ifdef SERVER
+	for (entity e = world; (e = find(e, ::classname, "pipebomb"));) {
+		NSEntity pb = (NSEntity)e;
+
+		if (pb.GetOwner() == pl) {
+			pb.ScheduleThink(w_pipebomb_explode, pb_timer);
+			pb_timer += 0.1f;
+		}
+	}
+#endif
+
+	pl.w_attack_next = 0.5f;
 }
 
 void
@@ -227,7 +286,7 @@ weapon_t w_pipebomb =
 	.draw		= w_pipebomb_draw,
 	.holster	= __NULL__,
 	.primary	= w_pipebomb_primary,
-	.secondary	= __NULL__,
+	.secondary	= w_pipebomb_secondary,
 	.reload		= w_pipebomb_reload,
 	.release	= w_pipebomb_release,
 	.postdraw	= w_pipebomb_postdraw,
