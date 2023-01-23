@@ -112,7 +112,19 @@ class info_tfgoal:NSRenderableEntity
 	virtual void(entity) Touch;
 	virtual void(void) Respawn;
 	virtual void(string, string) SpawnKey;
+	virtual void Spawned(void);
 };
+
+void
+info_tfgoal::Spawned(void)
+{
+	super::Spawned();
+
+	/* HACK: goals without a targetname and TFGOAL_REMOVED can't work */
+	if (m_tfgState == TFGOAL_REMOVED && !targetname) {
+		m_tfgState = TFGOAL_INACTIVE;
+	}
+}
 
 void
 info_tfgoal::Touch(entity eToucher)
@@ -125,13 +137,17 @@ info_tfgoal::Touch(entity eToucher)
 	player pl = (player)eToucher;
 
 	/* check for state */
-	if (m_tfgState != TFGOAL_INACTIVE)
+	if (m_tfgState != TFGOAL_INACTIVE) {
+		print("not active\n");
 		return;
+	}
 
 	/* check for team eligibility */
 	if (m_iTeamUses)
-	if (eToucher.team != m_iTeamUses)
+	if (eToucher.team != m_iTeamUses) {
+		print("not eligble\n");
 		return;
+	}
 
 	/* check for the must-have carry */
 	if (m_dMustCarry) {
