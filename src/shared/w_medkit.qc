@@ -80,10 +80,10 @@ w_medkit_primary(player pl)
 
 	Weapons_ViewAnimation(pl, MEDKIT_USE);
 
-	if (self.flags & FL_CROUCHING)
-		Animation_PlayerTop(pl, ANIM_SHOOT1HAND, 0.45f);
+	if (pl.flags & FL_CROUCHING)
+		Animation_PlayerTop(pl, TFCANIM_CR_SHOOTMEDKIT, 0.45f);
 	else
-		Animation_PlayerTop(pl, ANIM_CR_SHOOT1HAND, 0.45f);
+		Animation_PlayerTop(pl, TFCANIM_SHOOTMEDKIT, 0.45f);
 
 	if (trace_ent.classname == "player") {
 		player otherpl = (player) trace_ent;
@@ -131,7 +131,7 @@ w_medkit_release(player pl)
 float
 w_medkit_aimanim(player pl)
 {
-	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIMMEDKIT : TFCANIM_AIMMEDKIT;
 }
 
 void

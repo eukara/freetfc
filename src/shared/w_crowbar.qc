@@ -45,7 +45,7 @@ w_crowbar_precache(void)
 	Sound_Precache("weapon_crowbar.hitbody");
 	precache_model("models/w_crowbar.mdl");
 #else
-	precache_model("models/v_crowbar.mdl");
+	precache_model("models/v_tfc_crowbar.mdl");
 	precache_model("models/p_crowbar.mdl");
 #endif
 }
@@ -76,7 +76,7 @@ w_crowbar_deathmsg(void)
 void
 w_crowbar_draw(player pl)
 {
-	Weapons_SetModel("models/v_crowbar.mdl");
+	Weapons_SetModel("models/v_tfc_crowbar.mdl");
 	Weapons_ViewAnimation(pl, CBAR_DRAW);
 }
 
@@ -124,7 +124,7 @@ w_crowbar_primary(player pl)
 		Weapons_ViewAnimation(pl, trace_fraction >= 1 ? CBAR_ATTACK3MISS:CBAR_ATTACK3HIT);
 	}
 
-	if (self.flags & FL_CROUCHING)
+	if (pl.flags & FL_CROUCHING)
 		Animation_PlayerTop(pl, ANIM_CR_SHOOTCROWBAR, 0.41f);
 	else
 		Animation_PlayerTop(pl, ANIM_SHOOTCROWBAR, 0.5f);
@@ -169,7 +169,7 @@ w_crowbar_release(player pl)
 float
 w_crowbar_aimanim(player pl)
 {
-	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+	return pl.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
 }
 
 void

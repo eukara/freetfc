@@ -69,7 +69,7 @@ w_sniper_draw(player pl)
 float
 w_sniper_aimanim(player pl)
 {
-	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIMSNIPER : TFCANIM_AIMSNIPER;
 }
 
 void
@@ -82,6 +82,12 @@ w_sniper_release(player pl)
 		float dmg = bound(75, (pl.mode_tempstate/2) * 75, 375);
 		w_baseauto_fire(pl, player::m_iAmmoShells, dmg, [0,0]);
 		Weapons_ViewAnimation(pl, SNIPER_FIRE);
+
+		if (pl.flags & FL_CROUCHING)
+			Animation_PlayerTop(pl, TFCANIM_CR_SHOOTSNIPER, 0.45f);
+		else
+			Animation_PlayerTop(pl, TFCANIM_SHOOTSNIPER, 0.45f);
+
 		#ifdef CLIENT
 		View_SetMuzzleflash(MUZZLE_RIFLE);
 		#endif

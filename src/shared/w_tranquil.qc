@@ -50,7 +50,7 @@ w_tranquil_wmodel(void)
 string
 w_tranquil_pmodel(player pl)
 {
-	return "models/p_tranquil.mdl";
+	return "models/p_9mmhandgun2.mdl";
 }
 
 string
@@ -113,6 +113,12 @@ w_tranquil_primary(player pl)
 		Weapons_ViewAnimation(pl, TRANQUIL_SHOOT);
 		Weapons_ViewPunchAngle(pl, [-2,0,0]);
 		Weapons_Sound(pl, CHAN_WEAPON, "weapon_tranquilizer.fire");
+
+		if (pl.flags & FL_CROUCHING)
+			Animation_PlayerTop(pl, TFCANIM_CR_SHOOT1HAND, 0.45f);
+		else
+			Animation_PlayerTop(pl, TFCANIM_SHOOT1HAND, 0.45f);
+
 		pl.w_attack_next = 1.5f;
 		break;
 	case AUTO_EMPTY:
@@ -126,7 +132,7 @@ w_tranquil_primary(player pl)
 float
 w_tranquil_aimanim(player pl)
 {
-	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIM1HAND : TFCANIM_AIM1HAND;
 }
 
 void

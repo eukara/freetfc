@@ -32,7 +32,7 @@ string g_teammodels[] = {
 	"models/player/scout/scout2.mdl",
 	"models/player/sniper/sniper2.mdl",
 	"models/player/soldier/soldier2.mdl",
-	"models/player/demo/demo.mdl",
+	"models/player/demo/demo2.mdl",
 	"models/player/medic/medic2.mdl",
 	"models/player/hvyweapon/hvyweapon2.mdl",
 	"models/player/pyro/pyro2.mdl",

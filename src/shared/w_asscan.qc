@@ -98,7 +98,7 @@ w_asscan_wmodel(void)
 string
 w_asscan_pmodel(player pl)
 {
-	return "models/p_tfac.mdl";
+	return "models/p_mini2.mdl";
 }
 
 string
@@ -177,6 +177,11 @@ w_asscan_primary(player pl)
 	Weapons_ViewPunchAngle(pl, [random(-2, 2),0,0]);
 	Weapons_Sound(pl, CHAN_WEAPON, "weapon_asscan.fire");
 
+	if (pl.flags & FL_CROUCHING)
+		Animation_PlayerTop(pl, TFCANIM_CR_SHOOTASSCAN, 0.1f);
+	else
+		Animation_PlayerTop(pl, TFCANIM_SHOOTASSCAN, 0.1f);
+
 #ifdef CLIENT
 	View_AddEvent(w_asscan_ejectshell, 0.0f);
 	View_SetMuzzleflash(MUZZLE_WEIRD);
@@ -207,7 +212,7 @@ w_asscan_hud(player pl)
 float
 w_asscan_aimanim(player pl)
 {
-	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIMASSCAN : TFCANIM_AIMASSCAN;
 }
 
 void

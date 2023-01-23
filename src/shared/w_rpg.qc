@@ -114,16 +114,17 @@ w_rpg_primary(player pl)
 	case AUTO_FIRE_FAILED:
 		return;
 		break;
+	case AUTO_LAST:
 	case AUTO_FIRED:
 		Weapons_ViewAnimation(pl, RPG_FIRE);
 		Weapons_ViewPunchAngle(pl, [-2,0,0]);
 		Weapons_Sound(pl, CHAN_WEAPON, "weapon_rpg.fire");
-		pl.w_attack_next = 0.8f;
-		break;
-	case AUTO_LAST:
-		Weapons_ViewAnimation(pl, RPG_FIRE);
-		Weapons_ViewPunchAngle(pl, [-2,0,0]);
-		Weapons_Sound(pl, CHAN_WEAPON, "weapon_rpg.fire");
+
+		if (pl.flags & FL_CROUCHING)
+			Animation_PlayerTop(pl, TFCANIM_CR_SHOOTRPG, 0.45f);
+		else
+			Animation_PlayerTop(pl, TFCANIM_SHOOTRPG, 0.45f);
+
 		pl.w_attack_next = 0.8f;
 		break;
 	case AUTO_EMPTY:
@@ -174,7 +175,7 @@ w_rpg_release(player pl)
 float
 w_rpg_aimanim(player pl)
 {
-	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIMRPG : TFCANIM_AIMRPG;
 }
 
 void

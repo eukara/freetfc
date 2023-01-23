@@ -46,12 +46,12 @@ w_pipebomb_pickup(player pl, int new, int startammo)
 string
 w_pipebomb_wmodel(void)
 {
-	return "models/w_pipebomb.mdl";
+	return "models/p_glauncher.mdl";
 }
 string
 w_pipebomb_pmodel(player pl)
 {
-	return "models/p_pipebomb.mdl";
+	return "models/p_glauncher.mdl";
 }
 
 string
@@ -181,6 +181,12 @@ w_pipebomb_primary(player pl)
 	case AUTO_LAST:
 		Weapons_ViewAnimation(pl, GLAUNCHER_PFIRE);
 		Weapons_ViewPunchAngle(pl, [-1,0,0]);
+
+		if (pl.flags & FL_CROUCHING)
+			Animation_PlayerTop(pl, TFCANIM_CR_SHOOTSHOTGUN, 0.45f);
+		else
+			Animation_PlayerTop(pl, TFCANIM_SHOOTSHOTGUN, 0.45f);
+
 		pl.w_attack_next = 0.6f;
 		break;
 	case AUTO_EMPTY:
@@ -244,7 +250,7 @@ w_pipebomb_postdraw(player pl)
 float
 w_pipebomb_aimanim(player pl)
 {
-	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIMSHOTGUN : TFCANIM_AIMSHOTGUN;
 }
 
 void

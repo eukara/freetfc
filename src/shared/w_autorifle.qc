@@ -78,7 +78,7 @@ w_autorifle_draw(player pl)
 float
 w_autorifle_aimanim(player pl)
 {
-	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIMAUTOSNIPER : TFCANIM_AIMAUTOSNIPER;
 }
 
 void
@@ -93,6 +93,12 @@ w_autorifle_primary(player pl)
 	case AUTO_FIRED:
 	case AUTO_LAST:
 		Weapons_ViewAnimation(pl, SNIPER_AUTOFIRE);
+
+		if (pl.flags & FL_CROUCHING)
+			Animation_PlayerTop(pl, TFCANIM_CR_SHOOTAUTOSNIPER, 0.45f);
+		else
+			Animation_PlayerTop(pl, TFCANIM_SHOOTAUTOSNIPER, 0.45f);
+
 		#ifdef CLIENT
 		View_SetMuzzleflash(MUZZLE_RIFLE);
 		#endif

@@ -56,7 +56,7 @@ w_incendiary_wmodel(void)
 string
 w_incendiary_pmodel(player pl)
 {
-	return "models/p_incendiary.mdl";
+	return "models/p_rpg2.mdl";
 }
 
 string
@@ -108,15 +108,16 @@ w_incendiary_primary(player pl)
 		return;
 		break;
 	case AUTO_FIRED:
-		Weapons_ViewAnimation(pl, INC_FIRE);
-		Weapons_Sound(pl, CHAN_WEAPON, "weapon_incendiary.fire");
-		Weapons_ViewPunchAngle(pl, [-2,0,0]);
-		pl.w_attack_next = 0.8f;
-		break;
 	case AUTO_LAST:
 		Weapons_ViewAnimation(pl, INC_FIRE);
 		Weapons_Sound(pl, CHAN_WEAPON, "weapon_incendiary.fire");
 		Weapons_ViewPunchAngle(pl, [-2,0,0]);
+
+		if (pl.flags & FL_CROUCHING)
+			Animation_PlayerTop(pl, TFCANIM_CR_SHOOTRPG, 0.45f);
+		else
+			Animation_PlayerTop(pl, TFCANIM_SHOOTRPG, 0.45f);
+
 		pl.w_attack_next = 0.8f;
 		break;
 	case AUTO_EMPTY:
@@ -130,7 +131,7 @@ w_incendiary_primary(player pl)
 float
 w_incendiary_aimanim(player pl)
 {
-	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIMRPG : TFCANIM_AIMRPG;
 }
 
 void

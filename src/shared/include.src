@@ -8,6 +8,7 @@ events.h
 player.qc
 ../../../base/src/shared/weapon_common.h
 ../../../valve/src/shared/animations.h
+animations_tfc.h
 ../../../valve/src/shared/animations.qc
 pmove.qc
 

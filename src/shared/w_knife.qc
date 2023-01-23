@@ -99,7 +99,7 @@ w_knife_primary(player pl)
 
 	Weapons_ViewAnimation(pl, KNIFE_SLASH);
 
-	if (self.flags & FL_CROUCHING)
+	if (pl.flags & FL_CROUCHING)
 		Animation_PlayerTop(pl, ANIM_CR_SHOOTCROWBAR, 0.41f);
 	else
 		Animation_PlayerTop(pl, ANIM_SHOOTCROWBAR, 0.5f);
@@ -144,7 +144,7 @@ w_knife_primary(player pl)
 float
 w_knife_aimanim(player pl)
 {
-	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+	return pl.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
 }
 
 void

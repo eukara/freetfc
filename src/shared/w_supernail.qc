@@ -48,12 +48,12 @@ w_supernail_updateammo(player pl)
 string
 w_supernail_wmodel(void)
 {
-	return "models/w_supernail.mdl";
+	return "models/p_snailgun2.mdl";
 }
 string
 w_supernail_pmodel(player pl)
 {
-	return "models/p_supernail.mdl";
+	return "models/p_snailgun2.mdl";
 }
 
 string
@@ -72,7 +72,7 @@ w_supernail_draw(player pl)
 float
 w_supernail_aimanim(player pl)
 {
-	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIMMP5 : TFCANIM_AIMMP5;
 }
 
 void
@@ -128,6 +128,12 @@ w_supernail_primary(player pl)
 		}
 		Weapons_ViewAnimation(pl, NAILGUN_SHOOT2);
 		Weapons_ViewPunchAngle(pl, [-1,0,0]);
+
+		if (pl.flags & FL_CROUCHING)
+			Animation_PlayerTop(pl, TFCANIM_CR_SHOOTMP5, 0.45f);
+		else
+			Animation_PlayerTop(pl, TFCANIM_SHOOTMP5, 0.45f);
+
 		#ifdef CLIENT
 		View_SetMuzzleflash(MUZZLE_RIFLE);
 		#endif

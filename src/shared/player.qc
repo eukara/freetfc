@@ -14,6 +14,89 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#ifdef CLIENT
+/* Here's a list of bone names that we are aware of on HL player models.
+   Usually we'd use skeletalobjects to share the same skeleton/anim with
+   another model - but because FTEQW does not support that for HLMDL we
+   are forced to manually position the bones of our attachnment
+   by iterating over them and manually setting their position in 3D-space.
+*/
+string g_pbones[] =
+{
+ "Bip01",
+ "Bip01 Footsteps",
+ "Bip01 Pelvis",
+ "Bip01 L Leg",
+ "Bip01 L Leg1",
+ "Bip01 L Foot",
+ "Bip01 L Toe0",
+ "Bip01 L Toe01",
+ "Bip01 L Toe02",
+ "Dummy16",
+ "Bip01 R Leg",
+ "Bip01 R Leg1",
+ "Bip01 R Foot",
+ "Bip01 R Toe0",
+ "Bip01 R Toe01",
+ "Bip01 R Toe02",
+ "Dummy11",
+ "Bip01 Spine",
+ "Bip01 Spine1",
+ "Bip01 Spine2",
+ "Bip01 Spine3",
+ "Bip01 Neck",
+ "Bip01 Head",
+ "Dummy21",
+ "Dummy08",
+ "Bone02",
+ "Bone03",
+ "Bone04",
+ "Dummy05",
+ "Bone09",
+ "Bone10",
+ "Dummy04",
+ "Bone05",
+ "Bone06",
+ "Dummy03",
+ "Bone07",
+ "Bone08",
+ "Dummy09",
+ "Bone11",
+ "Bone12",
+"Dummy10",
+ "Bone13",
+ "Bone14",
+ "Bone15",
+ "Bip01 L Arm",
+ "Bip01 L Arm1",
+ "Bip01 L Arm2",
+ "Bip01 L Hand",
+ "Bip01 L Finger0",
+ "Bip01 L Finger01",
+ "Bip01 L Finger02",
+ "Dummy06",
+ "Bip01 L Finger1",
+ "Bip01 L Finger11",
+ "Bip01 L Finger12",
+ "Dummy07",
+ "Bip01 R Arm",
+ "Bip01 R Arm1",
+ "Bip01 R Arm2",
+ "Bip01 R Hand",
+ "Bip01 R Finger0",
+ "Bip01 R Finger01",
+ "Bip01 R Finger02",
+ "Dummy01",
+ "Bip01 R Finger1",
+ "Bip01 R Finger11",
+ "Bip01 R Finger12",
+ "Dummy02",
+ "Box02",
+ "Bone08",
+ "Bone15"
+};
+#endif
+
 /* all potential SendFlags bits we can possibly send */
 enumflags
 {
@@ -65,12 +148,14 @@ class player:NSClientPlayer
 	nonvirtual void TFC_CookGren2(void);
 	nonvirtual void TFC_ReleaseGren1(void);
 	nonvirtual void TFC_ReleaseGren2(void);
+	virtual void UpdatePlayerAnimation(float);
 
 #ifdef CLIENT
 	virtual void ReceiveEntity(float,float);
 	virtual void PredictPreFrame(void);
 	virtual void PredictPostFrame(void);
 	virtual void UpdateAliveCam(void);
+	virtual void UpdatePlayerAttachments(bool);
 
 #else
 	NSTimer gren1;
@@ -97,6 +182,18 @@ class player:NSClientPlayer
 	nonvirtual void TFC_FragSelf(void);
 #endif
 };
+
+void Animation_PlayerUpdate(player); 
+void Animation_TimerUpdate(player, float); 
+
+void
+player::UpdatePlayerAnimation(float timelength)
+{
+	/* calculate our skeletal progression */
+	Animation_PlayerUpdate(this);
+	/* advance animation timers */
+	Animation_TimerUpdate(this, timelength);
+}
 
 #ifdef SERVER
 
@@ -215,6 +312,88 @@ player::ProcessInput(void)
 }
 
 #ifdef CLIENT
+
+.string oldmodel;
+string Weapons_GetPlayermodel(player, int);
+
+void
+player::UpdatePlayerAttachments(bool visible)
+{
+	/* draw the flashlight */
+	if (gflags & GF_FLASHLIGHT) {
+		vector src;
+		vector ang;
+		
+		if (entnum != player_localentnum) {
+			src = origin + view_ofs;
+			ang = v_angle;
+		} else {
+			src = pSeat->m_vecPredictedOrigin + [0,0,-8];
+			ang = view_angles;
+		}
+
+		makevectors(ang);
+		traceline(src, src + (v_forward * 8096), MOVE_NORMAL, this);
+
+		if (serverkeyfloat("*bspversion") == BSPVER_HL) {
+			dynamiclight_add(trace_endpos + (v_forward * -2), 128, [1,1,1]);
+		} else {
+			float p = dynamiclight_add(src, 512, [1,1,1], 0, "textures/flashlight");
+			dynamiclight_set(p, LFIELD_ANGLES, ang);
+			dynamiclight_set(p, LFIELD_FLAGS, 3);
+		}
+	}
+
+	/* FIXME: this needs to be incorporated and simplified, now that we can handle it all in-class */
+	if (!visible)
+		return;
+
+	/* what's the current weapon model supposed to be anyway? */
+	p_model.oldmodel = Weapons_GetPlayermodel(this, activeweapon);
+
+	/* we changed weapons, update skeletonindex */
+	if (p_model.model != p_model.oldmodel) {
+		/* free memory */
+		if (p_model.skeletonindex)
+			skel_delete(p_model.skeletonindex);
+
+		/* set the new model and mark us updated */
+		setmodel(p_model, p_model.oldmodel);
+		p_model.model = p_model.oldmodel;
+		
+		/* set the new skeletonindex */
+		p_model.skeletonindex = skel_create(p_model.modelindex);
+
+		/* hack this thing in here FIXME: this should be done when popping in/out of a pvs */
+		if (autocvar(cl_himodels, 1, "Use high-quality thisayer models over lower-definition ones"))
+			setcustomskin(this, "", "geomset 0 2\n");
+		else
+			setcustomskin(this, "", "geomset 0 1\n");
+	}
+
+	/* follow thisayer at all times */
+	setorigin(p_model, origin);
+	p_model.angles = angles;
+	skel_build(p_model.skeletonindex, p_model, p_model.modelindex,0, 0, -1);
+
+	/* we have to loop through all valid bones of the weapon model and match them
+	 * to the thisayer one */
+	for (float i = 0; i < g_pbones.length; i++) {
+		vector bpos;
+		float pbone = gettagindex(this, g_pbones[i]);
+		float wbone = gettagindex(p_model, g_pbones[i]);
+
+		/* if the bone doesn't ignore in either skeletal mesh, ignore */
+		if (wbone <= 0 || pbone <= 0)
+			continue;
+
+		bpos = gettaginfo(this, pbone);
+		
+		/* the most expensive bit */
+		skel_set_bone_world(p_model, wbone, bpos, v_forward, v_right, v_up);
+	}
+}
+
 void Weapons_AmmoUpdate(entity);
 void HUD_AmmoNotify_Check(player pl);
 void HUD_ItemNotify_Check(player pl);

@@ -56,7 +56,7 @@ w_dbs_wmodel(void)
 string
 w_dbs_pmodel(player pl)
 {
-	return "models/p_shot2.mdl";
+	return "models/p_shotgun2.mdl";
 }
 
 string
@@ -106,6 +106,12 @@ w_dbs_primary(player pl)
 		pl.mag_dbs--;
 		Weapons_ViewAnimation(pl, DBS_FIRE1);
 		Weapons_ViewPunchAngle(pl, [-2,0,0]);
+
+		if (pl.flags & FL_CROUCHING)
+			Animation_PlayerTop(pl, TFCANIM_CR_SHOOTSHOTGUN, 0.45f);
+		else
+			Animation_PlayerTop(pl, TFCANIM_SHOOTSHOTGUN, 0.45f);
+
 		#ifdef CLIENT
 		View_SetMuzzleflash(MUZZLE_ROUND);
 		#endif
@@ -175,7 +181,7 @@ w_dbs_crosshair(player pl)
 float
 w_dbs_aimanim(player pl)
 {
-	return self.flags & FL_CROUCHING ? ANIM_CR_AIMSHOTGUN : ANIM_AIMSHOTGUN;
+	return pl.flags & FL_CROUCHING ? ANIM_CR_AIMSHOTGUN : ANIM_AIMSHOTGUN;
 }
 
 void

@@ -46,7 +46,7 @@ w_railgun_wmodel(void)
 string
 w_railgun_pmodel(player pl)
 {
-	return "models/p_railgun.mdl";
+	return "models/p_9mmhandgun.mdl";
 }
 
 string
@@ -65,7 +65,7 @@ w_railgun_draw(player pl)
 float
 w_railgun_aimanim(player pl)
 {
-	return pl.flags & FL_CROUCHING ? ANIM_CR_AIM1HAND : ANIM_AIM1HAND;
+	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIM1HAND : TFCANIM_AIM1HAND;
 }
 
 void
@@ -118,6 +118,12 @@ w_railgun_primary(player pl)
 		int r = (float)input_sequence % 3;
 		Weapons_ViewAnimation(pl, RAILGUN_SHOOT);
 		Weapons_ViewPunchAngle(pl, [-1,0,0]);
+
+		if (pl.flags & FL_CROUCHING)
+			Animation_PlayerTop(pl, TFCANIM_CR_SHOOT1HAND, 0.45f);
+		else
+			Animation_PlayerTop(pl, TFCANIM_SHOOT1HAND, 0.45f);
+
 		Weapons_Sound(pl, CHAN_WEAPON, "weapon_railgun.fire");
 		pl.w_attack_next = 0.4f;
 		break;

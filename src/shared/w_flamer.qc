@@ -57,7 +57,7 @@ w_flamer_wmodel(void)
 string
 w_flamer_pmodel(player pl)
 {
-	return "models/p_egon.mdl";
+	return "models/p_egon2.mdl";
 }
 
 string
@@ -163,14 +163,14 @@ w_flamer_crosshair(player pl)
 	//Cross_DrawSub(g_cross_spr, [24,24], [72/128,48/128], [0.1875, 0.1875]);
 	HUD_DrawAmmo2();
 	vector aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];
-	drawsubpic(aicon_pos, [24,24], "sprites/640hud7.spr_0.tga", [0,96/128], [24/256, 24/128], g_hud_color, pSeatLocal->m_flAmmo2Alpha, DRAWFLAG_ADDITIVE);
+	drawsubpic(aicon_pos, [24,24], g_hud7_spr, [0,96/128], [24/256, 24/128], g_hud_color, pSeatLocal->m_flAmmo2Alpha, DRAWFLAG_ADDITIVE);
 #endif
 }
 
 float
 w_flamer_aimanim(player pl)
 {
-	return self.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIMEGON : TFCANIM_AIMEGON;
 }
 
 void
