@@ -14,6 +14,8 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+void VGUI_ChooseClass(void);
+
 int
 ClientGame_ConsoleCommand(void)
 {
@@ -23,6 +25,14 @@ ClientGame_ConsoleCommand(void)
 		break;
 	case "dismantle":
 		sendevent("TFCDismantle", "i", stoi(argv(1)));
+		break;
+	case "chooseclass":
+	case "changeclass":
+		VGUI_ChooseClass();
+		break;
+	case "chooseteam":
+	case "changeteam":
+		VGUI_ChooseTeam();
 		break;
 	default:
 		return (0);

@@ -15,298 +15,88 @@
  */
 
 static CUIWindow winChooseTeam;
-static CUIWindow winCTTeam;
-static CUIWindow winTTeam;
-
-typedef struct
-{
-	string str;
-	void(void) ptr;
-} btnarr_t;
 
 void
-VGUI_TeamJoin(float i)
+VGUI_ChooseTeam_Blue(void)
 {
-	sendevent("TeamJoin", "f", i);
-	winCTTeam.Hide();
-}
-
-void
-VGUI_TeamBack(void)
-{
-	
-}
-
-void VGUI_JoinScout_B (void) { VGUI_TeamJoin(1); }
-void VGUI_JoinSniper_B (void) { VGUI_TeamJoin(2); }
-void VGUI_JoinSoldier_B (void) { VGUI_TeamJoin(3); }
-void VGUI_JoinDemoman_B (void) { VGUI_TeamJoin(4); }
-void VGUI_JoinMedic_B (void) { VGUI_TeamJoin(5); }
-void VGUI_JoinHwguy_B (void) { VGUI_TeamJoin(6); }
-void VGUI_JoinPyro_B (void) { VGUI_TeamJoin(7); }
-void VGUI_JoinSpy_B (void) { VGUI_TeamJoin(8); }
-void VGUI_JoinEngineer_B (void) { VGUI_TeamJoin(9); }
-
-void VGUI_JoinScout_R (void) { VGUI_TeamJoin(11); }
-void VGUI_JoinSniper_R (void) { VGUI_TeamJoin(12); }
-void VGUI_JoinSoldier_R (void) { VGUI_TeamJoin(13); }
-void VGUI_JoinDemoman_R (void) { VGUI_TeamJoin(14); }
-void VGUI_JoinMedic_R (void) { VGUI_TeamJoin(15); }
-void VGUI_JoinHwguy_R (void) { VGUI_TeamJoin(16); }
-void VGUI_JoinPyro_R (void) { VGUI_TeamJoin(17); }
-void VGUI_JoinSpy_R (void) { VGUI_TeamJoin(18); }
-void VGUI_JoinEngineer_R (void) { VGUI_TeamJoin(19); }
-
-void VGUI_JoinScout_Y (void) { VGUI_TeamJoin(21); }
-void VGUI_JoinSniper_Y (void) { VGUI_TeamJoin(22); }
-void VGUI_JoinSoldier_Y (void) { VGUI_TeamJoin(23); }
-void VGUI_JoinDemoman_Y (void) { VGUI_TeamJoin(24); }
-void VGUI_JoinMedic_Y (void) { VGUI_TeamJoin(25); }
-void VGUI_JoinHwguy_Y (void) { VGUI_TeamJoin(26); }
-void VGUI_JoinPyro_Y (void) { VGUI_TeamJoin(27); }
-void VGUI_JoinSpy_Y (void) { VGUI_TeamJoin(28); }
-void VGUI_JoinEngineer_Y (void) { VGUI_TeamJoin(29); }
-
-void VGUI_JoinScout_G (void) { VGUI_TeamJoin(31); }
-void VGUI_JoinSniper_G (void) { VGUI_TeamJoin(32); }
-void VGUI_JoinSoldier_G (void) { VGUI_TeamJoin(33); }
-void VGUI_JoinDemoman_G (void) { VGUI_TeamJoin(34); }
-void VGUI_JoinMedic_G (void) { VGUI_TeamJoin(35); }
-void VGUI_JoinHwguy_G (void) { VGUI_TeamJoin(36); }
-void VGUI_JoinPyro_G (void) { VGUI_TeamJoin(37); }
-void VGUI_JoinSpy_G (void) { VGUI_TeamJoin(38); }
-void VGUI_JoinEngineer_G (void) { VGUI_TeamJoin(39); }
-
-btnarr_t red_team[] = {
-	{"SCOUT", VGUI_JoinScout_R },
-	{"SNIPER", VGUI_JoinSniper_R },
-	{"SOLDIER", VGUI_JoinSoldier_R },
-	{"DEMOMAN", VGUI_JoinDemoman_R },
-	{"MEDIC", VGUI_JoinMedic_R },
-	{"HWGUY", VGUI_JoinHwguy_R },
-	{"PYRO", VGUI_JoinPyro_R },
-	{"SPY", VGUI_JoinSpy_R },
-	{"ENGINEER", VGUI_JoinEngineer_R },
-	{__NULL__, __NULL__ },
-	{"< Back", VGUI_TeamBack }
-};
-
-btnarr_t blue_team[] = {
-	{"SCOUT", VGUI_JoinScout_B },
-	{"SNIPER", VGUI_JoinSniper_B },
-	{"SOLDIER", VGUI_JoinSoldier_B },
-	{"DEMOMAN", VGUI_JoinDemoman_B },
-	{"MEDIC", VGUI_JoinMedic_B },
-	{"HWGUY", VGUI_JoinHwguy_B },
-	{"PYRO", VGUI_JoinPyro_B },
-	{"SPY", VGUI_JoinSpy_B },
-	{"ENGINEER", VGUI_JoinEngineer_B },
-	{__NULL__, __NULL__ },
-	{"< Back", VGUI_TeamBack }
-};
-
-btnarr_t yellow_team[] = {
-	{"SCOUT", VGUI_JoinScout_Y },
-	{"SNIPER", VGUI_JoinSniper_Y },
-	{"SOLDIER", VGUI_JoinSoldier_Y },
-	{"DEMOMAN", VGUI_JoinDemoman_Y },
-	{"MEDIC", VGUI_JoinMedic_Y },
-	{"HWGUY", VGUI_JoinHwguy_Y },
-	{"PYRO", VGUI_JoinPyro_Y },
-	{"SPY", VGUI_JoinSpy_Y },
-	{"ENGINEER", VGUI_JoinEngineer_Y },
-	{__NULL__, __NULL__ },
-	{"< Back", VGUI_TeamBack }
-};
-
-btnarr_t green_team[] = {
-	{"SCOUT", VGUI_JoinScout_G },
-	{"SNIPER", VGUI_JoinSniper_G },
-	{"SOLDIER", VGUI_JoinSoldier_G },
-	{"DEMOMAN", VGUI_JoinDemoman_G },
-	{"MEDIC", VGUI_JoinMedic_G },
-	{"HWGUY", VGUI_JoinHwguy_G },
-	{"PYRO", VGUI_JoinPyro_G },
-	{"SPY", VGUI_JoinSpy_G },
-	{"ENGINEER", VGUI_JoinEngineer_G },
-	{__NULL__, __NULL__ },
-	{"< Back", VGUI_TeamBack }
-};
-
-void 
-VGUI_GoSpectator(void)
-{
-	VGUI_TeamJoin(0);
+	localcmd("changeclass\n");
+	sendevent("TeamJoin", "f", 1);
 	winChooseTeam.Hide();
 }
 
 void
 VGUI_ChooseTeam_Red(void)
 {
-	static int initialized;
-	static CUIButton *btns;
-
-	if (!initialized) {
-		vector btnpos = [16,0];
-		initialized = TRUE;
-		winCTTeam = spawn(CUIWindow);
-		winCTTeam.SetTitle("Choose Skin");
-		winCTTeam.SetSize([420,320]);
-		g_uiDesktop.Add(winCTTeam);
-		
-		btns = memalloc(sizeof(btnarr_t) * red_team.length);
-		for (int i = 0; i < red_team.length; i++) {
-			btnpos[1] += 30;
-			if (red_team[i].ptr == __NULL__) {
-				continue;
-			}
-			btns[i] = spawn(CUIButton);
-			btns[i].SetTitle(red_team[i].str);
-			btns[i].SetPos(btnpos);
-			btns[i].SetFunc(red_team[i].ptr);
-			winCTTeam.Add(btns[i]);
-		}
-	}
-
+	localcmd("changeclass\n");
+	sendevent("TeamJoin", "f", 2);
 	winChooseTeam.Hide();
-	winCTTeam.Show();
-	winCTTeam.SetPos((video_res / 2) - (winCTTeam.GetSize() / 2));
-}
-
-void
-VGUI_ChooseTeam_Blue(void)
-{
-	static int initialized;
-	static CUIButton *btns;
-
-	if (!initialized) {
-		vector btnpos = [16,0];
-		initialized = TRUE;
-		winTTeam = spawn(CUIWindow);
-		winTTeam.SetTitle("Choose Skin");
-		winTTeam.SetSize([420,320]);
-		g_uiDesktop.Add(winTTeam);
-
-		btns = memalloc(sizeof(btnarr_t) * blue_team.length);
-		for (int i = 0; i < blue_team.length; i++) {
-			btnpos[1] += 30;
-			if (blue_team[i].ptr == __NULL__) {
-				continue;
-			}
-			btns[i] = spawn(CUIButton);
-			btns[i].SetTitle(blue_team[i].str);
-			btns[i].SetPos(btnpos);
-			btns[i].SetFunc(blue_team[i].ptr);
-			winTTeam.Add(btns[i]);
-		}
-	}
-
-	winChooseTeam.Hide();
-	winTTeam.Show();
-	winTTeam.SetPos((video_res / 2) - (winTTeam.GetSize() / 2));
-}
-
-void
-VGUI_ChooseTeam_Yellow(void)
-{
-	static int initialized;
-	static CUIButton *btns;
-
-	if (!initialized) {
-		vector btnpos = [16,0];
-		initialized = TRUE;
-		winTTeam = spawn(CUIWindow);
-		winTTeam.SetTitle("Choose Skin");
-		winTTeam.SetSize([420,320]);
-		g_uiDesktop.Add(winTTeam);
-
-		btns = memalloc(sizeof(btnarr_t) * yellow_team.length);
-		for (int i = 0; i < yellow_team.length; i++) {
-			btnpos[1] += 30;
-			if (yellow_team[i].ptr == __NULL__) {
-				continue;
-			}
-			btns[i] = spawn(CUIButton);
-			btns[i].SetTitle(yellow_team[i].str);
-			btns[i].SetPos(btnpos);
-			btns[i].SetFunc(yellow_team[i].ptr);
-			winTTeam.Add(btns[i]);
-		}
-	}
-
-	winChooseTeam.Hide();
-	winTTeam.Show();
-	winTTeam.SetPos((video_res / 2) - (winTTeam.GetSize() / 2));
 }
 
 void
 VGUI_ChooseTeam_Green(void)
 {
-	static int initialized;
-	static CUIButton *btns;
-
-	if (!initialized) {
-		vector btnpos = [16,0];
-		initialized = TRUE;
-		winTTeam = spawn(CUIWindow);
-		winTTeam.SetTitle("Choose Skin");
-		winTTeam.SetSize([420,320]);
-		g_uiDesktop.Add(winTTeam);
-
-		btns = memalloc(sizeof(btnarr_t) * green_team.length);
-		for (int i = 0; i < green_team.length; i++) {
-			btnpos[1] += 30;
-			if (green_team[i].ptr == __NULL__) {
-				continue;
-			}
-			btns[i] = spawn(CUIButton);
-			btns[i].SetTitle(green_team[i].str);
-			btns[i].SetPos(btnpos);
-			btns[i].SetFunc(green_team[i].ptr);
-			winTTeam.Add(btns[i]);
-		}
-	}
-
+	localcmd("changeclass\n");
+	sendevent("TeamJoin", "f", 3);
 	winChooseTeam.Hide();
-	winTTeam.Show();
-	winTTeam.SetPos((video_res / 2) - (winTTeam.GetSize() / 2));
+}
+
+void
+VGUI_ChooseTeam_Yellow(void)
+{
+	localcmd("changeclass\n");
+	sendevent("TeamJoin", "f", 4);
+	winChooseTeam.Hide();
+}
+
+void 
+VGUI_GoSpectator(void)
+{
+	//VGUI_TeamJoin(0);
+	sendevent("TeamJoin", "f", 0);
+	winChooseTeam.Hide();
 }
 
 void
 VGUI_ChooseTeam(void)
 {
 	static int initialized;
-	static CUIButton btnGoRed;
-	static CUIButton btnGoBlue;
-	static CUIButton btnGoYellow;
-	static CUIButton btnGoGreen;
 	static CUIButton btnGoSpectator;
 
 	if (!initialized) {
+		vector btnpos = [16,48];
+
 		initialized = TRUE;
 		winChooseTeam = spawn(CUIWindow);
 		winChooseTeam.SetTitle("Choose Team");
 		winChooseTeam.SetSize('420 320');
 
-		btnGoRed = spawn(CUIButton);
-		btnGoRed.SetTitle("Red Team");
-		btnGoRed.SetPos('8 132');
-		btnGoRed.SetFunc(VGUI_ChooseTeam_Red);
+		for (int t = 1; t <= serverkeyfloat("teams"); t++) {
+			CUIButton btnForTeam;
+			string team_name = serverkey(sprintf("team_%i", t));
 
-		btnGoBlue = spawn(CUIButton);
-		btnGoBlue.SetTitle("Blue Team");
-		btnGoBlue.SetPos('8 162');
-		btnGoBlue.SetFunc(VGUI_ChooseTeam_Blue);
+			btnForTeam = spawn(CUIButton);
+			btnForTeam.SetTitle(team_name);
+			btnForTeam.SetPos(btnpos);
 
-		btnGoYellow = spawn(CUIButton);
-		btnGoYellow.SetTitle("Yellow Team");
-		btnGoYellow.SetPos('8 192');
-		btnGoYellow.SetFunc(VGUI_ChooseTeam_Yellow);
+			switch (team_name) {
+			case "Blue":
+				btnForTeam.SetFunc(VGUI_ChooseTeam_Blue);
+				break;
+			case "Red":
+				btnForTeam.SetFunc(VGUI_ChooseTeam_Red);
+				break;
+			case "Green":
+				btnForTeam.SetFunc(VGUI_ChooseTeam_Green);
+				break;
+			case "Yellow":
+				btnForTeam.SetFunc(VGUI_ChooseTeam_Yellow);
+				break;
+			}
 
-		btnGoGreen = spawn(CUIButton);
-		btnGoGreen.SetTitle("Green Team");
-		btnGoGreen.SetPos('8 222');
-		btnGoGreen.SetFunc(VGUI_ChooseTeam_Green);
+			winChooseTeam.Add(btnForTeam);
+			btnpos[1] += 30;
+		}
+
 
 		btnGoSpectator = spawn(CUIButton);
 		btnGoSpectator.SetTitle("Spectator");
@@ -314,10 +104,6 @@ VGUI_ChooseTeam(void)
 		btnGoSpectator.SetFunc(VGUI_GoSpectator);
 
 		g_uiDesktop.Add(winChooseTeam);
-		winChooseTeam.Add(btnGoRed);
-		winChooseTeam.Add(btnGoBlue);
-		winChooseTeam.Add(btnGoYellow);
-		winChooseTeam.Add(btnGoGreen);
 		winChooseTeam.Add(btnGoSpectator);
 	}
 

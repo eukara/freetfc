@@ -43,5 +43,6 @@ hud_ammonotify.qc
 
 ../../../src/client/include.src
 vgui_chooseteam.qc
+vgui_changeclass.qc
 ../../../src/shared/include.src
 #endlist

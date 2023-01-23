@@ -30,6 +30,10 @@ ClientGame_Init(float apilevel, string enginename, float engineversion)
 	registercommand("-gren1");
 	registercommand("+gren2");
 	registercommand("-gren2");
+	registercommand("chooseclass");
+	registercommand("changeclass");
+	registercommand("chooseteam");
+	registercommand("changeteam");
 	Obituary_Init();
 }
 

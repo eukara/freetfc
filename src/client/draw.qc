@@ -31,10 +31,10 @@ ClientGame_PreDraw(void)
 		g_hud_color = TFC_HUD_TEAM_COLOR_RED;
 		break;
 	case 3:
-		g_hud_color = TFC_HUD_TEAM_COLOR_YELLOW;
+		g_hud_color = TFC_HUD_TEAM_COLOR_GREEN;
 		break;
 	case 4:
-		g_hud_color = TFC_HUD_TEAM_COLOR_GREEN;
+		g_hud_color = TFC_HUD_TEAM_COLOR_YELLOW;
 		break;
 	}
 }
@@ -75,25 +75,25 @@ ClientGame_PostDraw(void)
 				1.0f,
 				DRAWFLAG_ADDITIVE
 			);
-		} else if (iGoalItemTeam == 3) { /* yellow */
+		} else if (iGoalItemTeam == 3) { /* green */
 			drawsubpic(
 				vecGoalItemPos,
 				[64,64],
 				g_tfchud6_spr,
 				[192/256, 62/256],
 				[64/256, 136/256],
-				TFC_HUD_TEAM_COLOR_YELLOW,
+				TFC_HUD_TEAM_COLOR_GREEN,
 				1.0f,
 				DRAWFLAG_ADDITIVE
 			);
-		} else { /* green */
+		} else { /* yellow */
 			drawsubpic(
 				vecGoalItemPos,
 				[64,64],
 				g_tfchud1_spr,
 				[0/256,136/256],
 				[64/256, 64/256],
-				TFC_HUD_TEAM_COLOR_GREEN,
+				TFC_HUD_TEAM_COLOR_YELLOW,
 				1.0f,
 				DRAWFLAG_ADDITIVE
 			);

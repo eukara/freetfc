@@ -17,38 +17,73 @@
 void
 CSEv_TeamJoin_f(float f)
 {
-	if (self.classname != "player") {
-		spawnfunc_player();
-	}
-
 	player pl = (player)self;
 
 	/* mess, do it better */
-	if (f < 10) {
+	if (f == 1) {
 		pl.team = 1; /* Blue */
 		forceinfokey(pl, "topcolor", "0x9aff");
 		forceinfokey(pl, "bottomcolor", "0x9aff");
-	} else if (f < 20) {
+	} else if (f == 2) {
 		pl.team = 2; /* Red */
 		f -= 10;
 		forceinfokey(pl, "topcolor", "0xff1800");
 		forceinfokey(pl, "bottomcolor", "0xff1800");
-	} else if (f < 30) {
+	} else if (f == 3) {
 		pl.team = 3; /* Yellow */
 		f -= 20;
 		forceinfokey(pl, "topcolor", "0xffca00");
 		forceinfokey(pl, "bottomcolor", "0xffca00");
-	} else if (f < 40) {
+	} else if (f == 4) {
 		pl.team = 4; /* Green */
 		f -= 30;
 		forceinfokey(pl, "topcolor", "0x3bff00");
 		forceinfokey(pl, "bottomcolor", "0x3bff00");
+	} else {
+		/* invalid */
+		return;
 	}
 
-	/* assign our class type for safe keeping */
-	pl.classtype = f;
+	if (self.health > 0) {
+		ClientKill();
+		return;
+	}
+} 
 
-	/* turn the player into the class of his choice */
-	pl.MakeClass(f);
-	pl.SpawnIntoGame();
+
+
+void
+CSEv_ClassJoin_f(float f)
+{
+
+	player pl = (player)self;
+
+	/* invalid */
+	if (pl.team == 0) {
+		return;
+	}
+
+	if (self.classname != "player") {
+		spawnfunc_player();
+	}
+
+	/* invalid */
+	if (pl.classtype == f)
+		return;
+
+	/* if we're still alive... */
+	if (pl.health > 0) {
+		pl.classtype = f;
+		pl.MakeClass(f);
+		ClientKill();
+	} else {
+		/* insta spawn */
+
+		/* assign our class type for safe keeping */
+		pl.classtype = f;
+
+		/* turn the player into the class of his choice */
+		pl.MakeClass(f);
+		pl.SpawnIntoGame();
+	}
 } 
