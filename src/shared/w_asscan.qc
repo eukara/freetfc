@@ -73,6 +73,7 @@ w_asscan_precache(void)
 
 #ifdef CLIENT
 	precache_model("models/v_tfac.mdl");
+	Sound_Precache("modelevent_shell.land");
 #endif
 }
 
@@ -123,24 +124,18 @@ w_asscan_holster(player pl)
 void
 w_asscan_release(player pl)
 {
-	/* auto-reload if need be */
-	if (pl.w_attack_next <= 0.0)
-	if (pl.m_iAmmoShells > 0) {
-		return;
-	}
-
-	if (pl.w_idle_next > 0.0)
-		return;
-
 	/* end firing */
 	if (pl.mode_tempstate == 1) {
 		pl.mode_tempstate = 0;
 		Weapons_Sound(pl, CHAN_WEAPON, "weapon_asscan.spindown");
 		Weapons_ViewAnimation(pl, ASSCAN_SPINDOWN);
 		pl.w_attack_next = 1.0f;
-		pl.w_idle_next = pl.w_attack_next;
+		pl.w_idle_next = 4.0f;
 		return;
 	}
+
+	if (pl.w_idle_next > 0.0)
+		return;
 
 	int r = (float)input_sequence % 2;
 	if (r) {
@@ -155,6 +150,7 @@ w_asscan_release(player pl)
 void
 w_asscan_primary(player pl)
 {
+	/* rate check */
 	if (pl.w_attack_next > 0.0)
 		return;
 
@@ -173,6 +169,8 @@ w_asscan_primary(player pl)
 		pl.w_idle_next = pl.w_attack_next;
 		return;
 	}
+
+	/* from now on we're just going rambo */
 	pl.m_iAmmoShells--;
 
 	Weapons_ViewAnimation(pl, ASSCAN_FIRE);
@@ -201,7 +199,6 @@ w_asscan_hud(player pl)
 	Cross_DrawSub(g_cross_spr, [24,24], [48/128,24/128], [0.1875, 0.1875]);
 
 	HUD_DrawAmmo2();
-
 
 	drawsubpic(aicon_pos, [24,24], g_hud7_spr, [72/256,72/128], [24/256, 24/128], g_hud_color, pSeatLocal->m_flAmmo2Alpha, DRAWFLAG_ADDITIVE);
 #endif
