@@ -82,6 +82,9 @@ w_nailgun_shootnail(player pl)
 			DecalGroups_Place("Impact.BigShot", trace_endpos + (v_forward * -2));
 			SurfData_Impact(trace_ent, trace_surfaceflagsi, trace_endpos, trace_plane_normal);
 		}
+		if (trace_ent.takedamage == DAMAGE_YES) {
+			Damage_Apply(trace_ent, self.owner, 9, WEAPON_NAILGUN, DMG_BULLET);
+		}
 		#endif
 		remove(self);
 	}
@@ -157,7 +160,7 @@ w_nailgun_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud07.spr_0.tga",
+			g_tfchud7_spr,
 			[0,90/256],
 			[170/256,45/256],
 			g_hud_color,
@@ -168,7 +171,7 @@ w_nailgun_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud07.spr_0.tga",
+			g_tfchud7_spr,
 			[0,90/256],
 			[170/256,45/256],
 			g_hud_color,

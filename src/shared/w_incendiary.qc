@@ -154,7 +154,7 @@ w_incendiary_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud05.spr_0.tga",
+			g_tfchud5_spr,
 			[0,90/256],
 			[170/256,45/256],
 			g_hud_color,
@@ -165,7 +165,7 @@ w_incendiary_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud06.spr_0.tga",
+			g_tfchud6_spr,
 			[0,0],
 			[170/256,45/256],
 			g_hud_color,

@@ -83,9 +83,11 @@ w_glauncher_draw(player pl)
 	Weapons_ViewAnimation(pl, GLAUNCHER_GDRAW);
 }
 
+
 void
 w_glauncher_shootnade(player pl)
 {
+#ifdef SERVER
 	vector vecNadeVelocity;
 
 	static void w_glauncher_shootnade_touch(void) {
@@ -98,7 +100,7 @@ w_glauncher_shootnade(player pl)
 	static void w_glauncher_explode(void) {
 		float dmg = 100;
 		FX_Explosion(self.origin);
-		//Damage_Radius(self.origin, self.owner, dmg, dmg * 2.5f, TRUE, WEAPON_GLAUNCHER);
+		Damage_Radius(self.origin, self.owner, dmg, dmg * 2.5f, TRUE, WEAPON_GLAUNCHER);
 		sound(self, CHAN_WEAPON, sprintf("weapons/explode%d.wav", floor(random() * 2) + 3), 1, ATTN_NORM);
 		NSEntity::Destroy();
 	}
@@ -125,6 +127,7 @@ w_glauncher_shootnade(player pl)
 	Sound_Play(pl, CHAN_WEAPON, "weapon_mp5.gl");
 
 	//eNade.traileffectnum = particleeffectnum("weapon_rpg.trail");
+#endif
 }
 
 void
@@ -222,7 +225,7 @@ w_glauncher_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud02.spr_0.tga",
+			g_tfchud2_spr,
 			[0,135/256],
 			[170/256,45/256],
 			g_hud_color,
@@ -233,7 +236,7 @@ w_glauncher_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud01.spr_0.tga",
+			g_tfchud1_spr,
 			[0,135/256],
 			[170/256,45/256],
 			g_hud_color,

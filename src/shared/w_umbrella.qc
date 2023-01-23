@@ -138,7 +138,7 @@ w_umbrella_primary(player pl)
 	}
 
 	if (trace_ent.takedamage) {
-		Damage_Apply(trace_ent, self, 10, WEAPON_UMBRELLA, DMG_BLUNT);
+		Damage_Apply(trace_ent, self, 18, WEAPON_UMBRELLA, DMG_BLUNT);
 
 		if (!trace_ent.iBleeds) {
 			return;
@@ -187,7 +187,7 @@ w_umbrella_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/640hud4.spr_0.tga",
+			g_hud4_spr,
 			[0,0],
 			[170/256,45/256],
 			g_hud_color,
@@ -198,7 +198,7 @@ w_umbrella_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/640hud1.spr_0.tga",
+			g_hud1_spr,
 			[0,0],
 			[170/256,45/256],
 			g_hud_color,

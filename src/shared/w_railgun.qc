@@ -59,7 +59,7 @@ void
 w_railgun_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_railgun.mdl");
-	Weapons_ViewAnimation(pl, 0);
+	Weapons_ViewAnimation(pl, RAILGUN_DRAW);
 }
 
 float
@@ -71,12 +71,16 @@ w_railgun_aimanim(player pl)
 void
 w_railgun_shootbeam(player pl)
 {
+#ifdef SERVER
 	static void w_railgun_shootbeam_touch(void) {
 		#ifndef CLIENT
 		/* impact per bullet */
 		if (trace_ent.iBleeds == 0) {
 			DecalGroups_Place("Impact.BigShot", trace_endpos + (v_forward * -2));
 			SurfData_Impact(trace_ent, trace_surfaceflagsi, trace_endpos, trace_plane_normal);
+		}
+		if (trace_ent.takedamage == DAMAGE_YES) {
+			Damage_Apply(trace_ent, self.owner, 23, WEAPON_RAILGUN, DMG_BULLET);
 		}
 		#endif
 		remove(self);
@@ -85,16 +89,19 @@ w_railgun_shootbeam(player pl)
 	Weapons_MakeVectors(pl);
 	entity p = spawn();
 	setmodel(p, "models/nail.mdl");
-	setorigin(p, Weapons_GetCameraPos(pl) + (v_forward * 14) + (v_up * -4) + (v_right * 2));
+	setorigin(p, Weapons_GetCameraPos(pl) + (v_forward * 14) + (v_up * -5) + (v_right * 3.5));
 	p.owner = self;
 	p.movetype = MOVETYPE_FLYMISSILE;
 	p.solid = SOLID_BBOX;
 	p.gravity = 0.5f;
-	p.velocity = (v_forward * 1000) + (v_up * 4) + (v_right * -2);
+	p.velocity = (v_forward * 1000) + (v_up * 5) + (v_right * -3.5);
 	p.angles = vectoangles(p.velocity);
 	p.touch = w_railgun_shootbeam_touch;
 	p.think = Util_Destroy;
 	p.nextthink = time + 5.0f;
+	p.alpha = 0.01f;
+	p.traileffectnum = particleeffectnum("weapon_railgun.trail");
+#endif
 }
 
 void
@@ -143,7 +150,7 @@ w_railgun_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud07.spr_0.tga",
+			g_tfchud7_spr,
 			[0,0],
 			[170/256,45/256],
 			g_hud_color,
@@ -154,7 +161,7 @@ w_railgun_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud07.spr_0.tga",
+			g_tfchud7_spr,
 			[0,0],
 			[170/256,45/256],
 			g_hud_color,

@@ -183,9 +183,9 @@ w_dbs_hudpic(player pl, int s, vector pos, float a)
 {
 #ifdef CLIENT
 	if (s) {
-		drawsubpic(pos, [170,45], "sprites/640hud4.spr_0.tga", [0,180/256], [170/256,45/256], g_hud_color, a, DRAWFLAG_ADDITIVE);
+		drawsubpic(pos, [170,45], g_hud4_spr, [0,180/256], [170/256,45/256], g_hud_color, a, DRAWFLAG_ADDITIVE);
 	} else {
-		drawsubpic(pos, [170,45], "sprites/640hud1.spr_0.tga", [0,180/256], [170/256,45/256], g_hud_color, a, DRAWFLAG_ADDITIVE);
+		drawsubpic(pos, [170,45], g_hud1_spr, [0,180/256], [170/256,45/256], g_hud_color, a, DRAWFLAG_ADDITIVE);
 	}
 #endif
 }

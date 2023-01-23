@@ -121,7 +121,7 @@ w_knife_primary(player pl)
 
 	// Backstab detection
 	if (trace_ent.takedamage) {
-		int damage = 10;
+		int damage = 36;
 		damageType_t dmgtype = DMG_BLUNT;
 
 		if (trace_ent.classname == "player") {
@@ -155,7 +155,7 @@ w_knife_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud04.spr_0.tga",
+			g_tfchud4_spr,
 			[0,135/256],
 			[170/256,45/256],
 			g_hud_color,
@@ -166,7 +166,7 @@ w_knife_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud03.spr_0.tga",
+			g_tfchud3_spr,
 			[0,90/256],
 			[170/256,45/256],
 			g_hud_color,

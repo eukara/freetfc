@@ -194,7 +194,7 @@ w_rpg_hud(player pl)
 	drawsubpic(
 		aicon_pos,
 		[24,24],
-		"sprites/640hud7.spr_0.tga",
+		g_hud7_spr,
 		[120/256,72/128],
 		[24/256, 24/128],
 		g_hud_color,
@@ -210,9 +210,9 @@ w_rpg_hudpic(player pl, int selected, vector pos, float a)
 {
 #ifdef CLIENT
 	if (selected) {
-		drawsubpic(pos, [170,45], "sprites/640hud5.spr_0.tga", [0,45/256], [170/256,45/256], g_hud_color, a, DRAWFLAG_ADDITIVE);
+		drawsubpic(pos, [170,45], g_hud5_spr, [0,45/256], [170/256,45/256], g_hud_color, a, DRAWFLAG_ADDITIVE);
 	} else {
-		drawsubpic(pos, [170,45], "sprites/640hud2.spr_0.tga", [0,45/256], [170/256,45/256], g_hud_color, a, DRAWFLAG_ADDITIVE);
+		drawsubpic(pos, [170,45], g_hud2_spr, [0,45/256], [170/256,45/256], g_hud_color, a, DRAWFLAG_ADDITIVE);
 	}
 #endif
 }

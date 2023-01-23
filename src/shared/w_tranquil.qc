@@ -77,6 +77,9 @@ w_tranquil_shootdart(player pl)
 			DecalGroups_Place("Impact.BigShot", trace_endpos + (v_forward * -2));
 			SurfData_Impact(trace_ent, trace_surfaceflagsi, trace_endpos, trace_plane_normal);
 		}
+		if (trace_ent.takedamage == DAMAGE_YES) {
+			Damage_Apply(trace_ent, self.owner, 18, WEAPON_TRANQUIL, DMG_BULLET);
+		}
 		#endif
 		remove(self);
 	}
@@ -151,7 +154,7 @@ w_tranquil_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud05.spr_0.tga",
+			g_tfchud5_spr,
 			[0,135/256],
 			[170/256,45/256],
 			g_hud_color,
@@ -162,7 +165,7 @@ w_tranquil_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud06.spr_0.tga",
+			g_tfchud6_spr,
 			[0,45/256],
 			[170/256,45/256],
 			g_hud_color,

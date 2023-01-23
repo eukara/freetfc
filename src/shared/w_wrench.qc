@@ -141,7 +141,7 @@ w_wrench_primary(player pl)
 
 		/* Damage without armor is between 12 - 20, so let's just do 15 for now */
 		if (trace_ent.takedamage) {
-			Damage_Apply(trace_ent, pl, Skill_GetValue("plr_wrench", 15), WEAPON_WRENCH, DMG_BLUNT);
+			Damage_Apply(trace_ent, pl, 18, WEAPON_WRENCH, DMG_BLUNT);
 			if (trace_ent.iBleeds) {
 				Sound_Play(self, CHAN_WEAPON, "weapon_crowbar.hitbody");
 			}

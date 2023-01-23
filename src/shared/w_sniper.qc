@@ -62,7 +62,8 @@ void
 w_sniper_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_sniper.mdl");
-	Weapons_ViewAnimation(pl, SNIPER_IDLE);
+	Weapons_ViewAnimation(pl, SNIPER_DRAW);
+	pl.w_idle_next = 1.0f;
 }
 
 float
@@ -74,7 +75,7 @@ w_sniper_aimanim(player pl)
 void
 w_sniper_release(player pl)
 {
-	if (pl.w_attack_next > 0.0)
+	if (pl.w_idle_next > 0.0)
 		return;
 
 	if (pl.mode_tempstate > 0) {
@@ -86,7 +87,7 @@ w_sniper_release(player pl)
 		#endif
 		Weapons_Sound(pl, CHAN_WEAPON, "weapon_sniper.fire");
 		pl.w_attack_next = 2.0f;
-		pl.w_idle_next = 1.5f;
+		pl.w_idle_next = 0.5f;
 		pl.mode_tempstate = 0;
 	}
 }
@@ -105,20 +106,30 @@ w_sniper_primary(player pl)
 		return;
 
 	/* if we aren't already, 'aim' down... */
-	if (pl.mode_tempstate == 0) {
-		Weapons_ViewAnimation(pl, SNIPER_AIM);
-	}
 
 	pl.mode_tempstate += 1;
 	pl.w_attack_next = 1.0f;
+
+	if (pl.mode_tempstate == 0) {
+		Weapons_ViewAnimation(pl, SNIPER_AIM);
+		pl.w_idle_next = pl.w_attack_next;
+	}
 }
 
 void
 w_sniper_secondary(player pl)
 {
-	if (pl.w_attack_next) {
+	if (!(input_buttons & INPUT_BUTTON0)) {
+		if (pl.mode_tempstate != 0) {
+			w_sniper_release(pl);
+			return;
+		}
+	}
+
+	if (pl.w_idle_next > 0) {
 		return;
 	}
+
 	/* Simple toggle of fovs */
 	if (pl.viewzoom == 1.0f) {
 		pl.viewzoom = 0.2f;
@@ -126,19 +137,14 @@ w_sniper_secondary(player pl)
 		pl.viewzoom = 1.0f;
 	}
 
-	pl.w_attack_next = 0.5f;
+	pl.w_idle_next = 0.25f;
 }
 
 void
 w_sniper_postdraw(player pl)
 {
 #ifdef CLIENT
-	// crosshair
-	if (pl.viewzoom == 1) {
-		Cross_DrawSub(g_cross_spr, [24,24], [72/128,0], [0.1875, 0.1875]);
-	} else {
-		Cross_DrawSub(g_cross_spr, [104,16], [24/128,96/128], [104/128, 16/128]);
-	}
+	Cross_DrawSub(g_cross_spr, [24,24], [72/128,0], [0.1875, 0.1875]);
 
 	if (pl.mode_tempstate) {
 		vector laser_pos;
@@ -146,8 +152,9 @@ w_sniper_postdraw(player pl)
 		vector jitter = [0.0f, 0.0f, 0.0f];
 		Weapons_MakeVectors(pl);
 		vector src = pl.origin + pl.view_ofs;
+		float a = bound(0.0, (pl.mode_tempstate / 10), 1.0) * 0.75;
 		traceline(src, src + (v_forward * 256), FALSE, pl);
-		lerp = Math_Lerp(18,6, trace_fraction);
+		lerp = Math_Lerp(32,16, trace_fraction);
 		jitter[0] = (random(0,2) - 2) * (1 - trace_fraction);
 		jitter[1] = (random(0,2) - 2) * (1 - trace_fraction);
 		laser_pos = g_hudmins + (g_hudres / 2) + ([-lerp,-lerp] / 2);
@@ -158,8 +165,8 @@ w_sniper_postdraw(player pl)
 			g_laser_spr,
 			[0,0],
 			[1.0, 1.0],
-			[1,1,1],
-			1.0f,
+			[1,1,1] * (0.25 + a),
+			1.0,
 			DRAWFLAG_ADDITIVE
 		);
 	}
@@ -167,7 +174,7 @@ w_sniper_postdraw(player pl)
 	// ammo counter
 	HUD_DrawAmmo2();
 	vector aicon_pos = g_hudmins + [g_hudres[0] - 48, g_hudres[1] - 42];
-	drawsubpic(aicon_pos, [24,24], "sprites/640hud7.spr_0.tga", [72/256,72/128], [24/256, 24/128], g_hud_color, pSeatLocal->m_flAmmo2Alpha, DRAWFLAG_ADDITIVE);
+	drawsubpic(aicon_pos, [24,24], g_hud7_spr, [72/256,72/128], [24/256, 24/128], g_hud_color, pSeatLocal->m_flAmmo2Alpha, DRAWFLAG_ADDITIVE);
 #endif
 }
 
@@ -179,7 +186,7 @@ w_sniper_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud02.spr_0.tga",
+			g_tfchud2_spr,
 			[0,0],
 			[170/256,45/256],
 			g_hud_color,
@@ -190,7 +197,7 @@ w_sniper_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud01.spr_0.tga",
+			g_tfchud1_spr,
 			[0,0],
 			[170/256,45/256],
 			g_hud_color,

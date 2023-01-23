@@ -190,7 +190,7 @@ w_flamer_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud04.spr_0.tga",
+			g_tfchud4_spr,
 			[0,45/256],
 			[170/256,45/256],
 			hud_col,
@@ -201,7 +201,7 @@ w_flamer_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud03.spr_0.tga",
+			g_tfchud3_spr,
 			[0,0/256],
 			[170/256,45/256],
 			hud_col,

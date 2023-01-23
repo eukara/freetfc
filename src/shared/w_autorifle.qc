@@ -61,6 +61,9 @@ w_autorifle_deathmsg(void)
 void
 w_autorifle_release(player pl)
 {
+	if (pl.w_idle_next > 0)
+		return;
+
 	Weapons_ViewAnimation(pl, SNIPER_AUTOIDLE);
 }
 
@@ -68,7 +71,8 @@ void
 w_autorifle_draw(player pl)
 {
 	Weapons_SetModel("models/v_tfc_sniper.mdl");
-	Weapons_ViewAnimation(pl, SNIPER_AUTOIDLE);
+	Weapons_ViewAnimation(pl, SNIPER_AUTODRAW);
+	pl.w_idle_next = 1.0f;
 }
 
 float
@@ -96,11 +100,12 @@ w_autorifle_primary(player pl)
 		pl.w_attack_next = 0.1f;
 		break;
 	case AUTO_EMPTY:
+		w_autorifle_release(pl);
 		pl.w_attack_next = 0.2f;
 		break;
 	}
 
-	pl.w_idle_next = 1.5f;
+	pl.w_idle_next = 0.0f;
 }
 
 void
@@ -128,7 +133,7 @@ w_autorifle_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud02.spr_0.tga",
+			g_tfchud2_spr,
 			[0,0],
 			[170/256,45/256],
 			g_hud_color,
@@ -139,7 +144,7 @@ w_autorifle_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/tfchud01.spr_0.tga",
+			g_tfchud1_spr,
 			[0,0],
 			[170/256,45/256],
 			g_hud_color,
@@ -159,7 +164,7 @@ weapon_t w_autorifle =
 	.draw		= w_autorifle_draw,
 	.holster	= __NULL__,
 	.primary	= w_autorifle_primary,
-	.secondary	= __NULL__,
+	.secondary	= w_autorifle_release,
 	.reload		= __NULL__,
 	.release	= w_autorifle_release,
 	.postdraw	= w_autorifle_postdraw,

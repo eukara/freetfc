@@ -68,7 +68,7 @@ w_grapple_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/640hud4.spr_0.tga",
+			g_tfchud4_spr,
 			[0,0],
 			[170/256,45/256],
 			g_hud_color,
@@ -79,7 +79,7 @@ w_grapple_hudpic(player pl, int selected, vector pos, float a)
 		drawsubpic(
 			pos,
 			[170,45],
-			"sprites/640hud1.spr_0.tga",
+			g_tfchud1_spr,
 			[0,0],
 			[170/256,45/256],
 			g_hud_color,
