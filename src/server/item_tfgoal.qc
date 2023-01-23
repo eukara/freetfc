@@ -217,7 +217,12 @@ item_tfgoal::Respawn(void)
 	m_eActivator = __NULL__;
 	ReleaseThink();
 	m_status = GISTATUS_HOME;
-	SetRenderFX(RFX_GLOWSHELL);
+
+	if (m_iTeamOwner) {
+		SetRenderAmt(1.0f);
+		SetRenderFX(RFX_GLOWSHELL);
+	} else
+		return;
 
 	/* spawn into the world */
 	switch (m_iTeamOwner) {
