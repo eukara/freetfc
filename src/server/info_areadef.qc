@@ -47,7 +47,7 @@ info_areadef::Touch(entity eToucher)
 	if (!(eToucher.flags & FL_CLIENT))
 		return;
 
-	forceinfokey(eToucher, "*areadef", strtoupper(m_strDescription));
+	forceinfokey(eToucher, "*areadef", m_strDescription);
 }
 
 void
@@ -55,7 +55,11 @@ info_areadef::SpawnKey(string strKey, string strValue)
 {
 	switch (strKey) {
 	case "areaname":
-		m_strDescription = strValue;
+		m_strDescription = strtoupper(strValue);
+		m_strDescription = strreplace("BLUE", "^x99FBLUE^7", m_strDescription);
+		m_strDescription = strreplace("RED", "^xF66RED^7", m_strDescription);
+		m_strDescription = strreplace("GREEN", "^x4F4GREEN^7", m_strDescription);
+		m_strDescription = strreplace("YELLOW", "^xFF4YELLOW^7", m_strDescription);
 		break;
 	case "mins":
 		m_vecMins = stov(strValue);
