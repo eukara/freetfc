@@ -70,10 +70,10 @@ w_pipebomb_draw(player pl)
 #ifdef SERVER
 void w_pipebomb_explode(void)
 {
-	float dmg = 100;
-
 	FX_Explosion(self.origin);
-	Damage_Radius(self.origin, self.owner, dmg, dmg * 2.5f, TRUE, WEAPON_GLAUNCHER);
+
+	/* dmg/radius taken from http://web.archive.org/web/20030323072941fw_/http://www.planetfortress.com/tfce/grenades/pipebomb.htm */
+	Damage_Radius(self.origin, self.owner, 80, 128, TRUE, WEAPON_GLAUNCHER);
 	sound(self, CHAN_WEAPON, sprintf("weapons/explode%d.wav", floor(random() * 2) + 3), 1, ATTN_NORM);
 	NSEntity::Destroy();
 }
