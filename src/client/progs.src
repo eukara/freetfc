@@ -39,7 +39,7 @@ hud_ammonotify.qc
 ../../../valve/src/client/hud.qc
 ../../../valve/src/client/hud_weaponselect.qc
 ../../../valve/src/client/scoreboard.qc
-../../../base/src/client/modelevent.qc
+../../../valve/src/client/modelevent.qc
 
 ../../../src/client/include.src
 vgui_chooseteam.qc
