@@ -79,7 +79,7 @@ w_nailgun_shootnail(player pl)
 		#ifndef CLIENT
 		/* impact per bullet */
 		if (trace_ent.iBleeds == 0) {
-			DecalGroups_Place("Impact.BigShot", trace_endpos + (v_forward * -2));
+			DecalGroups_Place("Impact.Shot", trace_endpos + (v_forward * -2));
 			SurfData_Impact(trace_ent, trace_surfaceflagsi, trace_endpos, trace_plane_normal);
 		}
 		if (trace_ent.takedamage == DAMAGE_YES) {
