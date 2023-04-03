@@ -44,8 +44,11 @@ ClientGame_PostDraw(void)
 {
 	player pl = (player)pSeat->m_ePlayer;
 
-	if (serverkeyfloat("areadefs") == 1)
-		Font_DrawText([16,16], getplayerkeyvalue(player_localnum, "*areadef"), FONT_CON);
+	if (serverkeyfloat("areadefs") == 1) {
+		string strArea = getplayerkeyvalue(player_localnum, "*areadef");
+		float flOffset = Font_StringWidth(strArea, TRUE, FONT_20) / 2;
+		Font_DrawText_A([g_hudmins[0] + 16, g_hudmins[1] + g_hudres[1] - 70], strArea, 0.75, FONT_20);
+	}
 
 	if (pl.g_items & ITEM_GOALITEM) {
 		vector vecGoalItemPos;

@@ -139,6 +139,8 @@ item_tfgoal::Touch(entity eToucher)
 
 	player pl = (player)eToucher;
 
+/* not in standard TFC, make cvar? */
+#if 0
 	/* if it's dropped, just let the other team return it...
       otherwise let the other teams pick it up as normal */
 	if (m_status == GISTATUS_DROPPED) {
@@ -147,6 +149,7 @@ item_tfgoal::Touch(entity eToucher)
 			return;
 		}
 	}
+#endif
 
 	/* team filter */
 	if (m_iTeamUses)
@@ -250,6 +253,11 @@ item_tfgoal::SpawnKey(string strKey, string strValue)
 		break;
 	case "mdl":
 		model = strValue;
+
+		if (serverkeyfloat("*bspversion") == BSPVER_Q1) {
+			model = strreplace("progs", "models", model);
+			model = strreplace("tf_stan", "flag", model);
+		}
 		break;
 	case "goal_no":
 		m_dItemID = stof(strValue);

@@ -436,42 +436,32 @@ player::ReceiveEntity
 =================
 */
 void
-player::ReceiveEntity(float new, float fl)
+player::ReceiveEntity(float new, float flChanged)
 {
 	/* the generic client attributes */
-	NSClientPlayer::ReceiveEntity(new, fl);
+	super::ReceiveEntity(new, flChanged);
 
 	/* animation */
-	if (fl & PLAYER_TOPFRAME) {
-		anim_top = readbyte();
-		anim_top_time = readfloat();
-		anim_top_delay = readfloat();
-	}
-	if (fl & PLAYER_BOTTOMFRAME) {
-		anim_bottom = readbyte();
-		anim_bottom_time = readfloat();
-	}
+	READENTITY_BYTE(anim_top, PLAYER_TOPFRAME)
+	READENTITY_FLOAT(anim_top_time, PLAYER_TOPFRAME)
+	READENTITY_FLOAT(anim_top_delay, PLAYER_TOPFRAME)
+	READENTITY_BYTE(anim_bottom, PLAYER_BOTTOMFRAME)
+	READENTITY_FLOAT(anim_bottom_time, PLAYER_BOTTOMFRAME)
 
-	if (fl & PLAYER_AMMO1) {
-		mag_sbs = readbyte();
-		mag_dbs = readbyte();
-		mag_rpg = readbyte();
-		mag_glauncher = readbyte();
-	}
-	
-	if (fl & PLAYER_AMMO2) {
-		m_iAmmoRockets = readbyte();
-		m_iAmmoNails = readbyte();
-		m_iAmmoCells = readbyte();
-		m_iAmmoShells = readbyte();
-		m_iAmmoDetpack = readbyte();
-		m_iAmmoMedikit = readbyte();
-	}
+	READENTITY_BYTE(mag_sbs, PLAYER_AMMO1)
+	READENTITY_BYTE(mag_dbs, PLAYER_AMMO1)
+	READENTITY_BYTE(mag_rpg, PLAYER_AMMO1)
+	READENTITY_BYTE(mag_glauncher, PLAYER_AMMO1)
 
-	if (fl & PLAYER_AMMO3) {
-		mode_tempstate = readbyte();
-		classtype = readbyte();
-	}
+	READENTITY_BYTE(m_iAmmoRockets, PLAYER_AMMO2)
+	READENTITY_BYTE(m_iAmmoNails, PLAYER_AMMO2)
+	READENTITY_BYTE(m_iAmmoCells, PLAYER_AMMO2)
+	READENTITY_BYTE(m_iAmmoShells, PLAYER_AMMO2)
+	READENTITY_BYTE(m_iAmmoDetpack, PLAYER_AMMO2)
+	READENTITY_BYTE(m_iAmmoMedikit, PLAYER_AMMO2)
+
+	READENTITY_BYTE(mode_tempstate, PLAYER_AMMO3)
+	READENTITY_BYTE(classtype, PLAYER_AMMO3)
 
 	setorigin(this, origin);
 
@@ -481,15 +471,15 @@ player::ReceiveEntity(float new, float fl)
 		return;
 
 	/* do not notify us of updates when spawning initially */
-	if (fl == UPDATE_ALL)
+	if (flChanged == UPDATE_ALL)
 		PredictPreFrame();
 
-	if (fl & PLAYER_AMMO1 || fl & PLAYER_AMMO2 || fl & PLAYER_AMMO3) {
+	if (flChanged & PLAYER_AMMO1 || flChanged & PLAYER_AMMO2 || flChanged & PLAYER_AMMO3) {
 		Weapons_AmmoUpdate(this);
 		HUD_AmmoNotify_Check(this);
 	}
 
-	if (fl & PLAYER_ITEMS || fl & PLAYER_HEALTH)
+	if (flChanged & PLAYER_ITEMS || flChanged & PLAYER_HEALTH)
 		HUD_ItemNotify_Check(this);
 }
 
@@ -507,26 +497,26 @@ player::PredictPreFrame(void)
 	/* the generic client attributes */
 	NSClientPlayer::PredictPreFrame();
 
-	SAVE_STATE(anim_top);
-	SAVE_STATE(anim_top_delay);
-	SAVE_STATE(anim_top_time);
-	SAVE_STATE(anim_bottom);
-	SAVE_STATE(anim_bottom_time);
+	SAVE_STATE(anim_top)
+	SAVE_STATE(anim_top_delay)
+	SAVE_STATE(anim_top_time)
+	SAVE_STATE(anim_bottom)
+	SAVE_STATE(anim_bottom_time)
 
-	SAVE_STATE(mag_sbs);
-	SAVE_STATE(mag_dbs);
-	SAVE_STATE(mag_rpg);
-	SAVE_STATE(mag_glauncher);
+	SAVE_STATE(mag_sbs)
+	SAVE_STATE(mag_dbs)
+	SAVE_STATE(mag_rpg)
+	SAVE_STATE(mag_glauncher)
 
-	SAVE_STATE(m_iAmmoRockets);
-	SAVE_STATE(m_iAmmoNails);
-	SAVE_STATE(m_iAmmoCells);
-	SAVE_STATE(m_iAmmoShells);
-	SAVE_STATE(m_iAmmoDetpack);
-	SAVE_STATE(m_iAmmoMedikit);
+	SAVE_STATE(m_iAmmoRockets)
+	SAVE_STATE(m_iAmmoNails)
+	SAVE_STATE(m_iAmmoCells)
+	SAVE_STATE(m_iAmmoShells)
+	SAVE_STATE(m_iAmmoDetpack)
+	SAVE_STATE(m_iAmmoMedikit)
 
-	SAVE_STATE(mode_tempstate);
-	SAVE_STATE(classtype);
+	SAVE_STATE(mode_tempstate)
+	SAVE_STATE(classtype)
 }
 
 /*
@@ -542,26 +532,26 @@ player::PredictPostFrame(void)
 	/* the generic client attributes */
 	NSClientPlayer::PredictPostFrame();
 
-	ROLL_BACK(anim_top);
-	ROLL_BACK(anim_top_delay);
-	ROLL_BACK(anim_top_time);
-	ROLL_BACK(anim_bottom);
-	ROLL_BACK(anim_bottom_time);
+	ROLL_BACK(anim_top)
+	ROLL_BACK(anim_top_delay)
+	ROLL_BACK(anim_top_time)
+	ROLL_BACK(anim_bottom)
+	ROLL_BACK(anim_bottom_time)
 
-	ROLL_BACK(mag_sbs);
-	ROLL_BACK(mag_dbs);
-	ROLL_BACK(mag_rpg);
-	ROLL_BACK(mag_glauncher);
+	ROLL_BACK(mag_sbs)
+	ROLL_BACK(mag_dbs)
+	ROLL_BACK(mag_rpg)
+	ROLL_BACK(mag_glauncher)
 
-	ROLL_BACK(m_iAmmoRockets);
-	ROLL_BACK(m_iAmmoNails);
-	ROLL_BACK(m_iAmmoCells);
-	ROLL_BACK(m_iAmmoShells);
-	ROLL_BACK(m_iAmmoDetpack);
-	ROLL_BACK(m_iAmmoMedikit);
+	ROLL_BACK(m_iAmmoRockets)
+	ROLL_BACK(m_iAmmoNails)
+	ROLL_BACK(m_iAmmoCells)
+	ROLL_BACK(m_iAmmoShells)
+	ROLL_BACK(m_iAmmoDetpack)
+	ROLL_BACK(m_iAmmoMedikit)
 
-	ROLL_BACK(mode_tempstate);
-	ROLL_BACK(classtype);
+	ROLL_BACK(mode_tempstate)
+	ROLL_BACK(classtype)
 }
 
 #else
@@ -580,61 +570,26 @@ player::EvaluateEntity(void)
 	NSClientPlayer::EvaluateEntity();
 
 	/* animation */
-	if (ATTR_CHANGED(anim_bottom) || ATTR_CHANGED(anim_bottom_time))
-		SendFlags |= PLAYER_BOTTOMFRAME;
-	if (ATTR_CHANGED(anim_top) || ATTR_CHANGED(anim_top_time) || ATTR_CHANGED(anim_top_delay))
-		SendFlags |= PLAYER_TOPFRAME;
+	EVALUATE_FIELD(anim_top, PLAYER_TOPFRAME)
+	EVALUATE_FIELD(anim_top_time, PLAYER_TOPFRAME)
+	EVALUATE_FIELD(anim_top_delay, PLAYER_TOPFRAME)
+	EVALUATE_FIELD(anim_bottom, PLAYER_BOTTOMFRAME)
+	EVALUATE_FIELD(anim_bottom_time, PLAYER_BOTTOMFRAME)
 
-	/* ammo 1 type updates */
-	if (ATTR_CHANGED(mag_sbs))
-		SendFlags |= PLAYER_AMMO1;
-	else if (ATTR_CHANGED(mag_dbs))
-		SendFlags |= PLAYER_AMMO1;
-	else if (ATTR_CHANGED(mag_rpg))
-		SendFlags |= PLAYER_AMMO1;
-	else if (ATTR_CHANGED(mag_glauncher))
-		SendFlags |= PLAYER_AMMO1;
+	EVALUATE_FIELD(mag_sbs, PLAYER_AMMO1)
+	EVALUATE_FIELD(mag_dbs, PLAYER_AMMO1)
+	EVALUATE_FIELD(mag_rpg, PLAYER_AMMO1)
+	EVALUATE_FIELD(mag_glauncher, PLAYER_AMMO1)
 
-	/* ammo 2 type updates */
-	if (ATTR_CHANGED(m_iAmmoRockets))
-		SendFlags |= PLAYER_AMMO2;
-	else if (ATTR_CHANGED(m_iAmmoNails))
-		SendFlags |= PLAYER_AMMO2;
-	else if (ATTR_CHANGED(m_iAmmoCells))
-		SendFlags |= PLAYER_AMMO2;
-	else if (ATTR_CHANGED(m_iAmmoShells))
-		SendFlags |= PLAYER_AMMO2;
-	else if (ATTR_CHANGED(m_iAmmoDetpack))
-		SendFlags |= PLAYER_AMMO2;
-	else if (ATTR_CHANGED(m_iAmmoMedikit))
-		SendFlags |= PLAYER_AMMO2;
+	EVALUATE_FIELD(m_iAmmoRockets, PLAYER_AMMO2)
+	EVALUATE_FIELD(m_iAmmoNails, PLAYER_AMMO2)
+	EVALUATE_FIELD(m_iAmmoCells, PLAYER_AMMO2)
+	EVALUATE_FIELD(m_iAmmoShells, PLAYER_AMMO2)
+	EVALUATE_FIELD(m_iAmmoDetpack, PLAYER_AMMO2)
+	EVALUATE_FIELD(m_iAmmoMedikit, PLAYER_AMMO2)
 
-	if (ATTR_CHANGED(mode_tempstate))
-		SendFlags |= PLAYER_AMMO3;
-
-	if (ATTR_CHANGED(classtype))
-		SendFlags |= PLAYER_AMMO3;
-
-	SAVE_STATE(mag_sbs);
-	SAVE_STATE(mag_dbs);
-	SAVE_STATE(mag_rpg);
-	SAVE_STATE(mag_glauncher);
-
-	SAVE_STATE(m_iAmmoRockets);
-	SAVE_STATE(m_iAmmoNails);
-	SAVE_STATE(m_iAmmoCells);
-	SAVE_STATE(m_iAmmoShells);
-	SAVE_STATE(m_iAmmoDetpack);
-	SAVE_STATE(m_iAmmoMedikit);
-
-	SAVE_STATE(mode_tempstate);
-	SAVE_STATE(classtype);
-
-	SAVE_STATE(anim_top);
-	SAVE_STATE(anim_top_delay);
-	SAVE_STATE(anim_top_time);
-	SAVE_STATE(anim_bottom);
-	SAVE_STATE(anim_bottom_time);
+	EVALUATE_FIELD(mode_tempstate, PLAYER_AMMO3)
+	EVALUATE_FIELD(classtype, PLAYER_AMMO3)
 }
 
 void
@@ -674,7 +629,7 @@ player::MakeClass(classtype_e class)
 	viewzoom = 1.0;
 
 	/* select our class model */
-	model = g_teammodels[classtype];
+	model = TFC_GetModelForClasstype(classtype);
 	setmodel(this, model);
 	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	velocity = [0,0,0];
@@ -883,36 +838,26 @@ player::SendEntity(entity ePEnt, float flChanged)
 	/* the generic client attributes */
 	NSClientPlayer::SendEntity(ePEnt, flChanged);
 
-	if (flChanged & PLAYER_TOPFRAME) {
-		WriteByte(MSG_ENTITY, anim_top);
-		WriteFloat(MSG_ENTITY, anim_top_time);
-		WriteFloat(MSG_ENTITY, anim_top_delay);
-	}
-	if (flChanged & PLAYER_BOTTOMFRAME) {
-		WriteByte(MSG_ENTITY, anim_bottom);
-		WriteFloat(MSG_ENTITY, anim_bottom_time);
-	}
+	SENDENTITY_BYTE(anim_top, PLAYER_TOPFRAME)
+	SENDENTITY_FLOAT(anim_top_time, PLAYER_TOPFRAME)
+	SENDENTITY_FLOAT(anim_top_delay, PLAYER_TOPFRAME)
+	SENDENTITY_BYTE(anim_bottom, PLAYER_BOTTOMFRAME)
+	SENDENTITY_FLOAT(anim_bottom_time, PLAYER_BOTTOMFRAME)
 
-	if (flChanged & PLAYER_AMMO1) {
-		WriteByte(MSG_ENTITY, mag_sbs);
-		WriteByte(MSG_ENTITY, mag_dbs);
-		WriteByte(MSG_ENTITY, mag_rpg);
-		WriteByte(MSG_ENTITY, mag_glauncher);
-	}
+	SENDENTITY_BYTE(mag_sbs, PLAYER_AMMO1)
+	SENDENTITY_BYTE(mag_dbs, PLAYER_AMMO1)
+	SENDENTITY_BYTE(mag_rpg, PLAYER_AMMO1)
+	SENDENTITY_BYTE(mag_glauncher, PLAYER_AMMO1)
 
-	if (flChanged & PLAYER_AMMO2) {
-		WriteByte(MSG_ENTITY, m_iAmmoRockets);
-		WriteByte(MSG_ENTITY, m_iAmmoNails);
-		WriteByte(MSG_ENTITY, m_iAmmoCells);
-		WriteByte(MSG_ENTITY, m_iAmmoShells);
-		WriteByte(MSG_ENTITY, m_iAmmoDetpack);
-		WriteByte(MSG_ENTITY, m_iAmmoMedikit);
-	}
+	SENDENTITY_BYTE(m_iAmmoRockets, PLAYER_AMMO2)
+	SENDENTITY_BYTE(m_iAmmoNails, PLAYER_AMMO2)
+	SENDENTITY_BYTE(m_iAmmoCells, PLAYER_AMMO2)
+	SENDENTITY_BYTE(m_iAmmoShells, PLAYER_AMMO2)
+	SENDENTITY_BYTE(m_iAmmoDetpack, PLAYER_AMMO2)
+	SENDENTITY_BYTE(m_iAmmoMedikit, PLAYER_AMMO2)
 
-	if (flChanged & PLAYER_AMMO3) {
-		WriteByte(MSG_ENTITY, mode_tempstate);
-		WriteByte(MSG_ENTITY, classtype);
-	}
+	SENDENTITY_BYTE(mode_tempstate, PLAYER_AMMO3)
+	SENDENTITY_BYTE(classtype, PLAYER_AMMO3)
 
 	return (1);
 }

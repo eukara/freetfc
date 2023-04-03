@@ -14,76 +14,243 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-static CUIWindow winClassSelection;
+static string g_classDescrScout;
+static string g_classDescrSniper;
+static string g_classDescrSoldier;
+static string g_classDescrDemoman;
+static string g_classDescrMedic;
+static string g_classDescrHWGuy;
+static string g_classDescrPyro;
+static string g_classDescrSpy;
+static string g_classDescrEngineer;
+static string g_classDescrRandomPC;
 
-typedef struct
+static void
+TFCClass_Init(void)
 {
-	string str;
-	void(void) ptr;
-} btnarr_t;
+	g_classDescrScout = textfile_to_string("classes/short_scout.txt");
+	g_classDescrSniper = textfile_to_string("classes/short_sniper.txt");
+	g_classDescrSoldier = textfile_to_string("classes/short_soldier.txt");
+	g_classDescrDemoman = textfile_to_string("classes/short_demoman.txt");
+	g_classDescrMedic = textfile_to_string("classes/short_medic.txt");
+	g_classDescrHWGuy = textfile_to_string("classes/short_hwguy.txt");
+	g_classDescrPyro = textfile_to_string("classes/short_pyro.txt");
+	g_classDescrSpy = textfile_to_string("classes/short_spy.txt");
+	g_classDescrEngineer = textfile_to_string("classes/short_engineer.txt");
+	g_classDescrRandomPC = textfile_to_string("classes/short_randompc.txt");
+}
+
+static VGUIWindow winClassSelection;
+static VGUIPic imgClassPreview;
+static VGUILabel lblClassTitle;
+static VGUILabel lblClassDescription;
+static VGUILabel lblClassCounter;
+
+class TFClassButton:VGUIButton
+{
+	void TFClassButton(void);
+
+	virtual void OnMouseUp(void);
+	virtual void OnMouseEntered(void);
+};
 
 void
-VGUI_ClassJoin(float i)
+TFClassButton::TFClassButton(void)
 {
-	sendevent("ClassJoin", "f", i);
+}
+
+void
+TFClassButton::OnMouseUp(void)
+{
+	int tag = GetTag();
+
 	winClassSelection.Hide();
+
+	int classSelection = GetTag();
+
+	switch (classSelection) {
+		case 0:
+			sendevent("ClassJoin", "f", 1);
+			break;
+		case 1:
+			sendevent("ClassJoin", "f", 2);
+			break;
+		case 2:
+			sendevent("ClassJoin", "f", 3);
+			break;
+		case 3:
+			sendevent("ClassJoin", "f", 4);
+			break;
+		case 4:
+			sendevent("ClassJoin", "f", 5);
+			break;
+		case 5:
+			sendevent("ClassJoin", "f", 6);
+			break;
+		case 6:
+			sendevent("ClassJoin", "f", 7);
+			break;
+		case 7:
+			sendevent("ClassJoin", "f", 8);
+			break;
+		case 8:
+			sendevent("ClassJoin", "f", 9);
+			break;
+		case 9:
+			sendevent("ClassJoin", "f", 0);
+			break;
+	}
 }
 
 void
-VGUI_TeamBack(void)
+TFClassButton::OnMouseEntered(void)
 {
-	
+	int classSelection = GetTag();
+	string teamName = "blue";
+
+	switch (getplayerkeyfloat(player_localnum, "*team")) {
+	case 1:
+		teamName = "blue";
+		break;
+	case 2:
+		teamName = "red";
+		break;
+	case 3:
+		teamName = "blue";	/* TFC doesn't ship with a real green. */
+		break;
+	case 4:
+		teamName = "red";	/* TFC doesn't ship with a real yellow either. */
+		break;
+	}
+
+	switch (classSelection) {
+		case 0:
+			lblClassTitle.SetTitle("Scout");
+			imgClassPreview.SetImage(strcat("gfx/vgui/640_scout", teamName));
+			lblClassDescription.SetTitle(g_classDescrScout);
+			break;
+		case 1:
+			lblClassTitle.SetTitle("Sniper");
+			imgClassPreview.SetImage(strcat("gfx/vgui/640_sniper", teamName));
+			lblClassDescription.SetTitle(g_classDescrSniper);
+			break;
+		case 2:
+			lblClassTitle.SetTitle("Soldier");
+			imgClassPreview.SetImage(strcat("gfx/vgui/640_soldier", teamName));
+			lblClassDescription.SetTitle(g_classDescrSoldier);
+			break;
+		case 3:
+			lblClassTitle.SetTitle("Demoman");
+			imgClassPreview.SetImage(strcat("gfx/vgui/640_demoman", teamName));
+			lblClassDescription.SetTitle(g_classDescrDemoman);
+			break;
+		case 4:
+			lblClassTitle.SetTitle("Medic");
+			imgClassPreview.SetImage(strcat("gfx/vgui/640_medic", teamName));
+			lblClassDescription.SetTitle(g_classDescrMedic);
+			break;
+		case 5:
+			lblClassTitle.SetTitle("Heavy Weapons Guy");
+			imgClassPreview.SetImage(strcat("gfx/vgui/640_hwguy", teamName));
+			lblClassDescription.SetTitle(g_classDescrHWGuy);
+			break;
+		case 6:
+			lblClassTitle.SetTitle("Pyro");
+			imgClassPreview.SetImage(strcat("gfx/vgui/640_pyro", teamName));
+			lblClassDescription.SetTitle(g_classDescrPyro);
+			break;
+		case 7:
+			lblClassTitle.SetTitle("Spy");
+			imgClassPreview.SetImage(strcat("gfx/vgui/640_spy", teamName));
+			lblClassDescription.SetTitle(g_classDescrSpy);
+			break;
+		case 8:
+			lblClassTitle.SetTitle("Engineer");
+			imgClassPreview.SetImage(strcat("gfx/vgui/640_engineer", teamName));
+			lblClassDescription.SetTitle(g_classDescrEngineer);
+			break;
+		case 9:
+			lblClassTitle.SetTitle("Random");
+			imgClassPreview.SetImage(strcat("gfx/vgui/640_randompc", teamName));
+			lblClassDescription.SetTitle(g_classDescrRandomPC);
+			break;
+	}
 }
 
-void VGUI_JoinScout (void) { VGUI_ClassJoin(1); }
-void VGUI_JoinSniper (void) { VGUI_ClassJoin(2); }
-void VGUI_JoinSoldier (void) { VGUI_ClassJoin(3); }
-void VGUI_JoinDemoman (void) { VGUI_ClassJoin(4); }
-void VGUI_JoinMedic (void) { VGUI_ClassJoin(5); }
-void VGUI_JoinHwguy (void) { VGUI_ClassJoin(6); }
-void VGUI_JoinPyro (void) { VGUI_ClassJoin(7); }
-void VGUI_JoinSpy (void) { VGUI_ClassJoin(8); }
-void VGUI_JoinEngineer (void) { VGUI_ClassJoin(9); }
-
-btnarr_t g_tfc_vgui_classlist[] = {
-	{"SCOUT", VGUI_JoinScout },
-	{"SNIPER", VGUI_JoinSniper },
-	{"SOLDIER", VGUI_JoinSoldier },
-	{"DEMOMAN", VGUI_JoinDemoman },
-	{"MEDIC", VGUI_JoinMedic },
-	{"HWGUY", VGUI_JoinHwguy },
-	{"PYRO", VGUI_JoinPyro },
-	{"SPY", VGUI_JoinSpy },
-	{"ENGINEER", VGUI_JoinEngineer },
-	{__NULL__, __NULL__ },
-	{"< Back", VGUI_TeamBack }
+string g_classnames [] = {
+	"SCOUT",
+	"SNIPER",
+	"SOLDIER",
+	"DEMOMAN",
+	"MEDIC",
+	"HWGUY",
+	"PYRO",
+	"SPY",
+	"ENGINEER",
+	"RANDOM"
 };
 
 void
 VGUI_ChooseClass(void)
 {
 	static int initialized;
-	static CUIButton *btns;
+	static TFClassButton *btns;
+	static VGUILabel lblSelectClass;
+	static VGUIFrame frmClassInfo;
 
 	if (!initialized) {
-		vector btnpos = [16,0];
+		vector btnpos = [40,80];
 		initialized = TRUE;
-		winClassSelection = spawn(CUIWindow);
-		winClassSelection.SetTitle("Choose Skin");
-		winClassSelection.SetSize([420,320]);
-		g_uiDesktop.Add(winClassSelection);
 
-		btns = memalloc(sizeof(btnarr_t) * g_tfc_vgui_classlist.length);
-		for (int i = 0; i < g_tfc_vgui_classlist.length; i++) {
-			btnpos[1] += 30;
-			if (g_tfc_vgui_classlist[i].ptr == __NULL__) {
-				continue;
-			}
-			btns[i] = spawn(CUIButton);
-			btns[i].SetTitle(g_tfc_vgui_classlist[i].str);
+		TFCClass_Init();
+
+		winClassSelection = spawn(VGUIWindow);
+		winClassSelection.SetSize([640, 480]);
+		winClassSelection.SetStyleMask(VGUIWindowBorderless | VGUIWindowFullscreen);
+
+		lblSelectClass = spawn(VGUILabel);
+		lblSelectClass.SetTitle("SELECT YOUR CLASS");
+		lblSelectClass.SetTextSize(19);
+		lblSelectClass.SetPos([40, 38]);
+		lblSelectClass.SetSize([400, 24]);
+
+		frmClassInfo = spawn(VGUIFrame);
+		frmClassInfo.SetPos([176, 80]);
+		frmClassInfo.SetSize([424, 312]);
+
+		imgClassPreview = spawn(VGUIPic);
+		imgClassPreview.SetPos([190, 90]);
+
+		lblClassTitle = spawn(VGUILabel);
+		lblClassTitle.SetPos([338, 90]);
+		lblClassTitle.SetTextSize(19);
+		lblClassTitle.SetSize([320, 24]);
+
+		lblClassCounter = spawn(VGUILabel);
+		lblClassCounter.SetPos([338, 90 + 32]);
+		lblClassCounter.SetSize([320, 18]);
+
+		lblClassDescription = spawn(VGUILabel);
+		lblClassDescription.SetPos([338, 90 + 32 + 32]);
+		lblClassDescription.SetSize([250, 240]);
+
+		g_uiDesktop.Add(winClassSelection);
+		winClassSelection.Add(lblSelectClass);
+		winClassSelection.Add(frmClassInfo);
+		winClassSelection.Add(imgClassPreview);
+		winClassSelection.Add(lblClassTitle);
+		winClassSelection.Add(lblClassCounter);
+		winClassSelection.Add(lblClassDescription);
+
+		btns = memalloc(sizeof(TFClassButton) * g_classnames.length);
+		for (int i = 0; i < g_classnames.length; i++) {
+			btns[i] = spawn(TFClassButton);
+			btns[i].SetTitle(g_classnames[i]);
+			btns[i].SetSize([124, 24]);
 			btns[i].SetPos(btnpos);
-			btns[i].SetFunc(g_tfc_vgui_classlist[i].ptr);
+			btns[i].SetTag(i);
 			winClassSelection.Add(btns[i]);
+			btnpos[1] += 32;
 		}
 	}
 

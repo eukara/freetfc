@@ -29,6 +29,19 @@ typedef enum
 
 string g_teammodels[] = {
 	"",
+	"models/player/scout/scout.mdl",
+	"models/player/sniper/sniper.mdl",
+	"models/player/soldier/soldier.mdl",
+	"models/player/demo/demo.mdl",
+	"models/player/medic/medic.mdl",
+	"models/player/hvyweapon/hvyweapon.mdl",
+	"models/player/pyro/pyro.mdl",
+	"models/player/spy/spy.mdl",
+	"models/player/engineer/engineer.mdl"
+};
+
+string g_teammodels_hd[] = {
+	"",
 	"models/player/scout/scout2.mdl",
 	"models/player/sniper/sniper2.mdl",
 	"models/player/soldier/soldier2.mdl",
@@ -39,3 +52,26 @@ string g_teammodels[] = {
 	"models/player/spy/spy2.mdl",
 	"models/player/engineer/engineer2.mdl"
 };
+
+/* are we using a later build of TF? */
+bool
+TFC_IsLaterBuild(void)
+{
+	if (whichpack(g_teammodels_hd[1]))
+		return true;
+
+	return false;
+}
+
+/* stuff */
+string
+TFC_GetModelForClasstype(classtype_e type)
+{
+	if (TFC_IsLaterBuild() == true)
+		if (autocvar(tfc_newmodels, 0) == 1)
+			return g_teammodels[type];	/* on later versions, the old names are the HD ones */
+		else
+			return g_teammodels_hd[type];
+
+	return g_teammodels[type];
+}

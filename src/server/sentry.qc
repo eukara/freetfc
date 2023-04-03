@@ -27,7 +27,8 @@ TFCSentry::Think(void)
 			if (vlen(origin - p.origin) > 1024)
 				continue;
 
-			print(sprintf("Is Facing? %d\n", IsFacing(p)));
+			if (team == p.team)
+				continue;
 
 			if (IsFacing(p) == false)
 				continue;
@@ -62,12 +63,13 @@ TFCSentry::Think(void)
 			m_state = SENTRY_SEARCHING;
 		else {
 			makevectors([0, angles[1], 0]);
-			m_flWantAngle = dotproduct(normalize(origin - t.origin), v_right);
+			m_flWantAngle = dotproduct((origin - t.origin), v_right);
 			m_flCurrAngle = Math_Lerp(m_flCurrAngle, m_flWantAngle, 0.25f);
 			m_eHead.SetBoneControl1(m_flCurrAngle);
+			print(sprintf("head: %f; want: %f\n", m_flCurrAngle, m_flWantAngle));
 
 			/* fire bullets */
-			v_angle = vectoangles(normalize(origin - t.origin));
+			input_angles = v_angle = vectoangles(origin - t.origin);
 			TraceAttack_FireBullets(1, origin, 5, [0.025,0.025], WEAPON_NONE);
 		}
 	}
@@ -87,6 +89,7 @@ TFCSentry::Place(NSClientPlayer pl)
 	ScheduleThink(FinishPlacing, 5.0f);
 	real_owner = pl;
 	colormap = pl.colormap;
+	team = pl.team;
 
 	env_message_single(real_owner, "#Engineer_building");
 	Sound_Play(this, CHAN_BODY, "engineer.build");

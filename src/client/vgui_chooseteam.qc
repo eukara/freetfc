@@ -14,96 +14,140 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-static CUIWindow winChooseTeam;
+static VGUIWindow winChooseTeam;
+
+class TFTeamButton:VGUIButton
+{
+	void TFTeamButton(void);
+
+	virtual void OnMouseUp(void);
+};
 
 void
-VGUI_ChooseTeam_Blue(void)
+TFTeamButton::TFTeamButton(void)
 {
-	localcmd("changeclass\n");
-	sendevent("TeamJoin", "f", 1);
-	winChooseTeam.Hide();
 }
 
 void
-VGUI_ChooseTeam_Red(void)
+TFTeamButton::OnMouseUp(void)
 {
+	int tag = GetTag();
+
 	localcmd("changeclass\n");
-	sendevent("TeamJoin", "f", 2);
+	sendevent("TeamJoin", "f", (float)tag);
 	winChooseTeam.Hide();
 }
 
-void
-VGUI_ChooseTeam_Green(void)
-{
-	localcmd("changeclass\n");
-	sendevent("TeamJoin", "f", 3);
-	winChooseTeam.Hide();
-}
 
-void
-VGUI_ChooseTeam_Yellow(void)
+string
+VGUI_ChooseTeam_MapInfo(void)
 {
-	localcmd("changeclass\n");
-	sendevent("TeamJoin", "f", 4);
-	winChooseTeam.Hide();
-}
+	static string mapinfo = __NULL__;
 
-void 
-VGUI_GoSpectator(void)
-{
-	//VGUI_TeamJoin(0);
-	sendevent("TeamJoin", "f", 0);
-	winChooseTeam.Hide();
+	if (mapinfo != __NULL__)
+		return mapinfo;
+	
+	filestream fileMap = fopen(strcat("maps/", mapname, ".txt"), FILE_READ);
+	string temp;
+
+	if (fileMap != -1) {
+		while ((temp = fgets(fileMap))) {
+			mapinfo = strcat(mapinfo, temp, "\n");
+		}
+	} else {
+		mapinfo = "No map info available.";
+	}
+
+	return mapinfo;
 }
 
 void
 VGUI_ChooseTeam(void)
 {
 	static int initialized;
-	static CUIButton btnGoSpectator;
+	static VGUIButton btnAutoAssign;
+	static VGUIButton btnGoSpectator;
+	static VGUIFrame frmMapInfo;
+	static VGUILabel lblSelectTeam;
+	static VGUILabel lblMapName;
+	static VGUILabel lblMapInfo;
 
 	if (!initialized) {
-		vector btnpos = [16,48];
+		vector btnpos = [40,80];
 
 		initialized = TRUE;
-		winChooseTeam = spawn(CUIWindow);
-		winChooseTeam.SetTitle("Choose Team");
-		winChooseTeam.SetSize('420 320');
+		winChooseTeam = spawn(VGUIWindow);
+		winChooseTeam.SetSize('640 480');
+		winChooseTeam.SetStyleMask(VGUIWindowBorderless | VGUIWindowFullscreen);
+
+		lblSelectTeam = spawn(VGUILabel);
+		lblSelectTeam.SetTitle("SELECT YOUR TEAM");
+		lblSelectTeam.SetTextSize(19);
+		lblSelectTeam.SetPos([40, 38]);
+		lblSelectTeam.SetSize('400 24');
+
+		frmMapInfo = spawn(VGUIFrame);
+		frmMapInfo.SetPos('176 80');
+		frmMapInfo.SetSize('424 312');
+
+		lblMapName = spawn(VGUILabel);
+		lblMapName.SetTitle(mapname);
+		lblMapName.SetTextSize(19);
+		lblMapName.SetPos('194 105');
+		lblMapName.SetSize('250 312');
+
+		lblMapInfo = spawn(VGUILabel);
+		lblMapInfo.SetTitle(VGUI_ChooseTeam_MapInfo());
+		lblMapInfo.SetPos('194 129');
+		lblMapInfo.SetSize('375 250');
 
 		for (int t = 1; t <= serverkeyfloat("teams"); t++) {
-			CUIButton btnForTeam;
+			TFTeamButton btnForTeam;
 			string team_name = serverkey(sprintf("team_%i", t));
 
-			btnForTeam = spawn(CUIButton);
-			btnForTeam.SetTitle(team_name);
+			btnForTeam = spawn(TFTeamButton);
+			btnForTeam.SetTitle(strtoupper(team_name));
 			btnForTeam.SetPos(btnpos);
+			btnForTeam.SetSize('124 24');
 
 			switch (team_name) {
 			case "Blue":
-				btnForTeam.SetFunc(VGUI_ChooseTeam_Blue);
+				btnForTeam.SetTag(1);
 				break;
 			case "Red":
-				btnForTeam.SetFunc(VGUI_ChooseTeam_Red);
+				btnForTeam.SetTag(2);
 				break;
 			case "Green":
-				btnForTeam.SetFunc(VGUI_ChooseTeam_Green);
+				btnForTeam.SetTag(3);
 				break;
 			case "Yellow":
-				btnForTeam.SetFunc(VGUI_ChooseTeam_Yellow);
+				btnForTeam.SetTag(4);
 				break;
 			}
 
 			winChooseTeam.Add(btnForTeam);
-			btnpos[1] += 30;
+			btnpos[1] += 32;
 		}
 
+		btnAutoAssign = spawn(VGUIButton);
+		btnAutoAssign.SetTitle("AUTO ASSIGN");
+		btnAutoAssign.SetPos(btnpos);
+		btnAutoAssign.SetSize('124 24');
+		//btnAutoAssign.SetFunc(VGUI_AutoAssign);
+		btnpos[1] += 32;
 
-		btnGoSpectator = spawn(CUIButton);
-		btnGoSpectator.SetTitle("Spectator");
-		btnGoSpectator.SetPos('8 252');
-		btnGoSpectator.SetFunc(VGUI_GoSpectator);
+		btnGoSpectator = spawn(VGUIButton);
+		btnGoSpectator.SetTitle("SPECTATE");
+		btnGoSpectator.SetPos(btnpos);
+		btnGoSpectator.SetSize('124 24');
+		//btnGoSpectator.SetFunc(VGUI_GoSpectator);
 
 		g_uiDesktop.Add(winChooseTeam);
+		winChooseTeam.Add(frmMapInfo);
+		winChooseTeam.Add(lblSelectTeam);
+		winChooseTeam.Add(lblMapName);
+		winChooseTeam.Add(lblMapInfo);
+		winChooseTeam.Add(btnAutoAssign);
 		winChooseTeam.Add(btnGoSpectator);
 	}
 

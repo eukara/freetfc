@@ -50,13 +50,22 @@ CSEv_TeamJoin_f(float f)
 	}
 } 
 
-
-
+/** Called by the client-side VGUI menu when we choose a class. */
 void
 CSEv_ClassJoin_f(float f)
 {
 
 	player pl = (player)self;
+
+	/* choose a random class. */
+	if (f == 0) {
+		float newClass = 0;
+
+		while (newClass == 0 || newClass == pl.classtype)
+			newClass = floor(random(CLASS_SCOUT, CLASS_ENGINEER + 1));
+
+		f = newClass;
+	}
 
 	/* invalid */
 	if (pl.team == 0) {

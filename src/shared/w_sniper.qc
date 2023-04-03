@@ -44,7 +44,7 @@ w_sniper_updateammo(player pl)
 string
 w_sniper_wmodel(void)
 {
-	return;
+	return "";
 }
 string
 w_sniper_pmodel(player pl)
@@ -80,7 +80,7 @@ w_sniper_release(player pl)
 
 	if (pl.mode_tempstate > 0) {
 		float dmg = bound(75, (pl.mode_tempstate/2) * 75, 375);
-		w_baseauto_fire(pl, player::m_iAmmoShells, dmg, [0,0]);
+		w_baseauto_fire(WEAPON_SNIPER, player::m_iAmmoShells, dmg, [0,0]);
 		Weapons_ViewAnimation(pl, SNIPER_FIRE);
 
 		if (pl.flags & FL_CROUCHING)

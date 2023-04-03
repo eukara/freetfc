@@ -53,7 +53,7 @@ player::Physics_Jump(void)
 float
 player::Physics_MaxSpeed(void)
 {
-	float desiredspeed;
+	float desiredspeed = 300.0f;
 
 	/* values courtesy of https://wiki.teamfortress.com/ */
 	switch (classtype) {

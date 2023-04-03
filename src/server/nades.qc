@@ -289,15 +289,71 @@ TFCNade_ThrowMIRV(player pl)
 void
 TFCNade_ThrowNapalm(player pl)
 {
+	vector vecNadeVelocity;
+	float flTimer;
 
-	print("Throwing Napalm grenade!\n");
+	static void TFCNade_ThrowConcussion_Touch(void) {
+		Sound_Play(self, CHAN_BODY, "weapon_handgrenade.bounce");
+
+		if (!vlen(self.velocity))
+			self.avelocity = g_vec_null;
+	}
+
+	static void TFCNade_ThrowConcussion_Explode(void) {
+		NSEntity::Destroy();
+	}
+
+	Weapons_MakeVectors(pl);
+	vecNadeVelocity = v_forward * 600 + v_up * 200 + crandom() * v_right * 10 + crandom() * v_up * 10;
+	flTimer = max(0.0, pl.gren2.GetNextThinkTime() - time);
+
+	NSRenderableEntity eNade = spawn(NSRenderableEntity);
+	eNade.SetModel("models/napalm.mdl");
+	eNade.SetOrigin(Weapons_GetCameraPos(pl) + (v_forward * 14) + (v_up * -4) + (v_right * 2));
+	eNade.SetOwner(pl);
+	eNade.SetMovetype(MOVETYPE_BOUNCE);
+	eNade.SetSolid(SOLID_BBOX);
+	eNade.SetGravity(1.0f);
+	eNade.SetVelocity(vecNadeVelocity);
+	eNade.SetAngularVelocity([0, 600, 0]);
+
+	eNade.touch = TFCNade_ThrowConcussion_Touch;
+	eNade.ScheduleThink(TFCNade_ThrowConcussion_Explode, flTimer);
 }
 
 void
 TFCNade_ThrowHallucination(player pl)
 {
+	vector vecNadeVelocity;
+	float flTimer;
 
-	print("Throwing Hallucination grenade!\n");
+	static void TFCNade_ThrowConcussion_Touch(void) {
+		Sound_Play(self, CHAN_BODY, "weapon_handgrenade.bounce");
+
+		if (!vlen(self.velocity))
+			self.avelocity = g_vec_null;
+	}
+
+	static void TFCNade_ThrowConcussion_Explode(void) {
+		NSEntity::Destroy();
+	}
+
+	Weapons_MakeVectors(pl);
+	vecNadeVelocity = v_forward * 600 + v_up * 200 + crandom() * v_right * 10 + crandom() * v_up * 10;
+	flTimer = max(0.0, pl.gren2.GetNextThinkTime() - time);
+
+	NSRenderableEntity eNade = spawn(NSRenderableEntity);
+	eNade.SetModel("models/spy_grenade.mdl");
+	eNade.SetOrigin(Weapons_GetCameraPos(pl) + (v_forward * 14) + (v_up * -4) + (v_right * 2));
+	eNade.SetOwner(pl);
+	eNade.SetMovetype(MOVETYPE_BOUNCE);
+	eNade.SetSolid(SOLID_BBOX);
+	eNade.SetGravity(1.0f);
+	eNade.SetVelocity(vecNadeVelocity);
+	eNade.SetAngularVelocity([0, 600, 0]);
+
+	eNade.touch = TFCNade_ThrowConcussion_Touch;
+	eNade.ScheduleThink(TFCNade_ThrowConcussion_Explode, flTimer);
 }
 
 void

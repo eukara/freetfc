@@ -84,7 +84,7 @@ w_autorifle_aimanim(player pl)
 void
 w_autorifle_primary(player pl)
 {
-	int s = w_baseauto_fire(pl, player::m_iAmmoShells, 8, [0,0]);
+	int s = w_baseauto_fire(WEAPON_AUTORIFLE, player::m_iAmmoShells, 8, [0,0]);
 
 	switch (s) {
 	case AUTO_FIRE_FAILED:
