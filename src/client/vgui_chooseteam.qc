@@ -108,6 +108,7 @@ VGUI_ChooseTeam(void)
 			btnForTeam = spawn(TFTeamButton);
 			btnForTeam.SetTitle(strtoupper(team_name));
 			btnForTeam.SetPos(btnpos);
+			btnForTeam.SetKeyEquivalent(ftos((float)t));
 			btnForTeam.SetSize('124 24');
 
 			switch (team_name) {
@@ -133,6 +134,7 @@ VGUI_ChooseTeam(void)
 		btnAutoAssign.SetTitle("AUTO ASSIGN");
 		btnAutoAssign.SetPos(btnpos);
 		btnAutoAssign.SetSize('124 24');
+		btnAutoAssign.SetKeyEquivalent("5");
 		//btnAutoAssign.SetFunc(VGUI_AutoAssign);
 		btnpos[1] += 32;
 
@@ -140,6 +142,7 @@ VGUI_ChooseTeam(void)
 		btnGoSpectator.SetTitle("SPECTATE");
 		btnGoSpectator.SetPos(btnpos);
 		btnGoSpectator.SetSize('124 24');
+		btnGoSpectator.SetKeyEquivalent("6");
 		//btnGoSpectator.SetFunc(VGUI_GoSpectator);
 
 		g_uiDesktop.Add(winChooseTeam);

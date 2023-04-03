@@ -62,44 +62,9 @@ TFClassButton::TFClassButton(void)
 void
 TFClassButton::OnMouseUp(void)
 {
-	int tag = GetTag();
-
-	winClassSelection.Hide();
-
 	int classSelection = GetTag();
-
-	switch (classSelection) {
-		case 0:
-			sendevent("ClassJoin", "f", 1);
-			break;
-		case 1:
-			sendevent("ClassJoin", "f", 2);
-			break;
-		case 2:
-			sendevent("ClassJoin", "f", 3);
-			break;
-		case 3:
-			sendevent("ClassJoin", "f", 4);
-			break;
-		case 4:
-			sendevent("ClassJoin", "f", 5);
-			break;
-		case 5:
-			sendevent("ClassJoin", "f", 6);
-			break;
-		case 6:
-			sendevent("ClassJoin", "f", 7);
-			break;
-		case 7:
-			sendevent("ClassJoin", "f", 8);
-			break;
-		case 8:
-			sendevent("ClassJoin", "f", 9);
-			break;
-		case 9:
-			sendevent("ClassJoin", "f", 0);
-			break;
-	}
+	sendevent("ClassJoin", "f", (float)classSelection);
+	winClassSelection.Hide();
 }
 
 void
@@ -124,52 +89,52 @@ TFClassButton::OnMouseEntered(void)
 	}
 
 	switch (classSelection) {
-		case 0:
+		case 1:
 			lblClassTitle.SetTitle("Scout");
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_scout", teamName));
 			lblClassDescription.SetTitle(g_classDescrScout);
 			break;
-		case 1:
+		case 2:
 			lblClassTitle.SetTitle("Sniper");
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_sniper", teamName));
 			lblClassDescription.SetTitle(g_classDescrSniper);
 			break;
-		case 2:
+		case 3:
 			lblClassTitle.SetTitle("Soldier");
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_soldier", teamName));
 			lblClassDescription.SetTitle(g_classDescrSoldier);
 			break;
-		case 3:
+		case 4:
 			lblClassTitle.SetTitle("Demoman");
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_demoman", teamName));
 			lblClassDescription.SetTitle(g_classDescrDemoman);
 			break;
-		case 4:
+		case 5:
 			lblClassTitle.SetTitle("Medic");
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_medic", teamName));
 			lblClassDescription.SetTitle(g_classDescrMedic);
 			break;
-		case 5:
+		case 6:
 			lblClassTitle.SetTitle("Heavy Weapons Guy");
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_hwguy", teamName));
 			lblClassDescription.SetTitle(g_classDescrHWGuy);
 			break;
-		case 6:
+		case 7:
 			lblClassTitle.SetTitle("Pyro");
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_pyro", teamName));
 			lblClassDescription.SetTitle(g_classDescrPyro);
 			break;
-		case 7:
+		case 8:
 			lblClassTitle.SetTitle("Spy");
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_spy", teamName));
 			lblClassDescription.SetTitle(g_classDescrSpy);
 			break;
-		case 8:
+		case 9:
 			lblClassTitle.SetTitle("Engineer");
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_engineer", teamName));
 			lblClassDescription.SetTitle(g_classDescrEngineer);
 			break;
-		case 9:
+		case 0:
 			lblClassTitle.SetTitle("Random");
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_randompc", teamName));
 			lblClassDescription.SetTitle(g_classDescrRandomPC);
@@ -248,7 +213,15 @@ VGUI_ChooseClass(void)
 			btns[i].SetTitle(g_classnames[i]);
 			btns[i].SetSize([124, 24]);
 			btns[i].SetPos(btnpos);
-			btns[i].SetTag(i);
+
+			if (i == 9) {
+				btns[i].SetKeyEquivalent("0");
+				btns[i].SetTag(0);
+			} else {
+				btns[i].SetKeyEquivalent(ftos((float)i+1));
+				btns[i].SetTag(i+1i);
+			}
+
 			winClassSelection.Add(btns[i]);
 			btnpos[1] += 32;
 		}
