@@ -90,52 +90,52 @@ TFClassButton::OnMouseEntered(void)
 
 	switch (classSelection) {
 		case 1:
-			lblClassTitle.SetTitle("Scout");
+			lblClassTitle.SetTitle(Titles_GetTextBody("Title_scout"));
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_scout", teamName));
 			lblClassDescription.SetTitle(g_classDescrScout);
 			break;
 		case 2:
-			lblClassTitle.SetTitle("Sniper");
+			lblClassTitle.SetTitle(Titles_GetTextBody("Title_sniper"));
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_sniper", teamName));
 			lblClassDescription.SetTitle(g_classDescrSniper);
 			break;
 		case 3:
-			lblClassTitle.SetTitle("Soldier");
+			lblClassTitle.SetTitle(Titles_GetTextBody("Title_soldier"));
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_soldier", teamName));
 			lblClassDescription.SetTitle(g_classDescrSoldier);
 			break;
 		case 4:
-			lblClassTitle.SetTitle("Demoman");
+			lblClassTitle.SetTitle(Titles_GetTextBody("Title_demoman"));
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_demoman", teamName));
 			lblClassDescription.SetTitle(g_classDescrDemoman);
 			break;
 		case 5:
-			lblClassTitle.SetTitle("Medic");
+			lblClassTitle.SetTitle(Titles_GetTextBody("Title_medic"));
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_medic", teamName));
 			lblClassDescription.SetTitle(g_classDescrMedic);
 			break;
 		case 6:
-			lblClassTitle.SetTitle("Heavy Weapons Guy");
+			lblClassTitle.SetTitle(Titles_GetTextBody("Title_hwguy"));
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_hwguy", teamName));
 			lblClassDescription.SetTitle(g_classDescrHWGuy);
 			break;
 		case 7:
-			lblClassTitle.SetTitle("Pyro");
+			lblClassTitle.SetTitle(Titles_GetTextBody("Title_pyro"));
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_pyro", teamName));
 			lblClassDescription.SetTitle(g_classDescrPyro);
 			break;
 		case 8:
-			lblClassTitle.SetTitle("Spy");
+			lblClassTitle.SetTitle(Titles_GetTextBody("Title_spy"));
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_spy", teamName));
 			lblClassDescription.SetTitle(g_classDescrSpy);
 			break;
 		case 9:
-			lblClassTitle.SetTitle("Engineer");
+			lblClassTitle.SetTitle(Titles_GetTextBody("Title_engineer"));
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_engineer", teamName));
 			lblClassDescription.SetTitle(g_classDescrEngineer);
 			break;
 		case 0:
-			lblClassTitle.SetTitle("Random");
+			lblClassTitle.SetTitle(Titles_GetTextBody("RandomPC"));
 			imgClassPreview.SetImage(strcat("gfx/vgui/640_randompc", teamName));
 			lblClassDescription.SetTitle(g_classDescrRandomPC);
 			break;
@@ -143,16 +143,16 @@ TFClassButton::OnMouseEntered(void)
 }
 
 string g_classnames [] = {
-	"SCOUT",
-	"SNIPER",
-	"SOLDIER",
-	"DEMOMAN",
-	"MEDIC",
-	"HWGUY",
-	"PYRO",
-	"SPY",
-	"ENGINEER",
-	"RANDOM"
+	"Scout",
+	"Sniper",
+	"Soldier",
+	"Demoman",
+	"Medic",
+	"HWGuy",
+	"Pyro",
+	"Spy",
+	"Engineer",
+	"Random"
 };
 
 void
@@ -174,7 +174,7 @@ VGUI_ChooseClass(void)
 		winClassSelection.SetStyleMask(VGUIWindowBorderless | VGUIWindowFullscreen);
 
 		lblSelectClass = spawn(VGUILabel);
-		lblSelectClass.SetTitle("SELECT YOUR CLASS");
+		lblSelectClass.SetTitle(Titles_GetTextBody("Title_SelectYourClass"));
 		lblSelectClass.SetTextSize(19);
 		lblSelectClass.SetPos([40, 38]);
 		lblSelectClass.SetSize([400, 24]);
@@ -210,7 +210,7 @@ VGUI_ChooseClass(void)
 		btns = memalloc(sizeof(TFClassButton) * g_classnames.length);
 		for (int i = 0; i < g_classnames.length; i++) {
 			btns[i] = spawn(TFClassButton);
-			btns[i].SetTitle(g_classnames[i]);
+			btns[i].SetTitle(Titles_GetTextBody(g_classnames[i]));
 			btns[i].SetSize([124, 24]);
 			btns[i].SetPos(btnpos);
 

@@ -55,7 +55,7 @@ VGUI_ChooseTeam_MapInfo(void)
 			mapinfo = strcat(mapinfo, temp, "\n");
 		}
 	} else {
-		mapinfo = "No map info available.";
+		mapinfo = Titles_GetTextBody("Map_Description_not_available");
 	}
 
 	return mapinfo;
@@ -81,7 +81,7 @@ VGUI_ChooseTeam(void)
 		winChooseTeam.SetStyleMask(VGUIWindowBorderless | VGUIWindowFullscreen);
 
 		lblSelectTeam = spawn(VGUILabel);
-		lblSelectTeam.SetTitle("SELECT YOUR TEAM");
+		lblSelectTeam.SetTitle(Titles_GetTextBody("Title_SelectYourTeam"));
 		lblSelectTeam.SetTextSize(19);
 		lblSelectTeam.SetPos([40, 38]);
 		lblSelectTeam.SetSize('400 24');
@@ -131,7 +131,7 @@ VGUI_ChooseTeam(void)
 		}
 
 		btnAutoAssign = spawn(VGUIButton);
-		btnAutoAssign.SetTitle("AUTO ASSIGN");
+		btnAutoAssign.SetTitle(Titles_GetTextBody("Team_AutoAssign"));
 		btnAutoAssign.SetPos(btnpos);
 		btnAutoAssign.SetSize('124 24');
 		btnAutoAssign.SetKeyEquivalent("5");
@@ -139,7 +139,7 @@ VGUI_ChooseTeam(void)
 		btnpos[1] += 32;
 
 		btnGoSpectator = spawn(VGUIButton);
-		btnGoSpectator.SetTitle("SPECTATE");
+		btnGoSpectator.SetTitle(Titles_GetTextBody("Menu_Spectate"));
 		btnGoSpectator.SetPos(btnpos);
 		btnGoSpectator.SetSize('124 24');
 		btnGoSpectator.SetKeyEquivalent("6");
