@@ -51,11 +51,6 @@ ClientGame_RendererRestart(string rstr)
 	Damage_Precache();
 
 	FX_Blood_Init();
-	FX_BreakModel_Init();
-	FX_Explosion_Init();
-	FX_GibHuman_Init();
-	FX_Spark_Init();
-	FX_Impact_Init();
 
 	/* HUD selection icons */
 	g_dmsg_spr = spriteframe("sprites/tfc_dmsg.spr", 0, 0.0f);

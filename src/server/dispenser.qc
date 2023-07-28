@@ -52,7 +52,7 @@ void
 TFCDispenser::Death(void)
 {
 	env_message_single(real_owner, "#Dispenser_destroyed");
-	FX_Explosion(origin);
+	pointparticles(particleeffectnum("fx_explosion.main"), origin, [0,0,0], 1);
 	Destroy();
 }
 

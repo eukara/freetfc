@@ -99,9 +99,9 @@ w_glauncher_shootnade(player pl)
 
 	static void w_glauncher_explode(void) {
 		float dmg = 100;
-		FX_Explosion(self.origin);
+		pointparticles(particleeffectnum("fx_explosion.main"), self.origin, [0,0,0], 1);
 		Damage_Radius(self.origin, self.owner, dmg, dmg * 2.5f, TRUE, WEAPON_GLAUNCHER);
-		sound(self, CHAN_WEAPON, sprintf("weapons/explode%d.wav", floor(random() * 2) + 3), 1, ATTN_NORM);
+		Sound_Play(self, CHAN_VOICE, "fx.explosion");
 		NSEntity::Destroy();
 	}
 

@@ -79,7 +79,7 @@ void
 w_incendiary_shootrocket(player pl)
 {
 	static void w_incendiary_shootrocket_touch(void) {
-		FX_Explosion(self.origin);
+		pointparticles(particleeffectnum("fx_explosion.main"), self.origin, [0,0,0], 1);
 		remove(self);
 	}
 

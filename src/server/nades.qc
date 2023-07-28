@@ -11,7 +11,7 @@ TFCNade_ThrowCaltrop(player pl)
 
 	static void TFCNade_ThrowHandGrenade_Explode(void) {
 		float dmg = 100;
-		FX_Explosion(self.origin);
+		pointparticles(particleeffectnum("fx_explosion.main"), self.origin, [0,0,0], 1);
 		Damage_Radius(self.origin, self.owner, dmg, dmg * 2.5f, TRUE, WEAPON_GLAUNCHER);
 		sound(self, CHAN_WEAPON, sprintf("weapons/explode%d.wav", floor(random() * 2) + 3), 1, ATTN_NORM);
 		NSEntity::Destroy();
@@ -51,7 +51,7 @@ TFCNade_ThrowHandGrenade(player pl)
 
 	static void TFCNade_ThrowHandGrenade_Explode(void) {
 		float dmg = 100;
-		FX_Explosion(self.origin);
+		pointparticles(particleeffectnum("fx_explosion.main"), self.origin, [0,0,0], 1);
 		Damage_Radius(self.origin, self.owner, dmg, dmg * 2.5f, TRUE, WEAPON_GLAUNCHER);
 		sound(self, CHAN_WEAPON, sprintf("weapons/explode%d.wav", floor(random() * 2) + 3), 1, ATTN_NORM);
 		NSEntity::Destroy();
@@ -125,7 +125,7 @@ TFCNade_ThrowNail(player pl)
 	}
 	static void TFCNade_ThrowNail_Explode(void) {
 		float dmg = 100;
-		FX_Explosion(self.origin);
+		pointparticles(particleeffectnum("fx_explosion.main"), self.origin, [0,0,0], 1);
 		Damage_Radius(self.origin, self.owner, dmg, dmg * 2.5f, TRUE, WEAPON_GLAUNCHER);
 		sound(self, CHAN_WEAPON, sprintf("weapons/explode%d.wav", floor(random() * 2) + 3), 1, ATTN_NORM);
 		NSEntity::Destroy();
@@ -215,7 +215,7 @@ TFCNade_ThrowMIRVBomblet(NSEntity bomb)
 
 	static void TFCNade_ThrowMIRVBomblet_Explode(void) {
 		float dmg = 100;
-		FX_Explosion(self.origin);
+		pointparticles(particleeffectnum("fx_explosion.main"), self.origin, [0,0,0], 1);
 		Damage_Radius(self.origin, self.owner, dmg, dmg * 2.5f, TRUE, WEAPON_GLAUNCHER);
 		sound(self, CHAN_WEAPON, sprintf("weapons/explode%d.wav", floor(random() * 2) + 3), 1, ATTN_NORM);
 		NSEntity::Destroy();
@@ -257,7 +257,7 @@ TFCNade_ThrowMIRV(player pl)
 
 	static void TFCNade_ThrowMIRV_Explode(void) {
 		float dmg = 100;
-		FX_Explosion(self.origin);
+		pointparticles(particleeffectnum("fx_explosion.main"), self.origin, [0,0,0], 1);
 		Damage_Radius(self.origin, self.owner, dmg, dmg * 2.5f, TRUE, WEAPON_GLAUNCHER);
 		sound(self, CHAN_WEAPON, sprintf("weapons/explode%d.wav", floor(random() * 2) + 3), 1, ATTN_NORM);
 
@@ -425,7 +425,7 @@ void
 TFCNade_SelfExplode(player pl)
 {
 	float dmg = 100;
-	FX_Explosion(pl.origin);
+	pointparticles(particleeffectnum("fx_explosion.main"), pl.origin, [0,0,0], 1);
 	Damage_Radius(pl.origin, pl, dmg, dmg * 2.5f, TRUE, WEAPON_GLAUNCHER);
 	sound(pl, CHAN_WEAPON, sprintf("weapons/explode%d.wav", floor(random() * 2) + 3), 1, ATTN_NORM);
 }

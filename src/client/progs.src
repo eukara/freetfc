@@ -36,6 +36,7 @@ game_event.qc
 ../../../valve/src/client/hud_dmgnotify.qc
 hud_itemnotify.qc
 hud_ammonotify.qc
+../../../valve/src/client/hud_sprite.qc
 ../../../valve/src/client/hud.qc
 ../../../valve/src/client/hud_weaponselect.qc
 ../../../valve/src/client/scoreboard.qc
