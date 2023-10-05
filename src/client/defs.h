@@ -27,3 +27,6 @@ var string g_tfchud6_spr;
 var string g_tfchud7_spr;
 
 var int MUZZLE_ROUND;
+
+
+void TFCHallucination_Insert(vector, vector);

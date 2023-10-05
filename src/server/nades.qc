@@ -90,6 +90,19 @@ TFCNade_ThrowConcussion(player pl)
 	}
 
 	static void TFCNade_ThrowConcussion_Explode(void) {
+		for (player f = world; (f = (player)find(f, ::classname, "player"));) {
+			float dist = vlen(f.origin - self.origin);
+
+			if (dist < 256) {
+				vector pushVel;
+				f.m_flIdleScale = 15.0f;
+				makevectors(f.origin - self.origin);
+				pushVel = v_forward * 300;
+				pushVel[2] += 300;
+				f.SetVelocity(pushVel);
+			}
+		}
+
 		NSEntity::Destroy();
 	}
 
@@ -335,6 +348,13 @@ TFCNade_ThrowHallucination(player pl)
 	}
 
 	static void TFCNade_ThrowConcussion_Explode(void) {
+		for (player f = world; (f = (player)find(f, ::classname, "player"));) {
+			float dist = vlen(f.origin - self.origin);
+
+			if (dist < 192) {
+				f.m_flHallucination = 15.0f;
+			}
+		}
 		NSEntity::Destroy();
 	}
 

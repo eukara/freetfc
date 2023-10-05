@@ -29,6 +29,7 @@ init.qc
 entities.qc
 cmds.qc
 game_event.qc
+hallucination.qc
 ../../../valve/src/client/camera.qc
 ../../../valve/src/client/viewmodel.qc
 ../../../valve/src/client/view.qc

@@ -58,6 +58,9 @@ class player:NSClientPlayer
 	/* ammo 3 */
 	PREDICTED_INT(mode_tempstate)
 
+	PREDICTED_FLOAT(m_flIdleScale)
+	PREDICTED_FLOAT(m_flHallucination)
+
 	virtual void Physics_Jump(void);
 	virtual float Physics_MaxSpeed(void);
 
@@ -75,6 +78,8 @@ class player:NSClientPlayer
 	virtual void PredictPostFrame(void);
 	virtual void UpdateAliveCam(void);
 	virtual void UpdatePlayerAttachments(bool);
+
+	float m_flNextHallucination;
 
 #else
 	NSTimer gren1;
@@ -98,7 +103,7 @@ class player:NSClientPlayer
 	virtual void ServerInputFrame(void);
 
 	nonvirtual void TFC_FragSelf(void);
-	nonvirtual void TFC_FragSelf(void);
+	nonvirtual void TFC_ThrowSecondary(void);
 #endif
 };
 
@@ -328,6 +333,13 @@ player::UpdateAliveCam(void)
 
 	g_view.SetCameraOrigin(cam_pos);
 	Camera_StrafeRoll(view_angles);
+
+	if (m_flIdleScale > 0.0) {
+		float wave = sin(time);
+		view_angles[0] -= m_flIdleScale * sin(1 * time) * 0.9;
+		view_angles[1] -= m_flIdleScale * sin(2 * time) * 0.9;
+		view_angles[2] -= m_flIdleScale * sin(0.5 * time) * 0.3;
+	}
 	g_view.SetCameraAngle(view_angles);
 
 	if (vehicle) {
@@ -381,6 +393,8 @@ player::ReceiveEntity(float new, float flChanged)
 
 	READENTITY_BYTE(mode_tempstate, PLAYER_AMMO3)
 	READENTITY_BYTE(classtype, PLAYER_AMMO3)
+	READENTITY_FLOAT(m_flIdleScale, PLAYER_AMMO3)
+	READENTITY_FLOAT(m_flHallucination, PLAYER_AMMO3)
 
 	setorigin(this, origin);
 
@@ -400,6 +414,14 @@ player::ReceiveEntity(float new, float flChanged)
 
 	if (flChanged & PLAYER_ITEMS || flChanged & PLAYER_HEALTH)
 		HUD_ItemNotify_Check(this);
+
+	if (m_flHallucination > 0.0) {
+		if (m_flNextHallucination > time)
+			return;
+
+		TFCHallucination_Insert(origin, v_angle);
+		m_flNextHallucination = time + 0.5f + random();
+	}
 }
 
 /*
@@ -436,6 +458,8 @@ player::PredictPreFrame(void)
 
 	SAVE_STATE(mode_tempstate)
 	SAVE_STATE(classtype)
+	SAVE_STATE(m_flIdleScale)
+	SAVE_STATE(m_flHallucination)
 }
 
 /*
@@ -471,6 +495,8 @@ player::PredictPostFrame(void)
 
 	ROLL_BACK(mode_tempstate)
 	ROLL_BACK(classtype)
+	ROLL_BACK(m_flIdleScale)
+	ROLL_BACK(m_flHallucination)
 }
 
 #else
@@ -480,6 +506,12 @@ player::ServerInputFrame(void)
 	super::ServerInputFrame();
 	gflags &= ~GF_NOBUILDZONE;
 	gflags &= ~GF_NOGRENADEZONE;
+
+	m_flIdleScale -= input_timelength;
+	m_flHallucination -= input_timelength;
+
+	if (m_flIdleScale <= 0.0)
+		m_flIdleScale = 0.0f;
 }
 
 void
@@ -509,6 +541,8 @@ player::EvaluateEntity(void)
 
 	EVALUATE_FIELD(mode_tempstate, PLAYER_AMMO3)
 	EVALUATE_FIELD(classtype, PLAYER_AMMO3)
+	EVALUATE_FIELD(m_flIdleScale, PLAYER_AMMO3)
+	EVALUATE_FIELD(m_flHallucination, PLAYER_AMMO3)
 }
 
 void
@@ -777,6 +811,8 @@ player::SendEntity(entity ePEnt, float flChanged)
 
 	SENDENTITY_BYTE(mode_tempstate, PLAYER_AMMO3)
 	SENDENTITY_BYTE(classtype, PLAYER_AMMO3)
+	SENDENTITY_FLOAT(m_flIdleScale, PLAYER_AMMO3)
+	SENDENTITY_FLOAT(m_flHallucination, PLAYER_AMMO3)
 
 	return (1);
 }
