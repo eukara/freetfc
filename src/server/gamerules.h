@@ -18,6 +18,7 @@ class TFCGameRules:CGameRules
 {
 	void(void) TFCGameRules;
 
+	virtual bool ConsoleCommand(NSClientPlayer, string);
 	virtual bool IsTeamplay(void);
 
 	virtual void PlayerConnect(NSClientPlayer);

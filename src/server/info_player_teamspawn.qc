@@ -47,6 +47,8 @@ info_player_teamspawn::info_player_teamspawn(void)
 		classname = "info_teamspawn_green";
 		break;
 	}
+
+	botinfo = BOTINFO_SPAWNPOINT;
 }
 
 CLASSEXPORT(i_p_t, info_player_teamspawn)

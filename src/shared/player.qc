@@ -420,7 +420,7 @@ player::ReceiveEntity(float new, float flChanged)
 			return;
 
 		TFCHallucination_Insert(origin, v_angle);
-		m_flNextHallucination = time + 0.5f + random();
+		m_flNextHallucination = time + 0.25f + random(0.25,0.75);
 	}
 }
 

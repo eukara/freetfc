@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2020 Marco Cawthorne <marco@icculus.org>
+ * Copyright (c) 2016-2023 Marco Cawthorne <marco@icculus.org>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -13,6 +13,52 @@
  * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+
+void CSEv_TeamJoin_f(float f);
+void CSEv_ClassJoin_f(float f);
+
+void
+TFCGameRules_BotJoin(void)
+{
+	spawnfunc_TFCBot();
+	CSEv_TeamJoin_f(0);
+	CSEv_ClassJoin_f(0);
+}
+
+void
+TFCGameRules::TFCGameRules(void)
+{
+	/* wipe the serverinfo clean */
+	forceinfokey(world, "teams", "0");
+	forceinfokey(world, "team_1", "");
+	forceinfokey(world, "team_2", "");
+	forceinfokey(world, "team_3", "");
+	forceinfokey(world, "team_4", "");
+	forceinfokey(world, "teamscore_1", "");
+	forceinfokey(world, "teamscore_2", "");
+	forceinfokey(world, "teamscore_3", "");
+	forceinfokey(world, "teamscore_4", "");
+}
+
+bool
+TFCGameRules::ConsoleCommand(NSClientPlayer pp, string cmd)
+{
+	tokenize(cmd);
+
+	switch (argv(0)) {
+	case "bot_add":
+		entity bot_ent = Bot_AddQuick();
+		if (bot_ent) {
+			bot_ent.think = TFCGameRules_BotJoin;
+			bot_ent.nextthink = time;
+		}
+		break;
+	default:
+		return (false);
+	}
+
+	return (true);
+}
 
 bool
 TFCGameRules::IsTeamplay(void)
@@ -182,6 +228,7 @@ TFCGameRules::InitPostEnts(void)
 		team_count += 1;
 		forceinfokey(world, sprintf("team_%i", team_count), "Blue");
 		forceinfokey(world, sprintf("teamscore_%i", team_count), "0");
+		g_tfcHasBlueTeam = true;
 	}
 
 	e = find(world, ::classname, "info_teamspawn_red");
@@ -189,6 +236,7 @@ TFCGameRules::InitPostEnts(void)
 		team_count += 1;
 		forceinfokey(world, sprintf("team_%i", team_count), "Red");
 		forceinfokey(world, sprintf("teamscore_%i", team_count), "0");
+		g_tfcHasRedTeam = true;
 	}
 
 	e = find(world, ::classname, "info_teamspawn_green");
@@ -196,6 +244,7 @@ TFCGameRules::InitPostEnts(void)
 		team_count += 1;
 		forceinfokey(world, sprintf("team_%i", team_count), "Green");
 		forceinfokey(world, sprintf("teamscore_%i", team_count), "0");
+		g_tfcHasGreenTeam = true;
 	}
 
 	e = find(world, ::classname, "info_teamspawn_yellow");
@@ -203,22 +252,8 @@ TFCGameRules::InitPostEnts(void)
 		team_count += 1;
 		forceinfokey(world, sprintf("team_%i", team_count), "Yellow");
 		forceinfokey(world, sprintf("teamscore_%i", team_count), "0");
+		g_tfcHasYellowTeam = true;
 	}
 
 	forceinfokey(world, "teams", itos(team_count));
-}
-
-void
-TFCGameRules::TFCGameRules(void)
-{
-	/* wipe the serverinfo clean */
-	forceinfokey(world, "teams", "0");
-	forceinfokey(world, "team_1", "");
-	forceinfokey(world, "team_2", "");
-	forceinfokey(world, "team_3", "");
-	forceinfokey(world, "team_4", "");
-	forceinfokey(world, "teamscore_1", "");
-	forceinfokey(world, "teamscore_2", "");
-	forceinfokey(world, "teamscore_3", "");
-	forceinfokey(world, "teamscore_4", "");
 }

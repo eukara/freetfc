@@ -158,6 +158,7 @@ item_tfgoal::Touch(entity eToucher)
 
 	Disappear();
 	pl.g_items |= ITEM_GOALITEM;
+	pl.flags |= FL_GOALITEM;
 	forceinfokey(pl, "*goalitem_t", itos(m_iTeamOwner));
 
 	m_eActivator = pl;
@@ -220,6 +221,16 @@ item_tfgoal::Respawn(void)
 	m_eActivator = __NULL__;
 	ReleaseThink();
 	m_status = GISTATUS_HOME;
+
+	/* helps with bots */
+	team = m_iTeamOwner;
+
+	/* it's either a goal item... or some other pickup */
+	if (m_dItemID) {
+		botinfo = BOTINFO_TEAM_GOALITEM;
+	} else {
+		botinfo = BOTINFO_AMMO;
+	}
 
 	if (m_iTeamOwner) {
 		SetRenderAmt(1.0f);

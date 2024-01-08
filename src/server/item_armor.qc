@@ -167,6 +167,7 @@ item_armor::Respawn(void)
 	SetSolid(SOLID_TRIGGER);
 	SetOrigin(GetSpawnOrigin());
 	DropToFloor();
+	botinfo = BOTINFO_ARMOR;
 }
 
 void

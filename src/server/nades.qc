@@ -103,6 +103,28 @@ TFCNade_ThrowConcussion(player pl)
 			}
 		}
 
+		WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+		WriteByte(MSG_MULTICAST, EV_BEAMCYLINDER);
+		WriteCoord(MSG_MULTICAST, self.origin[0]);
+		WriteCoord(MSG_MULTICAST, self.origin[1]);
+		WriteCoord(MSG_MULTICAST, self.origin[2]);
+		WriteCoord(MSG_MULTICAST, 0);
+		WriteCoord(MSG_MULTICAST, 128);
+		WriteCoord(MSG_MULTICAST, 0);
+		WriteShort(MSG_MULTICAST, getmodelindex("sprites/shockwave.spr"));
+		WriteByte(MSG_MULTICAST, 0);
+		WriteByte(MSG_MULTICAST, 10);
+		WriteByte(MSG_MULTICAST, 2);
+		WriteByte(MSG_MULTICAST, 16);
+		WriteByte(MSG_MULTICAST, 0);
+		WriteByte(MSG_MULTICAST, 255);
+		WriteByte(MSG_MULTICAST, 255);
+		WriteByte(MSG_MULTICAST, 255);
+		WriteByte(MSG_MULTICAST, 255);
+		WriteByte(MSG_MULTICAST, 0);
+		msg_entity = self;
+		multicast(self.origin, MULTICAST_PVS);
+
 		NSEntity::Destroy();
 	}
 

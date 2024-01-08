@@ -90,6 +90,7 @@ item_healthkit::Respawn(void)
 	SetSolid(SOLID_TRIGGER);
 	SetOrigin(GetSpawnOrigin());
 	DropToFloor();
+	botinfo = BOTINFO_HEALTH;
 }
 
 void

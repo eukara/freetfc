@@ -19,6 +19,11 @@
 #include "../../../valve/src/server/flashlight.h"
 #include "sentry.h"
 
+var bool g_tfcHasBlueTeam = false;
+var bool g_tfcHasRedTeam = false;
+var bool g_tfcHasYellowTeam = false;
+var bool g_tfcHasGreenTeam = false;
+
 /* returns if a player already has a teleporter/exit built */
 bool
 TFC_ExistsForPlayer(entity pl, string cname)

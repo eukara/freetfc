@@ -31,6 +31,9 @@ func_nogrenades.qc
 
 vox.qc
 ../../../valve/src/server/items.qc
+../../../src/botlib/include.src
+bot.qc
+
 info_player_teamspawn.qc
 item_tfgoal.qc
 info_tfgoal.qc
@@ -45,8 +48,6 @@ server.qc
 ../../../valve/src/server/damage.qc
 ../../../valve/src/server/flashlight.qc
 ../../../valve/src/server/modelevent.qc
-
-../../../src/botlib/include.src
 
 spawn.qc
 

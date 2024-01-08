@@ -14,10 +14,76 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+float
+TFCTeamJoin_SmallestTeam(int blue, int red, int yellow, int green)
+{
+	while (blue > 0i || red > 0i || yellow > 0i || green > 0i) {
+		/* the first team that goes to 0, gets picked. */
+		if (blue <= 0i)
+			return 1;
+		else if (red <= 0i)
+			return 2;
+		else if (yellow <= 0i)
+			return 3;
+		else if (green <= 0i)
+			return 4;
+
+		blue--;
+		red--;
+		yellow--;
+		green--;
+	}
+
+	/* the first team that goes to 0, gets picked. */
+	if (blue == 0i)
+		return 1;
+	else if (red == 0i)
+		return 2;
+	else if (yellow == 0i)
+		return 3;
+	else if (green == 0i)
+		return 4;
+
+	return 0;
+}
+
 void
 CSEv_TeamJoin_f(float f)
 {
 	player pl = (player)self;
+
+	/* random... */
+	if (f == 0) {
+		int bluePlayers = 0i;
+		int redPlayers = 0i;
+		int yellowPlayers = 0i;
+		int greenPlayers = 0i;
+
+		/* hack to get it to never pick this team */
+		if (g_tfcHasBlueTeam == false)
+			bluePlayers = (int)cvar("sv_playerslots");
+		if (g_tfcHasRedTeam == false)
+			redPlayers = (int)cvar("sv_playerslots");
+		if (g_tfcHasYellowTeam == false)
+			yellowPlayers = (int)cvar("sv_playerslots");
+		if (g_tfcHasGreenTeam == false)
+			greenPlayers = (int)cvar("sv_playerslots");
+
+		/* count all valid players within each team */
+		for (entity e = world; (e = find(e, ::classname, "player"));) {
+			if (e.team == 1)
+				bluePlayers++;
+			else if (e.team == 2)
+				redPlayers++;
+			else if (e.team == 3)
+				yellowPlayers++;
+			else if (e.team == 4)
+				greenPlayers++;
+		}
+
+		/* assign us to the team with the lowest amount of players */
+		f = TFCTeamJoin_SmallestTeam(bluePlayers, redPlayers, yellowPlayers, greenPlayers);
+	}
 
 	/* mess, do it better */
 	if (f == 1) {
@@ -40,7 +106,6 @@ CSEv_TeamJoin_f(float f)
 		forceinfokey(pl, "topcolor", "0x3bff00");
 		forceinfokey(pl, "bottomcolor", "0x3bff00");
 	} else {
-		/* invalid */
 		return;
 	}
 

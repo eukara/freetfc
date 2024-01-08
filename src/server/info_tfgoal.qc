@@ -179,6 +179,7 @@ info_tfgoal::Touch(entity eToucher)
 
 		/* mark as removed on the player end, too. */
 		pl.g_items &= ~ITEM_GOALITEM;
+		pl.flags &= ~FL_GOALITEM;
 		forceinfokey(pl, "*goalitem_t", "");
 	}
 
@@ -286,6 +287,10 @@ info_tfgoal::Respawn(void)
 	SetModel(GetSpawnModel());
 	SetSize(VEC_HULL_MIN, VEC_HULL_MAX);
 	SetOrigin(GetSpawnOrigin());
+	team = m_iTeamUses;
+
+	if (frags > 0)
+		botinfo = BOTINFO_TEAM_GOALCAPTURE;
 }
 
 void
@@ -446,6 +451,10 @@ i_t_g::Respawn(void)
 	SetModel(GetSpawnModel());
 	SetOrigin(GetSpawnOrigin());
 	Hide();
+	team = m_iTeamUses;
+
+	if (frags > 0)
+		botinfo = BOTINFO_TEAM_GOALCAPTURE;
 }
 
 void
