@@ -224,6 +224,7 @@ weapon_t w_rpg =
 	.id		= ITEM_RPG,
 	.slot		= 4,
 	.slot_pos	= 0,
+	.weight		= WEIGHT_RPG,
 	.draw		= w_rpg_draw,
 	.holster	= __NULL__,
 	.primary	= w_rpg_primary,

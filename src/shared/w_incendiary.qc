@@ -183,6 +183,7 @@ weapon_t w_incendiary =
 	.id		= ITEM_INCENDIARY,
 	.slot		= 4,
 	.slot_pos	= 3,
+	.weight		= WEIGHT_INCENDIARY,
 	.draw		= w_incendiary_draw,
 	.holster	= __NULL__,
 	.primary	= w_incendiary_primary,

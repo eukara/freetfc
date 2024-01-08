@@ -209,6 +209,7 @@ weapon_t w_supernail =
 	.id		= ITEM_SUPERNAIL,
 	.slot		= 3,
 	.slot_pos	= 2,
+	.weight		= WEIGHT_SUPERNAIL,
 	.draw		= w_supernail_draw,
 	.holster	= __NULL__,
 	.primary	= w_supernail_primary,

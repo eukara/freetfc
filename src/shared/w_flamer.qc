@@ -234,6 +234,7 @@ weapon_t w_flamer =
 	.id			= ITEM_FLAMER,
 	.slot		= 3,
 	.slot_pos	= 2,
+	.weight		= WEIGHT_FLAMER,
 	.draw		= w_flamer_draw,
 	.holster	= __NULL__,
 	.primary	= w_flamer_primary,

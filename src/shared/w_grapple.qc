@@ -96,6 +96,7 @@ weapon_t w_grapple =
 	.id		= ITEM_GRAPPLE,
 	.slot		= 5,
 	.slot_pos	= 0,
+	.weight		= WEIGHT_GRAPPLE,
 	.draw		= w_grapple_draw,
 	.holster	= __NULL__,
 	.primary	= __NULL__,

@@ -190,6 +190,7 @@ weapon_t w_sbs =
 	.id		= ITEM_SBS,
 	.slot		= 1,
 	.slot_pos	= 0,
+	.weight		= WEIGHT_SBS,
 	.draw		= w_sbs_draw,
 	.holster	= w_sbs_holster,
 	.primary	= w_sbs_primary,

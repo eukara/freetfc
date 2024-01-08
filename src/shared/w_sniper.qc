@@ -220,6 +220,7 @@ weapon_t w_sniper =
 	.id		= ITEM_SNIPER,
 	.slot		= 1,
 	.slot_pos	= 1,
+	.weight		= WEIGHT_SNIPER,
 	.draw		= w_sniper_draw,
 	.holster	= __NULL__,
 	.primary	= w_sniper_primary,

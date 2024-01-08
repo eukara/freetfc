@@ -183,6 +183,7 @@ weapon_t w_knife =
 	.id		= ITEM_KNIFE,
 	.slot		= 0,
 	.slot_pos	= 2,
+	.weight		= WEIGHT_KNIFE,
 	.draw		= w_knife_draw,
 	.holster	= w_knife_holster,
 	.primary	= w_knife_primary,

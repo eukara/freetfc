@@ -275,6 +275,7 @@ weapon_t w_asscan =
 	.id			= ITEM_ASSCAN,
 	.slot		= 3,
 	.slot_pos	= 3,
+	.weight		= WEIGHT_ASSCAN,
 	.draw		= w_asscan_draw,
 	.holster	= w_asscan_holster,
 	.primary	= w_asscan_primary,

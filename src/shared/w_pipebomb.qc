@@ -289,6 +289,7 @@ weapon_t w_pipebomb =
 	.id		= ITEM_PIPEBOMB,
 	.slot		= 4,
 	.slot_pos	= 1,
+	.weight		= WEIGHT_PIPEBOMB,
 	.draw		= w_pipebomb_draw,
 	.holster	= __NULL__,
 	.primary	= w_pipebomb_primary,

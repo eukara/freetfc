@@ -202,6 +202,7 @@ weapon_t w_dbs =
 	.id		= ITEM_DBS,
 	.slot		= 2,
 	.slot_pos	= 1,
+	.weight		= WEIGHT_DBS,
 	.draw		= w_dbs_draw,
 	.holster	= w_dbs_holster,
 	.primary	= w_dbs_primary,

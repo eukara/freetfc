@@ -215,6 +215,7 @@ weapon_t w_umbrella =
 	.id		= ITEM_UMBRELLA,
 	.slot		= 0,
 	.slot_pos	= 4,
+	.weight		= WEIGHT_UMBRELLA,
 	.draw		= w_umbrella_draw,
 	.holster	= w_umbrella_holster,
 	.primary	= w_umbrella_primary,

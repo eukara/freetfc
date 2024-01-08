@@ -188,6 +188,7 @@ weapon_t w_tranquil =
 	.id		= ITEM_TRANQUIL,
 	.slot		= 1,
 	.slot_pos	= 2,
+	.weight		= WEIGHT_TRANQUIL,
 	.draw		= w_tranquil_draw,
 	.holster	= __NULL__,
 	.primary	= w_tranquil_primary,

@@ -167,6 +167,7 @@ weapon_t w_autorifle =
 	.id		= ITEM_AUTORIFLE,
 	.slot		= 2,
 	.slot_pos	= 0,
+	.weight		= WEIGHT_AUTORIFLE,
 	.draw		= w_autorifle_draw,
 	.holster	= __NULL__,
 	.primary	= w_autorifle_primary,

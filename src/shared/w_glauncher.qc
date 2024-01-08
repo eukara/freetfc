@@ -259,6 +259,7 @@ weapon_t w_glauncher =
 	.id		= ITEM_GLAUNCHER,
 	.slot		= 3,
 	.slot_pos	= 1,
+	.weight		= WEIGHT_GLAUNCHER,
 	.draw		= w_glauncher_draw,
 	.holster	= __NULL__,
 	.primary	= w_glauncher_primary,

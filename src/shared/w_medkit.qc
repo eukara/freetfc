@@ -170,6 +170,7 @@ weapon_t w_medkit =
 	.id		= ITEM_MEDKIT,
 	.slot		= 0,
 	.slot_pos	= 1,
+	.weight		= WEIGHT_MEDKIT,
 	.draw		= w_medkit_draw,
 	.holster	= __NULL__,
 	.primary	= w_medkit_primary,

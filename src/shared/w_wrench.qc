@@ -232,6 +232,7 @@ weapon_t w_wrench =
 	.id		= ITEM_WRENCH,
 	.slot		= 0,
 	.slot_pos	= 3,
+	.weight		= WEIGHT_WRENCH,
 	.draw		= w_wrench_draw,
 	.holster	= w_wrench_holster,
 	.primary	= w_wrench_primary,

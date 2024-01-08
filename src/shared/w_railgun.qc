@@ -184,6 +184,7 @@ weapon_t w_railgun =
 	.id		= ITEM_RAILGUN,
 	.slot		= 1,
 	.slot_pos	= 3,
+	.weight		= WEIGHT_RAILGUN,
 	.draw		= w_railgun_draw,
 	.holster	= __NULL__,
 	.primary	= w_railgun_primary,
