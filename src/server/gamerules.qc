@@ -14,17 +14,6 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-void CSEv_TeamJoin_f(float f);
-void CSEv_ClassJoin_f(float f);
-
-void
-TFCGameRules_BotJoin(void)
-{
-	spawnfunc_TFCBot();
-	CSEv_TeamJoin_f(0);
-	CSEv_ClassJoin_f(0);
-}
-
 void
 TFCGameRules::TFCGameRules(void)
 {
@@ -46,13 +35,6 @@ TFCGameRules::ConsoleCommand(NSClientPlayer pp, string cmd)
 	tokenize(cmd);
 
 	switch (argv(0)) {
-	case "bot_add":
-		entity bot_ent = Bot_AddQuick();
-		if (bot_ent) {
-			bot_ent.think = TFCGameRules_BotJoin;
-			bot_ent.nextthink = time;
-		}
-		break;
 	default:
 		return (false);
 	}
