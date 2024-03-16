@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2020 Marco Cawthorne <marco@icculus.org>
+ * Copyright (c) 2016-2024 Marco Cawthorne <marco@icculus.org>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -83,7 +83,7 @@ w_supernail_shootnail(player pl)
 		/* impact per bullet */
 		if (trace_ent.iBleeds == 0) {
 			DecalGroups_Place("Impact.BigShot", trace_endpos + (v_forward * -2));
-			SurfData_Impact(trace_ent, trace_surfaceflagsi, trace_endpos, trace_plane_normal);
+			SurfData_Impact(trace_ent, trace_endpos, trace_plane_normal);
 		}
 		if (trace_ent.takedamage == DAMAGE_YES) {
 			Damage_Apply(trace_ent, self.owner, 14, WEAPON_NAILGUN, DMG_BULLET);

@@ -1,0 +1,44 @@
+entityDef info_player_start
+{
+	editor_mins "-16 -16 -36"
+	editor_maxs "16 16 36"
+	editor_description "Singleplayer Spawn"
+
+	spawnclass NSSpawnPoint
+}
+
+entityDef info_teamspawn_blue
+{
+	editor_mins "-16 -16 -36"
+	editor_maxs "16 16 36"
+	editor_description "Blue Team Spawn"
+
+	spawnclass NSSpawnPoint
+}
+
+entityDef info_teamspawn_red
+{
+	editor_mins "-16 -16 -36"
+	editor_maxs "16 16 36"
+	editor_description "Red Team Spawn"
+
+	spawnclass NSSpawnPoint
+}
+
+entityDef info_teamspawn_green
+{
+	editor_mins "-16 -16 -36"
+	editor_maxs "16 16 36"
+	editor_description "Yellow Team Spawn"
+
+	spawnclass NSSpawnPoint
+}
+
+entityDef info_teamspawn_yellow
+{
+	editor_mins "-16 -16 -36"
+	editor_maxs "16 16 36"
+	editor_description "Yellow Team Spawn"
+
+	spawnclass NSSpawnPoint
+}

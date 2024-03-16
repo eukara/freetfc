@@ -1,0 +1,23 @@
+entityDef item_armor1
+{
+	spawnclass	TFCArmor
+	model		"models/g_armor.mdl"
+	armorvalue	"100"
+	snd_pickup	"item_armor_tfc.pickup"
+}
+
+entityDef item_armor2
+{
+	spawnclass	TFCArmor
+	model		"models/y_armor.mdl"
+	armorvalue	"150"
+	snd_pickup	"item_armor_tfc.pickup"
+}
+
+entityDef item_armor3
+{
+	spawnclass	TFCArmor
+	model		"models/r_armor.mdl"
+	armorvalue	"200"
+	snd_pickup	"item_armor_tfc.pickup"
+}

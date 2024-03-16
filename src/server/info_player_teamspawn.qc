@@ -14,38 +14,53 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-class info_player_teamspawn:NSRenderableEntity
+class info_player_teamspawn:NSSpawnPoint
 {
 	void(void) info_player_teamspawn;
+
+	virtual void SpawnKey(string, string);
+
+	nonvirtual void RenameTeamSpawns(void);
 };
 
 void
 info_player_teamspawn::info_player_teamspawn(void)
 {
-	int team = 1;
-	for (int i = 1; i < (tokenize(__fullspawndata) - 1); i += 2) {
-		switch (argv(i)) {
-		case "team_no":
-			team = stoi(argv(i+1));
+
+}
+
+void
+info_player_teamspawn::SpawnKey(string keyName, string setValue)
+{
+	switch (keyName) {
+	case "team_no":
+		team = ReadInt(setValue);
+		break;
+	default:
+		super::SpawnKey(keyName, setValue);
+	}
+}
+
+void
+info_player_teamspawn::RenameTeamSpawns(void)
+{
+	for (entity e = world; (e = find(e, ::classname, "info_player_teamspawn"));) {
+		info_player_teamspawn findSpawn = (info_player_teamspawn)e;
+
+		switch (findSpawn.team) {
+		case 1:
+			e.classname = "info_teamspawn_blue";
 			break;
-		default:
+		case 2:
+			e.classname = "info_teamspawn_red";
+			break;
+		case 3:
+			e.classname = "info_teamspawn_yellow";
+			break;
+		case 4:
+			e.classname = "info_teamspawn_green";
 			break;
 		}
-	}
-
-	switch (team) {
-	case 1:
-		classname = "info_teamspawn_blue";
-		break;
-	case 2:
-		classname = "info_teamspawn_red";
-		break;
-	case 3:
-		classname = "info_teamspawn_yellow";
-		break;
-	case 4:
-		classname = "info_teamspawn_green";
-		break;
 	}
 
 	botinfo = BOTINFO_SPAWNPOINT;

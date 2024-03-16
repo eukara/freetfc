@@ -167,26 +167,26 @@ TFCGameRules::ImpulseCommand(NSClient bp, float num)
 	case 101:
 		player pl = (player)bp;
 		if (cvar("sv_cheats") > 0) {
-		Weapons_AddItem(pl, WEAPON_CROWBAR, -1);
-		Weapons_AddItem(pl, WEAPON_MEDKIT, -1);
-		Weapons_AddItem(pl, WEAPON_KNIFE, -1);
-		Weapons_AddItem(pl, WEAPON_WRENCH, -1);
-		Weapons_AddItem(pl, WEAPON_UMBRELLA, -1);
-		Weapons_AddItem(pl, WEAPON_SBS, -1);
-		Weapons_AddItem(pl, WEAPON_SNIPER, -1);
-		Weapons_AddItem(pl, WEAPON_TRANQUIL, -1);
-		Weapons_AddItem(pl, WEAPON_RAILGUN, -1);
-		Weapons_AddItem(pl, WEAPON_AUTORIFLE, -1);
-		Weapons_AddItem(pl, WEAPON_DBS, -1);
-		Weapons_AddItem(pl, WEAPON_NAILGUN, -1);
-		Weapons_AddItem(pl, WEAPON_GLAUNCHER, -1);
-		Weapons_AddItem(pl, WEAPON_SUPERNAIL, -1);
-		Weapons_AddItem(pl, WEAPON_FLAMER, -1);
-		Weapons_AddItem(pl, WEAPON_RPG, -1);
-		Weapons_AddItem(pl, WEAPON_PIPEBOMB, -1);
-		Weapons_AddItem(pl, WEAPON_ASSCAN, -1);
-		Weapons_AddItem(pl, WEAPON_INCENDIARY, -1);
-		Weapons_AddItem(pl, WEAPON_GRAPPLE, -1);
+			Weapons_AddItem(pl, WEAPON_CROWBAR, -1);
+			Weapons_AddItem(pl, WEAPON_MEDKIT, -1);
+			Weapons_AddItem(pl, WEAPON_KNIFE, -1);
+			Weapons_AddItem(pl, WEAPON_WRENCH, -1);
+			Weapons_AddItem(pl, WEAPON_UMBRELLA, -1);
+			Weapons_AddItem(pl, WEAPON_SBS, -1);
+			Weapons_AddItem(pl, WEAPON_SNIPER, -1);
+			Weapons_AddItem(pl, WEAPON_TRANQUIL, -1);
+			Weapons_AddItem(pl, WEAPON_RAILGUN, -1);
+			Weapons_AddItem(pl, WEAPON_AUTORIFLE, -1);
+			Weapons_AddItem(pl, WEAPON_DBS, -1);
+			Weapons_AddItem(pl, WEAPON_NAILGUN, -1);
+			Weapons_AddItem(pl, WEAPON_GLAUNCHER, -1);
+			Weapons_AddItem(pl, WEAPON_SUPERNAIL, -1);
+			Weapons_AddItem(pl, WEAPON_FLAMER, -1);
+			Weapons_AddItem(pl, WEAPON_RPG, -1);
+			Weapons_AddItem(pl, WEAPON_PIPEBOMB, -1);
+			Weapons_AddItem(pl, WEAPON_ASSCAN, -1);
+			Weapons_AddItem(pl, WEAPON_INCENDIARY, -1);
+			Weapons_AddItem(pl, WEAPON_GRAPPLE, -1);
 		}
 		break;
 	default:
@@ -199,43 +199,9 @@ TFCGameRules::ImpulseCommand(NSClient bp, float num)
 void
 TFCGameRules::InitPostEnts(void)
 {
-	int team_count = 0i;
-	entity e = __NULL__;
-
 	super::InitPostEnts();
 
-	/* populate the serverinfo field with the teams we have on the map */
-	e = find(world, ::classname, "info_teamspawn_blue");
-	if (e) {
-		team_count += 1;
-		forceinfokey(world, sprintf("team_%i", team_count), "Blue");
-		forceinfokey(world, sprintf("teamscore_%i", team_count), "0");
-		g_tfcHasBlueTeam = true;
-	}
-
-	e = find(world, ::classname, "info_teamspawn_red");
-	if (e) {
-		team_count += 1;
-		forceinfokey(world, sprintf("team_%i", team_count), "Red");
-		forceinfokey(world, sprintf("teamscore_%i", team_count), "0");
-		g_tfcHasRedTeam = true;
-	}
-
-	e = find(world, ::classname, "info_teamspawn_green");
-	if (e) {
-		team_count += 1;
-		forceinfokey(world, sprintf("team_%i", team_count), "Green");
-		forceinfokey(world, sprintf("teamscore_%i", team_count), "0");
-		g_tfcHasGreenTeam = true;
-	}
-
-	e = find(world, ::classname, "info_teamspawn_yellow");
-	if (e) {
-		team_count += 1;
-		forceinfokey(world, sprintf("team_%i", team_count), "Yellow");
-		forceinfokey(world, sprintf("teamscore_%i", team_count), "0");
-		g_tfcHasYellowTeam = true;
-	}
-
-	forceinfokey(world, "teams", itos(team_count));
+	/* rename the team spawns. */
+	info_player_teamspawn::RenameTeamSpawns();
+	info_tfdetect::Setup();
 }

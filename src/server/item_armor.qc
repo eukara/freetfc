@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Marco Cawthorne <marco@icculus.org>
+ * Copyright (c) 2022-2024 Marco Cawthorne <marco@icculus.org>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,63 +14,67 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-/*QUAKED item_armor1 (0 0 0.8) (-16 -16 0) (16 16 56)
-
-TEAM FORTRESS/QUAKE (1996) ENTITY
-
-Armor pickup, which will also replenish metal.
-It has a 100 points.
-
--------- KEYS --------
-"targetname"    : Name
-"areaname"      : Name of the specified area
-"team_no"       : Which team can pick up the armor (0 = all)
-"respawn_delay" : Time it takes to respawn after having been picked up
-*/
-
-/*QUAKED item_armor2 (0 0 0.8) (-16 -16 0) (16 16 56)
-
-TEAM FORTRESS/QUAKE (1996) ENTITY
-
-Armor pickup, which will also replenish metal
-It has a 150 points.
-
--------- KEYS --------
-"targetname"    : Name
-"areaname"      : Name of the specified area
-"team_no"       : Which team can pick up the armor (0 = all)
-"respawn_delay" : Time it takes to respawn after having been picked up
-*/
-
-/*QUAKED item_armor3 (0 0 0.8) (-16 -16 0) (16 16 56)
-
-TEAM FORTRESS/QUAKE (1996) ENTITY
-
-Armor pickup, which will also replenish metal
-It has a 200 points.
-
--------- KEYS --------
-"targetname"    : Name
-"areaname"      : Name of the specified area
-"team_no"       : Which team can pick up the armor (0 = all)
-"respawn_delay" : Time it takes to respawn after having been picked up
-*/
-
 class
-item_armor:NSRenderableEntity
+TFCArmor:NSRenderableEntity
 {
 	float m_flRespawnDelay;
 	int m_iTeamUses;
+	int m_iArmorValue;
 
-	void(void) item_armor;
+	void(void) TFCArmor;
 
 	virtual void(entity) Touch;
 	virtual void(void) Respawn;
+	virtual void(void) Spawned;
 	virtual void(string,string) SpawnKey;
 };
 
 void
-item_armor::Touch(entity eToucher)
+TFCArmor::TFCArmor(void)
+{
+	m_flRespawnDelay = 0.0f;
+	m_iTeamUses = 0i;
+	m_iArmorValue = 0i;
+}
+
+void
+TFCArmor::SpawnKey(string keyName, string setValue)
+{
+	switch (keyName) {
+	case "armorvalue":
+		m_iArmorValue = ReadInt(setValue);
+		break;
+	case "team_no":
+		m_iTeamUses = ReadInt(setValue);
+		break;
+	case "respawn_delay":
+		m_flRespawnDelay = ReadFloat(setValue);
+		break;
+	default:
+		super::SpawnKey(keyName, setValue);
+	}
+}
+
+void
+TFCArmor::Spawned(void)
+{
+	super::Spawned();
+	Sound_Precache("item_armor_tfc.pickup");
+}
+
+void
+TFCArmor::Respawn(void)
+{
+	SetModel(GetSpawnModel());
+	SetSize([-16,-16,0], [16,16,56]);
+	SetSolid(SOLID_TRIGGER);
+	SetOrigin(GetSpawnOrigin());
+	DropToFloor();
+	botinfo = BOTINFO_ARMOR;
+}
+
+void
+TFCArmor::Touch(entity eToucher)
 {
 	if (eToucher.classname != "player") {
 		return;
@@ -91,22 +95,7 @@ item_armor::Touch(entity eToucher)
 
 	/* get remaining points */
 	ap = pl.m_iMaxArmor - pl.armor;
-
-	/* get the total points the armor can give */
-	switch (classname) {
-	case "item_armor1":
-		tp = 100;
-		break;
-	case "item_armor2":
-		tp = 150;
-		break;
-	case "item_armor3":
-		tp = 200;
-		break;
-	default:
-		print("^1item_armor: unknown armor type\n");
-		return;
-	}
+	tp = m_iArmorValue;
 
 	/* if that's all we can give... */
 	if (ap > tp) {
@@ -126,76 +115,4 @@ item_armor::Touch(entity eToucher)
 	/* hide and respawn */
 	Disappear();
 	ScheduleThink(Respawn, m_flRespawnDelay);
-}
-
-void
-item_armor::SpawnKey(string strKey, string strValue)
-{
-	switch (strKey) {
-	case "team_no":
-		m_iTeamUses = stoi(strValue);
-		break;
-	case "respawn_delay":
-		m_flRespawnDelay = stof(strValue);
-		break;
-	default:
-		super::SpawnKey(strKey, strValue);
-	}
-}
-
-void
-item_armor::Respawn(void)
-{
-	/* get the total points the armor can give */
-	switch (classname) {
-	case "item_armor1":
-		SetModel("models/g_armor.mdl");
-		break;
-	case "item_armor2":
-		SetModel("models/y_armor.mdl");
-		break;
-	case "item_armor3":
-		SetModel("models/r_armor.mdl");
-		break;
-	default:
-		print("^1item_armor: unknown armor type\n");
-		Destroy();
-		return;
-	}
-
-	SetSize([-16,-16,0], [16,16,56]);
-	SetSolid(SOLID_TRIGGER);
-	SetOrigin(GetSpawnOrigin());
-	DropToFloor();
-	botinfo = BOTINFO_ARMOR;
-}
-
-void
-item_armor::item_armor(void)
-{
-	Sound_Precache("item_armor_tfc.pickup");
-}
-
-void
-item_armor1(void)
-{
-	precache_model("models/g_armor.mdl");
-	spawnfunc_item_armor();
-	self.classname = "item_armor1";
-}
-
-void
-item_armor2(void)
-{
-	precache_model("models/y_armor.mdl");
-	spawnfunc_item_armor();
-	self.classname = "item_armor2";
-}
-
-void
-item_armor3(void)
-{
-	precache_model("models/r_armor.mdl");
-	spawnfunc_item_armor();
-	self.classname = "item_armor3";
 }
