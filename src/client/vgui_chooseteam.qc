@@ -155,5 +155,5 @@ VGUI_ChooseTeam(void)
 	}
 
 	winChooseTeam.Show();
-	winChooseTeam.SetPos((video_res / 2) - (winChooseTeam.GetSize() / 2));
+	winChooseTeam.SetPos((g_vidsize / 2) - (winChooseTeam.GetSize() / 2));
 }

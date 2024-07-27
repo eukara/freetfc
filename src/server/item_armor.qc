@@ -65,10 +65,10 @@ TFCArmor::Spawned(void)
 void
 TFCArmor::Respawn(void)
 {
-	SetModel(GetSpawnModel());
+	SetModel(GetSpawnString("model"));
 	SetSize([-16,-16,0], [16,16,56]);
 	SetSolid(SOLID_TRIGGER);
-	SetOrigin(GetSpawnOrigin());
+	SetOrigin(GetSpawnVector("origin"));
 	DropToFloor();
 	botinfo = BOTINFO_ARMOR;
 }
@@ -79,7 +79,9 @@ TFCArmor::Touch(entity eToucher)
 	if (eToucher.classname != "player") {
 		return;
 	}
-	player pl = (player)eToucher;
+
+	TFPlayer pl = (TFPlayer)eToucher;
+	int cellType = ammoNumForName("ammo_cells");
 
 	/* check for team eligibility */
 	if (m_iTeamUses)
@@ -87,7 +89,7 @@ TFCArmor::Touch(entity eToucher)
 		return;
 
 	/* if we can't add anything, don't bother */
-	if (pl.armor >= pl.m_iMaxArmor && pl.m_iAmmoCells >= pl.m_iMaxCells)
+	if (pl.armor >= pl.m_iMaxArmor && pl.GetReserveAmmo(cellType) >= pl.m_iMaxCells)
 		return;
 
 	int ap;
@@ -106,7 +108,7 @@ TFCArmor::Touch(entity eToucher)
 
 		/* give the remaining as metal... engineers only!*/
 		if (pl.classtype == CLASS_ENGINEER) {
-			pl. m_iAmmoCells = bound(0, pl.m_iAmmoCells + (tp - ap), pl.m_iMaxCells);
+			pl.GiveAmmo(cellType, (tp - ap));
 		}
 	}
 

@@ -36,7 +36,7 @@ func_nobuild:NSBrushTrigger
 void
 func_nobuild::Touch(entity eToucher)
 {
-	player pl = (player)eToucher;
+	TFPlayer pl = (TFPlayer)eToucher;
 	if (!(eToucher.flags & FL_CLIENT))
 		return;
 

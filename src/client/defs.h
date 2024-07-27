@@ -28,5 +28,10 @@ var string g_tfchud7_spr;
 
 var int MUZZLE_ROUND;
 
-
 void TFCHallucination_Insert(vector, vector);
+
+struct
+{
+	bool m_bInputGren1;
+	bool m_bInputGren2;
+} g_seats_tfc[4], *pSeatTFC;

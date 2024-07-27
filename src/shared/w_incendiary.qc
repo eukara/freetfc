@@ -113,7 +113,7 @@ w_incendiary_primary(player pl)
 		Weapons_Sound(pl, CHAN_WEAPON, "weapon_incendiary.fire");
 		Weapons_ViewPunchAngle(pl, [-2,0,0]);
 
-		if (pl.flags & FL_CROUCHING)
+		if (pl.IsCrouching())
 			Animation_PlayerTop(pl, TFCANIM_CR_SHOOTRPG, 0.45f);
 		else
 			Animation_PlayerTop(pl, TFCANIM_SHOOTRPG, 0.45f);
@@ -131,7 +131,7 @@ w_incendiary_primary(player pl)
 float
 w_incendiary_aimanim(player pl)
 {
-	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIMRPG : TFCANIM_AIMRPG;
+	return pl.IsCrouching() ? TFCANIM_CR_AIMRPG : TFCANIM_AIMRPG;
 }
 
 void

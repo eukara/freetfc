@@ -54,8 +54,8 @@ Duplicate keys:
 
 typedef enum
 {
-	GISTATUS_HOME,
-	GISTATUS_DROPPED
+	GISTATUS_HOME,	/*<< The item is at its home base. */
+	GISTATUS_DROPPED /*<< The item is at neither on a player, nor at its base. */
 } goalitem_status_e;
 
 class item_tfgoal:NSRenderableEntity
@@ -66,7 +66,7 @@ class item_tfgoal:NSRenderableEntity
 	int m_iTeamOwner;
 
 	string m_strSound;
-	player m_eActivator;
+	TFPlayer m_eActivator;
 
 	goalitem_status_e m_status;
 
@@ -102,7 +102,7 @@ class item_tfgoal:NSRenderableEntity
 void
 item_tfgoal::DropReturnable(NSClientPlayer pp)
 {
-	player pl = (player)pp;
+	TFPlayer pl = (TFPlayer)pp;
 
 	/* make it available again, put it exactly where we died */
 	Respawn();
@@ -137,7 +137,7 @@ item_tfgoal::Touch(entity eToucher)
 		return;
 	}
 
-	player pl = (player)eToucher;
+	TFPlayer pl = (TFPlayer)eToucher;
 
 /* not in standard TFC, make cvar? */
 #if 0
@@ -158,7 +158,7 @@ item_tfgoal::Touch(entity eToucher)
 
 	Disappear();
 	pl.g_items |= ITEM_GOALITEM;
-	pl.flags |= FL_GOALITEM;
+	pl.AddVFlags(VFL_GOALITEM);
 	forceinfokey(pl, "*goalitem_t", itos(m_iTeamOwner));
 
 	m_eActivator = pl;
@@ -214,10 +214,10 @@ item_tfgoal::Touch(entity eToucher)
 void
 item_tfgoal::Respawn(void)
 {
-	SetModel(GetSpawnModel());
+	SetModel(GetSpawnString("model"));
 	SetSize(VEC_HULL_MIN, VEC_HULL_MAX);
 	SetSolid(SOLID_TRIGGER);
-	SetOrigin(GetSpawnOrigin());
+	SetOrigin(GetSpawnVector("origin"));
 	m_eActivator = __NULL__;
 	ReleaseThink();
 	m_status = GISTATUS_HOME;

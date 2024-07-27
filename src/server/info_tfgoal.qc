@@ -71,7 +71,7 @@ class info_tfgoal:NSRenderableEntity
 	tfgoal_activation m_tfgActivation;
 	tfgoal_effects m_tfgEffects;
 	tfgoal_result m_tfgResult;
-	player m_Activator;
+	TFPlayer m_Activator;
 
 	float m_dMustCarry; /* player must carry item of this ID */
 	float m_dRespawn; /* respawn after num seconds on TFRESULT_REMOVE */ 
@@ -130,11 +130,17 @@ void
 info_tfgoal::Touch(entity eToucher)
 {
 	item_tfgoal findme = __NULL__;
+	int rocketType = ammoNumForName("ammo_rockets");
+	int nailType = ammoNumForName("ammo_nails");
+	int cellType = ammoNumForName("ammo_cells");
+	int shellType = ammoNumForName("ammo_shells");
+	int medikitType = ammoNumForName("ammo_medkit");
+	int detpackType = ammoNumForName("ammo_detpack");
 
 	if (eToucher.classname != "player") {
 		return;
 	}
-	player pl = (player)eToucher;
+	TFPlayer pl = (TFPlayer)eToucher;
 
 	/* check for state */
 	if (m_tfgState != TFGOAL_INACTIVE) {
@@ -179,7 +185,7 @@ info_tfgoal::Touch(entity eToucher)
 
 		/* mark as removed on the player end, too. */
 		pl.g_items &= ~ITEM_GOALITEM;
-		pl.flags &= ~FL_GOALITEM;
+		pl.RemoveVFlags(VFL_GOALITEM);
 		forceinfokey(pl, "*goalitem_t", "");
 	}
 
@@ -189,20 +195,16 @@ info_tfgoal::Touch(entity eToucher)
 	/* here we increase/decrease funstuff */
 	pl.health += m_iHealth;
 	pl.armor += m_iArmor;
-	pl.m_iAmmoShells += m_iShells;
-	pl.m_iAmmoNails += m_iNails;
-	pl.m_iAmmoCells += m_iCells;
-	pl.m_iAmmoRockets += m_iRockets;
-	pl.m_iAmmoMedikit += m_iMedikit;
-	pl.m_iAmmoDetpack += m_iDetpack;
+	pl.GiveAmmo(rocketType, m_iRockets);
+	pl.GiveAmmo(nailType, m_iNails);
+	pl.GiveAmmo(cellType, m_iCells);
+	pl.GiveAmmo(shellType, m_iShells);
+	pl.GiveAmmo(medikitType, m_iMedikit);
+	pl.GiveAmmo(detpackType, m_iDetpack);
 
 	/* clamp */
 	pl.health = bound(0, pl.health, pl.m_iMaxHealth);
 	pl.armor = bound(0, pl.armor, pl.m_iMaxArmor);
-	pl.m_iAmmoShells = bound(0, pl.m_iAmmoShells, pl.m_iMaxShells);
-	pl.m_iAmmoNails = bound(0, pl.m_iAmmoNails, pl.m_iMaxNails);
-	pl.m_iAmmoCells = bound(0, pl.m_iAmmoCells, pl.m_iMaxCells);
-	pl.m_iAmmoRockets = bound(0, pl.m_iAmmoRockets, pl.m_iMaxRockets);
 
 	pl.frags += frags;
 
@@ -284,9 +286,9 @@ info_tfgoal::Respawn(void)
 {
 	SetSolid(SOLID_TRIGGER);
 	SetMovetype(MOVETYPE_NONE);
-	SetModel(GetSpawnModel());
+	SetModel(GetSpawnString("model"));
 	SetSize(VEC_HULL_MIN, VEC_HULL_MAX);
-	SetOrigin(GetSpawnOrigin());
+	SetOrigin(GetSpawnVector("origin"));
 	team = m_iTeamUses;
 
 	if (frags > 0)
@@ -448,8 +450,8 @@ i_t_g::Respawn(void)
 {
 	SetSolid(SOLID_BSPTRIGGER);
 	SetMovetype(MOVETYPE_NONE);
-	SetModel(GetSpawnModel());
-	SetOrigin(GetSpawnOrigin());
+	SetModel(GetSpawnString("model"));
+	SetOrigin(GetSpawnVector("origin"));
 	Hide();
 	team = m_iTeamUses;
 

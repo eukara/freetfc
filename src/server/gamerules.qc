@@ -125,7 +125,7 @@ TFCGameRules_PlayerRespawn(void)
 void
 TFCGameRules::PlayerDeath(NSClientPlayer pp)
 {
-	player pl = (player)pp;
+	TFPlayer pl = (TFPlayer)pp;
 
 	DropGoalItem(pp);
 	pl.SetSolid(SOLID_NOT);
@@ -140,14 +140,12 @@ TFCGameRules::PlayerDeath(NSClientPlayer pp)
 void
 TFCGameRules::PlayerKill(NSClientPlayer pp)
 {
-	player pl = (player)pp;
-	Damage_Apply(pl, pl, pl.health, WEAPON_NONE, DMG_SKIP_ARMOR);
 }
 
 void
 TFCGameRules::PlayerRespawn(NSClientPlayer pp)
 {
-	player pl = (player)pp;
+	TFPlayer pl = (TFPlayer)pp;
 	pl.MakeClass(pl.classtype);
 	pl.SpawnIntoGame();
 }
@@ -155,7 +153,7 @@ TFCGameRules::PlayerRespawn(NSClientPlayer pp)
 void
 TFCGameRules::PlayerSpawn(NSClientPlayer pp)
 {
-	player pl = (player)pp;
+	TFPlayer pl = (TFPlayer)pp;
 	pl.MakeTempSpectator(); /* replace this with a non-spectator ghost */
 	Spawn_ObserverCam(pl);
 }
@@ -164,31 +162,6 @@ bool
 TFCGameRules::ImpulseCommand(NSClient bp, float num)
 {
 	switch (num) {
-	case 101:
-		player pl = (player)bp;
-		if (cvar("sv_cheats") > 0) {
-			Weapons_AddItem(pl, WEAPON_CROWBAR, -1);
-			Weapons_AddItem(pl, WEAPON_MEDKIT, -1);
-			Weapons_AddItem(pl, WEAPON_KNIFE, -1);
-			Weapons_AddItem(pl, WEAPON_WRENCH, -1);
-			Weapons_AddItem(pl, WEAPON_UMBRELLA, -1);
-			Weapons_AddItem(pl, WEAPON_SBS, -1);
-			Weapons_AddItem(pl, WEAPON_SNIPER, -1);
-			Weapons_AddItem(pl, WEAPON_TRANQUIL, -1);
-			Weapons_AddItem(pl, WEAPON_RAILGUN, -1);
-			Weapons_AddItem(pl, WEAPON_AUTORIFLE, -1);
-			Weapons_AddItem(pl, WEAPON_DBS, -1);
-			Weapons_AddItem(pl, WEAPON_NAILGUN, -1);
-			Weapons_AddItem(pl, WEAPON_GLAUNCHER, -1);
-			Weapons_AddItem(pl, WEAPON_SUPERNAIL, -1);
-			Weapons_AddItem(pl, WEAPON_FLAMER, -1);
-			Weapons_AddItem(pl, WEAPON_RPG, -1);
-			Weapons_AddItem(pl, WEAPON_PIPEBOMB, -1);
-			Weapons_AddItem(pl, WEAPON_ASSCAN, -1);
-			Weapons_AddItem(pl, WEAPON_INCENDIARY, -1);
-			Weapons_AddItem(pl, WEAPON_GRAPPLE, -1);
-		}
-		break;
 	default:
 		return super::ImpulseCommand(bp, num);
 	}
@@ -200,6 +173,25 @@ void
 TFCGameRules::InitPostEnts(void)
 {
 	super::InitPostEnts();
+
+	EntityDef_Precache("tf_weapon_ac");
+	EntityDef_Precache("tf_weapon_autorifle");
+	EntityDef_Precache("tf_weapon_axe");
+	EntityDef_Precache("tf_weapon_flamethrower");
+	EntityDef_Precache("tf_weapon_gl");
+	EntityDef_Precache("tf_weapon_ic");
+	EntityDef_Precache("tf_weapon_knife");
+	EntityDef_Precache("tf_weapon_medikit");
+	EntityDef_Precache("tf_weapon_ng");
+	EntityDef_Precache("tf_weapon_pl");
+	EntityDef_Precache("tf_weapon_railgun");
+	EntityDef_Precache("tf_weapon_rpg");
+	EntityDef_Precache("tf_weapon_shotgun");
+	EntityDef_Precache("tf_weapon_sniperrifle");
+	EntityDef_Precache("tf_weapon_spanner");
+	EntityDef_Precache("tf_weapon_superng");
+	EntityDef_Precache("tf_weapon_supershotgun");
+	EntityDef_Precache("tf_weapon_tranq");
 
 	/* rename the team spawns. */
 	info_player_teamspawn::RenameTeamSpawns();

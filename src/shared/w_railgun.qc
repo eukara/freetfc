@@ -65,7 +65,7 @@ w_railgun_draw(player pl)
 float
 w_railgun_aimanim(player pl)
 {
-	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIM1HAND : TFCANIM_AIM1HAND;
+	return pl.IsCrouching() ? TFCANIM_CR_AIM1HAND : TFCANIM_AIM1HAND;
 }
 
 void
@@ -119,7 +119,7 @@ w_railgun_primary(player pl)
 		Weapons_ViewAnimation(pl, RAILGUN_SHOOT);
 		Weapons_ViewPunchAngle(pl, [-1,0,0]);
 
-		if (pl.flags & FL_CROUCHING)
+		if (pl.IsCrouching())
 			Animation_PlayerTop(pl, TFCANIM_CR_SHOOT1HAND, 0.45f);
 		else
 			Animation_PlayerTop(pl, TFCANIM_SHOOT1HAND, 0.45f);

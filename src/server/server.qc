@@ -42,19 +42,19 @@ Game_Worldspawn(void)
 	precache_model("models/sentry3.mdl");
 	precache_model("models/player.mdl");
 	precache_model("models/w_weaponbox.mdl");
-	Weapons_Init();
+
 	Player_Precache();
 	FX_Corpse_Init();
 }
 
-void weaponbox_spawn(player pl)
+void weaponbox_spawn(TFPlayer pl)
 {
 }
 
 void
 CSEv_TFCBuild_i(int type)
 {
-	player pl = (player)self;
+	TFPlayer pl = (TFPlayer)self;
 
 	if (pl.gflags & GF_NOBUILDZONE) {
 		env_message_single(pl, "#Build_nobuild");

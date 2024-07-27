@@ -177,7 +177,7 @@ w_asscan_primary(player pl)
 	Weapons_ViewPunchAngle(pl, [random(-2, 2),0,0]);
 	Weapons_Sound(pl, CHAN_WEAPON, "weapon_asscan.fire");
 
-	if (pl.flags & FL_CROUCHING)
+	if (pl.IsCrouching())
 		Animation_PlayerTop(pl, TFCANIM_CR_SHOOTASSCAN, 0.1f);
 	else
 		Animation_PlayerTop(pl, TFCANIM_SHOOTASSCAN, 0.1f);
@@ -212,7 +212,7 @@ w_asscan_hud(player pl)
 float
 w_asscan_aimanim(player pl)
 {
-	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIMASSCAN : TFCANIM_AIMASSCAN;
+	return pl.IsCrouching() ? TFCANIM_CR_AIMASSCAN : TFCANIM_AIMASSCAN;
 }
 
 void

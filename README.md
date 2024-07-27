@@ -1,4 +1,4 @@
-# FreeTFC
+# Team Contest (FreeTFC)
 Clean-room reimplementation of Team Fortress Classic in QuakeC.
 
 ![Preview 1](img/preview1.jpg)

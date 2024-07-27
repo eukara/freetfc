@@ -1,0 +1,8 @@
+entityDef item_suit
+{
+	"spawnclass"	"NSItem"
+	"model"			"models/w_suit.mdl"
+	"mins"			"-16 -16 0"
+	"maxs"			"16 16 16"
+	"inv_carry"		"1"
+}

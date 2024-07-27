@@ -75,10 +75,10 @@ info_areadef::SpawnKey(string strKey, string strValue)
 void
 info_areadef::Respawn(void)
 {
+	super::Respawn();
+
 	/* set up our volume */
 	SetSolid(SOLID_TRIGGER);
-	SetMovetype(MOVETYPE_NONE);
-	SetOrigin(GetSpawnOrigin());
 	SetSize(m_vecMins, m_vecMaxs);
 }
 

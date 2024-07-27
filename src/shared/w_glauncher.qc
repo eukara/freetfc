@@ -174,7 +174,7 @@ w_glauncher_primary(player pl)
 		Weapons_ViewAnimation(pl, GLAUNCHER_GFIRE);
 		Weapons_ViewPunchAngle(pl, [-1,0,0]);
 
-		if (pl.flags & FL_CROUCHING)
+		if (pl.IsCrouching())
 			Animation_PlayerTop(pl, TFCANIM_CR_SHOOTSHOTGUN, 0.45f);
 		else
 			Animation_PlayerTop(pl, TFCANIM_SHOOTSHOTGUN, 0.45f);
@@ -220,7 +220,7 @@ w_glauncher_postdraw(player pl)
 float
 w_glauncher_aimanim(player pl)
 {
-	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIMSHOTGUN : TFCANIM_AIMSHOTGUN;
+	return pl.IsCrouching() ? TFCANIM_CR_AIMSHOTGUN : TFCANIM_AIMSHOTGUN;
 }
 
 void

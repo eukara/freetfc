@@ -1,6 +1,7 @@
 void
-TFCNade_ThrowCaltrop(player pl)
+TFCNade_ThrowCaltrop(TFPlayer pl)
 {
+#if 0
 	vector vecNadeVelocity;
 
 	static void TFCNade_ThrowHandGrenade_Touch(void) {
@@ -34,11 +35,13 @@ TFCNade_ThrowCaltrop(player pl)
 
 	eNade.touch = TFCNade_ThrowHandGrenade_Touch;
 	}
+#endif
 }
 
 void
-TFCNade_ThrowHandGrenade(player pl)
+TFCNade_ThrowHandGrenade(TFPlayer pl)
 {
+#if 0
 	vector vecNadeVelocity;
 	float flTimer;
 
@@ -74,11 +77,13 @@ TFCNade_ThrowHandGrenade(player pl)
 
 	eNade.touch = TFCNade_ThrowHandGrenade_Touch;
 	eNade.ScheduleThink(TFCNade_ThrowHandGrenade_Explode, flTimer);
+#endif
 }
 
 void
-TFCNade_ThrowConcussion(player pl)
+TFCNade_ThrowConcussion(TFPlayer pl)
 {
+#if 0
 	vector vecNadeVelocity;
 	float flTimer;
 
@@ -90,7 +95,7 @@ TFCNade_ThrowConcussion(player pl)
 	}
 
 	static void TFCNade_ThrowConcussion_Explode(void) {
-		for (player f = world; (f = (player)find(f, ::classname, "player"));) {
+		for (TFPlayer f = world; (f = (TFPlayer)find(f, ::classname, "player"));) {
 			float dist = vlen(f.origin - self.origin);
 
 			if (dist < 256) {
@@ -144,11 +149,13 @@ TFCNade_ThrowConcussion(player pl)
 
 	eNade.touch = TFCNade_ThrowConcussion_Touch;
 	eNade.ScheduleThink(TFCNade_ThrowConcussion_Explode, flTimer);
+#endif
 }
 
 void
-TFCNade_ThrowNail(player pl)
+TFCNade_ThrowNail(TFPlayer pl)
 {
+#if 0
 	vector vecNadeVelocity;
 	float flTimer;
 
@@ -235,11 +242,13 @@ TFCNade_ThrowNail(player pl)
 
 	eNade.touch = TFCNade_ThrowNail_Touch;
 	eNade.ScheduleThink(TFCNade_ThrowNail_Deploy, flTimer);
+#endif
 }
 
 void
 TFCNade_ThrowMIRVBomblet(NSEntity bomb)
 {
+#if 0
 	vector vecNadeVelocity;
 
 	static void TFCNade_ThrowMIRVBomblet_Touch(void) {
@@ -256,7 +265,7 @@ TFCNade_ThrowMIRVBomblet(NSEntity bomb)
 		NSEntity::Destroy();
 	}
 
-	player pl = (player)bomb.owner;
+	TFPlayer pl = (TFPlayer)bomb.owner;
 
 	makevectors([0, random() * 360, 0]);
 	vecNadeVelocity = v_forward * 100 + v_up * 350 + crandom() * v_right * 10 + crandom() * v_up * 10;
@@ -275,11 +284,13 @@ TFCNade_ThrowMIRVBomblet(NSEntity bomb)
 
 	eNade.touch = TFCNade_ThrowMIRVBomblet_Touch;
 	eNade.ScheduleThink(TFCNade_ThrowMIRVBomblet_Explode, 1.5f + random());
+#endif
 }
 
 void
-TFCNade_ThrowMIRV(player pl)
+TFCNade_ThrowMIRV(TFPlayer pl)
 {
+#if 0
 	vector vecNadeVelocity;
 	float flTimer;
 
@@ -319,11 +330,13 @@ TFCNade_ThrowMIRV(player pl)
 	eNade.SetSkin(1);
 	eNade.ScheduleThink(TFCNade_ThrowMIRV_Explode, flTimer);
 	eNade.touch = TFCNade_ThrowMIRV_Touch;
+#endif
 }
 
 void
-TFCNade_ThrowNapalm(player pl)
+TFCNade_ThrowNapalm(TFPlayer pl)
 {
+#if 0
 	vector vecNadeVelocity;
 	float flTimer;
 
@@ -354,11 +367,13 @@ TFCNade_ThrowNapalm(player pl)
 
 	eNade.touch = TFCNade_ThrowConcussion_Touch;
 	eNade.ScheduleThink(TFCNade_ThrowConcussion_Explode, flTimer);
+#endif
 }
 
 void
-TFCNade_ThrowHallucination(player pl)
+TFCNade_ThrowHallucination(TFPlayer pl)
 {
+#if 0
 	vector vecNadeVelocity;
 	float flTimer;
 
@@ -370,7 +385,7 @@ TFCNade_ThrowHallucination(player pl)
 	}
 
 	static void TFCNade_ThrowConcussion_Explode(void) {
-		for (player f = world; (f = (player)find(f, ::classname, "player"));) {
+		for (TFPlayer f = world; (f = (TFPlayer)find(f, ::classname, "player"));) {
 			float dist = vlen(f.origin - self.origin);
 
 			if (dist < 192) {
@@ -396,11 +411,13 @@ TFCNade_ThrowHallucination(player pl)
 
 	eNade.touch = TFCNade_ThrowConcussion_Touch;
 	eNade.ScheduleThink(TFCNade_ThrowConcussion_Explode, flTimer);
+#endif
 }
 
 void
-TFCNade_ThrowEMP(player pl)
+TFCNade_ThrowEMP(TFPlayer pl)
 {
+#if 0
 	vector vecNadeVelocity;
 	float flTimer;
 
@@ -431,10 +448,11 @@ TFCNade_ThrowEMP(player pl)
 
 	eNade.touch = TFCNade_ThrowEMP_Touch;
 	eNade.ScheduleThink(TFCNade_ThrowEMP_Explode, flTimer);
+#endif
 }
 
 void
-TFCNade_ThrowSecondary(player pl)
+TFCNade_ThrowSecondary(TFPlayer pl)
 {
 	switch (pl.classtype) {
 	case CLASS_SCOUT:
@@ -464,10 +482,10 @@ TFCNade_ThrowSecondary(player pl)
 }
 
 void
-TFCNade_SelfExplode(player pl)
+TFCNade_SelfExplode(TFPlayer pl)
 {
 	float dmg = 100;
 	pointparticles(particleeffectnum("fx_explosion.main"), pl.origin, [0,0,0], 1);
-	Damage_Radius(pl.origin, pl, dmg, dmg * 2.5f, TRUE, WEAPON_GLAUNCHER);
+	//Damage_Radius(pl.origin, pl, dmg, dmg * 2.5f, TRUE, WEAPON_GLAUNCHER);
 	sound(pl, CHAN_WEAPON, sprintf("weapons/explode%d.wav", floor(random() * 2) + 3), 1, ATTN_NORM);
 }

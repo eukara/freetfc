@@ -16,9 +16,12 @@
 
 void VGUI_ChooseClass(void);
 
-int
+bool
 ClientGame_ConsoleCommand(void)
 {
+	int s = (int)getproperty(VF_ACTIVESEAT);
+	pSeatTFC = &g_seats_tfc[s];
+
 	switch(argv(0)) {
 	case "build":
 		sendevent("TFCBuild", "i", stoi(argv(1)));
@@ -34,21 +37,30 @@ ClientGame_ConsoleCommand(void)
 	case "changeteam":
 		VGUI_ChooseTeam();
 		break;
-
 	case "+gren1":
-		pSeat->m_iInputExtra1 = TRUE;
+		pSeatTFC->m_bInputGren1 = true;
 		break;
 	case "-gren1":
-		pSeat->m_iInputExtra1 = FALSE;
+		pSeatTFC->m_bInputGren1 = false;
 		break;
 	case "+gren2":
-		pSeat->m_iInputExtra2 = TRUE;
+		pSeatTFC->m_bInputGren2 = true;
 		break;
 	case "-gren2":
-		pSeat->m_iInputExtra2 = FALSE;
+		pSeatTFC->m_bInputGren2 = false;
+		break;
+	/* stubbed out, so they won't get forwarded to Nuclide */
+	case "goprone":
+	case "gocrouch":
+	case "+prone":
+	case "-prone":
+	case "+gostand":
+	case "-gostand":
+	case "+sprint":
+	case "-sprint":
 		break;
 	default:
-		return (0);
+		return (false);
 	}
-	return (1);
+	return (true);
 }

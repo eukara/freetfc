@@ -170,7 +170,7 @@ w_flamer_crosshair(player pl)
 float
 w_flamer_aimanim(player pl)
 {
-	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIMEGON : TFCANIM_AIMEGON;
+	return pl.IsCrouching() ? TFCANIM_CR_AIMEGON : TFCANIM_AIMEGON;
 }
 
 void

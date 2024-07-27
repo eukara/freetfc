@@ -47,7 +47,7 @@ item_healthkit::Touch(entity eToucher)
 	if (eToucher.classname != "player") {
 		return;
 	}
-	player pl = (player)eToucher;
+	TFPlayer pl = (TFPlayer)eToucher;
 
 	/* check for team eligibility */
 	if (m_iTeamUses)
@@ -88,7 +88,7 @@ item_healthkit::Respawn(void)
 	SetModel("models/w_medkit.mdl");
 	SetSize([-16,-16,0], [16,16,56]);
 	SetSolid(SOLID_TRIGGER);
-	SetOrigin(GetSpawnOrigin());
+	SetOrigin(GetSpawnVector("origin"));
 	DropToFloor();
 	botinfo = BOTINFO_HEALTH;
 }

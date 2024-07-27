@@ -80,7 +80,7 @@ w_medkit_primary(player pl)
 
 	Weapons_ViewAnimation(pl, MEDKIT_USE);
 
-	if (pl.flags & FL_CROUCHING)
+	if (pl.IsCrouching())
 		Animation_PlayerTop(pl, TFCANIM_CR_SHOOTMEDKIT, 0.45f);
 	else
 		Animation_PlayerTop(pl, TFCANIM_SHOOTMEDKIT, 0.45f);
@@ -131,7 +131,7 @@ w_medkit_release(player pl)
 float
 w_medkit_aimanim(player pl)
 {
-	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIMMEDKIT : TFCANIM_AIMMEDKIT;
+	return pl.IsCrouching() ? TFCANIM_CR_AIMMEDKIT : TFCANIM_AIMMEDKIT;
 }
 
 void

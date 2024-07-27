@@ -18,6 +18,9 @@ int
 ClientGame_EntityUpdate(float id, float new)
 {
 	switch (id) {
+	case ENT_PLAYER:
+		NSENTITY_READENTITY(TFPlayer, new)
+		break;
 	default:
 		return (0);
 	}

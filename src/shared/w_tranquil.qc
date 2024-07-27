@@ -114,7 +114,7 @@ w_tranquil_primary(player pl)
 		Weapons_ViewPunchAngle(pl, [-2,0,0]);
 		Weapons_Sound(pl, CHAN_WEAPON, "weapon_tranquilizer.fire");
 
-		if (pl.flags & FL_CROUCHING)
+		if (pl.IsCrouching())
 			Animation_PlayerTop(pl, TFCANIM_CR_SHOOT1HAND, 0.45f);
 		else
 			Animation_PlayerTop(pl, TFCANIM_SHOOT1HAND, 0.45f);
@@ -132,7 +132,7 @@ w_tranquil_primary(player pl)
 float
 w_tranquil_aimanim(player pl)
 {
-	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIM1HAND : TFCANIM_AIM1HAND;
+	return pl.IsCrouching() ? TFCANIM_CR_AIM1HAND : TFCANIM_AIM1HAND;
 }
 
 void

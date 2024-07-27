@@ -35,6 +35,8 @@ ClientGame_Init(float apilevel, string enginename, float engineversion)
 	registercommand("chooseteam");
 	registercommand("changeteam");
 	Obituary_Init();
+
+	pSeatTFC = &g_seats_tfc[0];
 }
 
 void VGUI_ChooseTeam(void);
@@ -67,4 +69,5 @@ ClientGame_RendererRestart(string rstr)
 	MUZZLE_SMALL = (int)getmodelindex("sprites/muzzleflash2.spr");
 	MUZZLE_WEIRD = (int)getmodelindex("sprites/muzzleflash3.spr");
 	MUZZLE_ROUND = (int)getmodelindex("sprites/muzzleflash.spr");
+	HLSprite_Init();
 }

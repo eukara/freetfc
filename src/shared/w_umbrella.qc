@@ -118,7 +118,7 @@ w_umbrella_primary(player pl)
 	pl.w_idle_next = 2.5f;
 
 #ifdef SERVER
-	if (pl.flags & FL_CROUCHING) {
+	if (pl.IsCrouching()) {
 		Animation_PlayerTop(pl, ANIM_SHOOTCROWBAR, 0.5f);
 	} else {
 		Animation_PlayerTop(pl, ANIM_CR_SHOOTCROWBAR, 0.42f);
@@ -176,7 +176,7 @@ w_umbrella_release(player pl)
 float
 w_umbrella_aimanim(player pl)
 {
-	return pl.flags & FL_CROUCHING ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
+	return pl.IsCrouching() ? ANIM_CR_AIMCROWBAR : ANIM_AIMCROWBAR;
 }
 
 void

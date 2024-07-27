@@ -30,7 +30,7 @@
 #define PHY_VIEWPOS_CROUCHED [0,0,12]
 
 void
-player::Physics_Jump(void)
+TFPlayer::Physics_Jump(void)
 {
 	if (waterlevel >= 2) {
 		if (watertype == CONTENT_WATER) {
@@ -51,7 +51,7 @@ player::Physics_Jump(void)
 }
 
 float
-player::Physics_MaxSpeed(void)
+TFPlayer::Physics_MaxSpeed(void)
 {
 	float desiredspeed = 300.0f;
 
@@ -88,7 +88,7 @@ player::Physics_MaxSpeed(void)
 		desiredspeed = 300.0f;
 	}
 
-	if (GetFlags() & FL_CROUCHING)
+	if (IsCrouching())
 		desiredspeed /= 3;
 
 	return desiredspeed;

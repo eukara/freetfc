@@ -28,28 +28,28 @@ TFCDispenser:NSSurfacePropEntity
 	int m_iRockets;
 	int m_iCells;
 	int m_iArmor;
-	
-	void(void) TFCDispenser;
 
-	virtual void(player) Place;
-	virtual void(void) FinishPlacing;
+	void TFCDispenser(void);
 
-	virtual void(entity) Touch;
+	virtual void Place(TFPlayer);
+	virtual void FinishPlacing(void);
 
-	virtual void(void) Replenish;
-	virtual void(void) ClampValues;
+	virtual void Touch(entity);
 
-	virtual int(void) GrabShells;
-	virtual int(void) GrabNails;
-	virtual int(void) GrabRockets;
-	virtual int(void) GrabCells;
-	virtual int(void) GrabArmor;
+	virtual void Replenish(void);
+	virtual void ClampValues(void);
 
-	virtual void(void) Death;
+	virtual int GrabShells(void);
+	virtual int GrabNails(void);
+	virtual int GrabRockets(void);
+	virtual int GrabCells(void);
+	virtual int GrabArmor(void);
+
+	virtual void Death(entity, entity, int, vector, int);
 };
 
 void
-TFCDispenser::Death(void)
+TFCDispenser::Death(entity inflictor, entity attacker, int damage, vector dir, int location)
 {
 	env_message_single(real_owner, "#Dispenser_destroyed");
 	pointparticles(particleeffectnum("fx_explosion.main"), origin, [0,0,0], 1);
@@ -171,19 +171,23 @@ TFCDispenser::Touch(entity eToucher)
 	if (m_flNextDispense > time)
 		return;
 
-	player pl = (player)eToucher;
+	TFPlayer pl = (TFPlayer)eToucher;
+	int rocketType = ammoNumForName("ammo_rockets");
+	int nailType = ammoNumForName("ammo_nails");
+	int cellType = ammoNumForName("ammo_cells");
+	int shellType = ammoNumForName("ammo_shells");
 
 	int r, n, c, s, a, sum;
 	r = n = c = s = a = sum = 0;
 
 	/* only subtract what if we need anything */
-	if (pl.m_iAmmoRockets < pl.m_iMaxRockets)
+	if (pl.GetReserveAmmo(rocketType) < pl.m_iMaxRockets)
 		r = GrabRockets();
-	if (pl.m_iAmmoNails < pl.m_iMaxNails)
+	if (pl.GetReserveAmmo(nailType) < pl.m_iMaxNails)
 		n = GrabNails();
-	if (pl.m_iAmmoCells < pl.m_iMaxCells)
+	if (pl.GetReserveAmmo(cellType) < pl.m_iMaxCells)
 		c = GrabCells();
-	if (pl.m_iAmmoShells < pl.m_iMaxShells)
+	if (pl.GetReserveAmmo(shellType) < pl.m_iMaxShells)
 		s = GrabShells();
 	if (pl.armor < pl.m_iMaxArmor)
 		a = GrabArmor();
@@ -198,21 +202,12 @@ TFCDispenser::Touch(entity eToucher)
 	sound(this, CHAN_ITEM, "weapons/scock1.wav", 1.0, ATTN_NORM);
 
 	/* add whatever it is we can get */
-	pl.m_iAmmoRockets += r;
-	pl.m_iAmmoNails += n;
-	pl.m_iAmmoCells += c;
-	pl.m_iAmmoShells += s;
+	pl.GiveAmmo(rocketType, r);
+	pl.GiveAmmo(nailType, n);
+	pl.GiveAmmo(cellType, c);
+	pl.GiveAmmo(shellType, s);
 	pl.armor += a;
 
-	/* clamp player values */
-	if (pl.m_iAmmoRockets > pl.m_iMaxRockets)
-		pl.m_iAmmoRockets = pl.m_iMaxRockets;
-	if (pl.m_iAmmoNails > pl.m_iMaxNails)
-		pl.m_iAmmoNails = pl.m_iMaxNails;
-	if (pl.m_iAmmoCells > pl.m_iMaxCells)
-		pl.m_iAmmoCells = pl.m_iMaxCells;
-	if (pl.m_iAmmoShells > pl.m_iMaxShells)
-		pl.m_iAmmoShells = pl.m_iMaxShells;
 	if (pl.armor > pl.m_iMaxArmor)
 		pl.armor = pl. m_iMaxArmor;
 
@@ -220,7 +215,7 @@ TFCDispenser::Touch(entity eToucher)
 }
 
 void
-TFCDispenser::Place(player pl)
+TFCDispenser::Place(TFPlayer pl)
 {
 	vector newAngles = pl.GetAngles();
 	newAngles[0] = newAngles[2] = 0;
@@ -260,14 +255,15 @@ TFCDispenser::TFCDispenser(void)
 void
 TFCDispenser_Build(void)
 {
-	player pl = (player)self;
+	TFPlayer pl = (TFPlayer)self;
+	int cellType = ammoNumForName("ammo_cells");
 
 	/* only engineers can do this */
 	if (pl.classtype != CLASS_ENGINEER)
 		return;
 
-	/* it costs */
-	if (pl.m_iAmmoCells < TFC_DISPENSER_COST) {
+	/* it costs cells to build these things */
+	if (pl.UseAmmo(cellType, TFC_DISPENSER_COST) == false) {
 		env_message_single(pl, "#Build_nometal");
 		return;
 	}
@@ -283,8 +279,6 @@ TFCDispenser_Build(void)
 		return;
 	}
 
-	pl.m_iAmmoCells -= TFC_DISPENSER_COST;
-
 	/* deploy */
 	TFCDispenser dispenser = spawn(TFCDispenser);
 	dispenser.Place(pl);
@@ -293,5 +287,5 @@ TFCDispenser_Build(void)
 void
 TFCDispenser_Dismantle(void)
 {
-	TFC_DetonateTypeForPlayer((player)self, "TFCDispenser");
+	TFC_DetonateTypeForPlayer((TFPlayer)self, "TFCDispenser");
 }

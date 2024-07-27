@@ -18,7 +18,7 @@
 void
 Game_RunClientCommand(void)
 {
-	player pl = (player)self;
+	TFPlayer pl = (TFPlayer)self;
 
 	/* clear map triggers */
 	pl.gflags &= ~GF_NOBUILDZONE;

@@ -69,7 +69,7 @@ w_sniper_draw(player pl)
 float
 w_sniper_aimanim(player pl)
 {
-	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIMSNIPER : TFCANIM_AIMSNIPER;
+	return pl.IsCrouching() ? TFCANIM_CR_AIMSNIPER : TFCANIM_AIMSNIPER;
 }
 
 void
@@ -83,7 +83,7 @@ w_sniper_release(player pl)
 		w_baseauto_fire(WEAPON_SNIPER, player::m_iAmmoShells, dmg, [0,0]);
 		Weapons_ViewAnimation(pl, SNIPER_FIRE);
 
-		if (pl.flags & FL_CROUCHING)
+		if (pl.IsCrouching())
 			Animation_PlayerTop(pl, TFCANIM_CR_SHOOTSNIPER, 0.45f);
 		else
 			Animation_PlayerTop(pl, TFCANIM_SHOOTSNIPER, 0.45f);
@@ -154,20 +154,20 @@ w_sniper_postdraw(player pl)
 
 	if (pl.mode_tempstate) {
 		vector laser_pos;
-		float lerp;
+		float lerpF;
 		vector jitter = [0.0f, 0.0f, 0.0f];
 		Weapons_MakeVectors(pl);
 		vector src = pl.origin + pl.view_ofs;
 		float a = bound(0.0, (pl.mode_tempstate / 10), 1.0) * 0.75;
 		traceline(src, src + (v_forward * 256), FALSE, pl);
-		lerp = Math_Lerp(32,16, trace_fraction);
+		lerpF = lerp(32,16, trace_fraction);
 		jitter[0] = (random(0,2) - 2) * (1 - trace_fraction);
 		jitter[1] = (random(0,2) - 2) * (1 - trace_fraction);
-		laser_pos = g_hudmins + (g_hudres / 2) + ([-lerp,-lerp] / 2);
+		laser_pos = g_hudmins + (g_hudres / 2) + ([-lerpF,-lerpF] / 2);
 
 		drawsubpic(
 			laser_pos + jitter,
-			[lerp,lerp],
+			[lerpF,lerpF],
 			g_laser_spr,
 			[0,0],
 			[1.0, 1.0],

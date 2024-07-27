@@ -1,0 +1,30 @@
+// these have to be defined by the game.
+entityDef ammo_types {
+	"ammo_none"				"0"
+	"ammo_rockets"			"1"
+	"ammo_nails"			"2"
+	"ammo_cells"			"3"
+	"ammo_shells"			"4"
+	"ammo_medkits"			"5"
+	"ammo_detpack"			"6"
+}
+
+entityDef ammo_names {
+	"ammo_none"				"None"
+	"ammo_rockets"			"Rockets"
+	"ammo_nails"			"Nails"
+	"ammo_cells"			"Cells"
+	"ammo_shells"			"Shells"
+	"ammo_medkits"			"Medkit"
+	"ammo_detpack"			"Depack"
+}
+
+entityDef ammo_max {
+	"ammo_none"				"0"
+	"ammo_rockets"			"255"
+	"ammo_nails"			"255"
+	"ammo_cells"			"255"
+	"ammo_shells"			"255"
+	"ammo_medkits"			"255"
+	"ammo_detpack"			"255"
+}

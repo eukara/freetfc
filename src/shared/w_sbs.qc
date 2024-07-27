@@ -98,7 +98,7 @@ w_sbs_primary(player pl)
 		Weapons_ViewAnimation(pl, SBS_FIRE1);
 		Weapons_ViewPunchAngle(pl, [-2,0,0]);
 
-		if (pl.flags & FL_CROUCHING)
+		if (pl.IsCrouching())
 			Animation_PlayerTop(pl, TFCANIM_CR_SHOOTSHOTGUN, 0.45f);
 		else
 			Animation_PlayerTop(pl, TFCANIM_SHOOTSHOTGUN, 0.45f);
@@ -169,7 +169,7 @@ w_sbs_crosshair(player pl)
 float
 w_sbs_aimanim(player pl)
 {
-	return pl.flags & FL_CROUCHING ? ANIM_CR_AIMSHOTGUN : ANIM_AIMSHOTGUN;
+	return pl.IsCrouching() ? ANIM_CR_AIMSHOTGUN : ANIM_AIMSHOTGUN;
 }
 
 void

@@ -36,7 +36,7 @@ func_nogrenades:NSBrushTrigger
 void
 func_nogrenades::Touch(entity eToucher)
 {
-	player pl = (player)eToucher;
+	TFPlayer pl = (TFPlayer)eToucher;
 	if (!(eToucher.flags & FL_CLIENT))
 		return;
 

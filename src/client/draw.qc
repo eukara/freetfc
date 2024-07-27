@@ -42,7 +42,7 @@ ClientGame_PreDraw(void)
 void
 ClientGame_PostDraw(void)
 {
-	player pl = (player)pSeat->m_ePlayer;
+	TFPlayer pl = (TFPlayer)pSeat->m_ePlayer;
 
 	if (serverkeyfloat("areadefs") == 1) {
 		string strArea = getplayerkeyvalue(player_localnum, "*areadef");

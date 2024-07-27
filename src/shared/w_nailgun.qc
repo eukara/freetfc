@@ -69,7 +69,7 @@ w_nailgun_draw(player pl)
 float
 w_nailgun_aimanim(player pl)
 {
-	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIMMP5 : TFCANIM_AIMMP5;
+	return pl.IsCrouching() ? TFCANIM_CR_AIMMP5 : TFCANIM_AIMMP5;
 }
 
 void
@@ -126,7 +126,7 @@ w_nailgun_primary(player pl)
 		Weapons_ViewAnimation(pl, NAILGUN_SHOOT2);
 		Weapons_ViewPunchAngle(pl, [-1,0,0]);
 
-		if (pl.flags & FL_CROUCHING)
+		if (pl.IsCrouching())
 			Animation_PlayerTop(pl, TFCANIM_CR_SHOOTMP5, 0.45f);
 		else
 			Animation_PlayerTop(pl, TFCANIM_SHOOTMP5, 0.45f);

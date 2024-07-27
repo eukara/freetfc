@@ -64,13 +64,13 @@ TFCSentry::Think(void)
 		else {
 			makevectors([0, angles[1], 0]);
 			m_flWantAngle = dotproduct((origin - t.origin), v_right);
-			m_flCurrAngle = Math_Lerp(m_flCurrAngle, m_flWantAngle, 0.25f);
+			m_flCurrAngle = lerpAngle(m_flCurrAngle, m_flWantAngle, 0.25f);
 			m_eHead.SetBoneControl1(m_flCurrAngle);
 			print(sprintf("head: %f; want: %f\n", m_flCurrAngle, m_flWantAngle));
 
 			/* fire bullets */
 			input_angles = v_angle = vectoangles(origin - t.origin);
-			TraceAttack_FireBullets(1, origin, 5, [0.025,0.025], WEAPON_NONE);
+			//TraceAttack_FireBullets(1, origin, 5, [0.025,0.025], WEAPON_NONE);
 		}
 	}
 }
@@ -134,14 +134,15 @@ TFCSentry::TFCSentry(void)
 void
 TFCSentry_Build(void)
 {
-	player pl = (player)self;
+	TFPlayer pl = (TFPlayer)self;
+	int cellType = ammoNumForName("ammo_cells");
 
 	/* only engineers can do this */
 	if (pl.classtype != CLASS_ENGINEER)
 		return;
 
-	/* it costs */
-	if (pl.m_iAmmoCells < TFC_SENTRY_COST) {
+	/* it costs cells to build these things */
+	if (pl.UseAmmo(cellType, TFC_SENTRY_COST) == false) {
 		env_message_single(pl, "#Build_nometal");
 		return;
 	}
@@ -157,8 +158,6 @@ TFCSentry_Build(void)
 		return;
 	}
 
-	pl.m_iAmmoCells -= TFC_SENTRY_COST;
-
 	/* deploy */
 	TFCSentry sentry = spawn(TFCSentry);
 	sentry.Place(pl);
@@ -167,5 +166,5 @@ TFCSentry_Build(void)
 void
 TFCSentry_Dismantle(void)
 {
-	TFC_DetonateTypeForPlayer((player)self, "TFCSentry");
+	TFC_DetonateTypeForPlayer((TFPlayer)self, "TFCSentry");
 }

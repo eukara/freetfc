@@ -24,7 +24,7 @@ TFCTeleporter:NSSurfacePropEntity
 
 	void(void) TFCTeleporter;
 
-	virtual void(player) Place;
+	virtual void(TFPlayer) Place;
 	virtual void(void) FinishPlacing;
 	virtual void(entity) Touch;
 };
@@ -68,7 +68,7 @@ TFCTeleporter::Touch(entity eToucher)
 }
 
 void
-TFCTeleporter::Place(player pl)
+TFCTeleporter::Place(TFPlayer pl)
 {
 	SetAngles(pl.GetAngles());
 
@@ -128,14 +128,15 @@ TFCTeleporterExit::TFCTeleporterExit(void)
 void
 TFCTeleporter_Build(void)
 {
-	player pl = (player)self;
+	TFPlayer pl = (TFPlayer)self;
+	int cellType = ammoNumForName("ammo_cells");
 
 	/* only engineers can do this */
 	if (pl.classtype != CLASS_ENGINEER)
 		return;
 
 	/* it costs */
-	if (pl.m_iAmmoCells < TFC_TELEPORTER_COST) {
+	if (pl.UseAmmo(cellType, TFC_TELEPORTER_COST) == false) {
 		env_message_single(pl, "#Build_nometal");
 		return;
 	}
@@ -151,8 +152,6 @@ TFCTeleporter_Build(void)
 		return;
 	}
 
-	pl.m_iAmmoCells -= TFC_TELEPORTER_COST;
-
 	/* deploy */
 	TFCTeleporter start = spawn(TFCTeleporter);
 	start.Place(pl);
@@ -161,14 +160,15 @@ TFCTeleporter_Build(void)
 void
 TFCTeleporterExit_Build(void)
 {
-	player pl = (player)self;
+	TFPlayer pl = (TFPlayer)self;
+	int cellType = ammoNumForName("ammo_cells");
 
 	/* only engineers can do this */
 	if (pl.classtype != CLASS_ENGINEER)
 		return;
 
 	/* it costs */
-	if (pl.m_iAmmoCells < TFC_TELEPORTER_COST) {
+	if (pl.UseAmmo(cellType, TFC_TELEPORTER_COST) == false) {
 		env_message_single(pl, "#Build_nometal");
 		return;
 	}
@@ -184,8 +184,6 @@ TFCTeleporterExit_Build(void)
 		return;
 	}
 
-	pl.m_iAmmoCells -= TFC_TELEPORTER_COST;
-
 	/* deploy */
 	TFCTeleporterExit end = spawn(TFCTeleporterExit);
 	end.Place(pl);
@@ -194,10 +192,10 @@ TFCTeleporterExit_Build(void)
 void
 TFCTeleporter_Dismantle(void)
 {
-	TFC_DetonateTypeForPlayer((player)self, "TFCTeleporter");
+	TFC_DetonateTypeForPlayer((TFPlayer)self, "TFCTeleporter");
 }
 void
 TFCTeleporterExit_Dismantle(void)
 {
-	TFC_DetonateTypeForPlayer((player)self, "TFCTeleporterExit");
+	TFC_DetonateTypeForPlayer((TFPlayer)self, "TFCTeleporterExit");
 }

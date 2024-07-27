@@ -50,7 +50,7 @@ TFCTeamJoin_SmallestTeam(int blue, int red, int yellow, int green)
 void
 CSEv_TeamJoin_f(float f)
 {
-	player pl = (player)self;
+	TFPlayer pl = (TFPlayer)self;
 
 	/* random... */
 	if (f == 0) {
@@ -119,8 +119,7 @@ CSEv_TeamJoin_f(float f)
 void
 CSEv_ClassJoin_f(float f)
 {
-
-	player pl = (player)self;
+	TFPlayer pl = (TFPlayer)self;
 
 	/* choose a random class. */
 	if (f == 0) {
@@ -138,7 +137,7 @@ CSEv_ClassJoin_f(float f)
 	}
 
 	if (self.classname != "player") {
-		spawnfunc_player();
+		spawnfunc_TFPlayer();
 	}
 
 	/* invalid */

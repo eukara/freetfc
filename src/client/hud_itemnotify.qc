@@ -76,7 +76,7 @@ HUD_ItemNotify_Insert(int type, int count)
 
 /* called whenever we should check for pickup updates */
 void
-HUD_ItemNotify_Check(player pl)
+HUD_ItemNotify_Check(NSClientPlayer pl)
 {
 	int healthdiff = bound(0, pl.health - pl.health_net, 100);
 	int armordiff = bound(0, pl.armor - pl.armor_net, 100);

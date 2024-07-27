@@ -78,7 +78,7 @@ w_autorifle_draw(player pl)
 float
 w_autorifle_aimanim(player pl)
 {
-	return pl.flags & FL_CROUCHING ? TFCANIM_CR_AIMAUTOSNIPER : TFCANIM_AIMAUTOSNIPER;
+	return pl.IsCrouching() ? TFCANIM_CR_AIMAUTOSNIPER : TFCANIM_AIMAUTOSNIPER;
 }
 
 void
@@ -94,7 +94,7 @@ w_autorifle_primary(player pl)
 	case AUTO_LAST:
 		Weapons_ViewAnimation(pl, SNIPER_AUTOFIRE);
 
-		if (pl.flags & FL_CROUCHING)
+		if (pl.IsCrouching())
 			Animation_PlayerTop(pl, TFCANIM_CR_SHOOTAUTOSNIPER, 0.45f);
 		else
 			Animation_PlayerTop(pl, TFCANIM_SHOOTAUTOSNIPER, 0.45f);
