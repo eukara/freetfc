@@ -21,6 +21,9 @@ ClientGame_EntityUpdate(float id, float new)
 	case ENT_PLAYER:
 		NSENTITY_READENTITY(TFPlayer, new)
 		break;
+	case ENT_WEAPON:
+		NSENTITY_READENTITY(HLWeapon, new)
+		break;
 	default:
 		return (0);
 	}
