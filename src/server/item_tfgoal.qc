@@ -60,6 +60,16 @@ typedef enum
 
 class item_tfgoal:NSRenderableEntity
 {
+public:
+	void(void) item_tfgoal;
+	virtual void(entity) Touch;
+	virtual void(void) Respawn;
+	virtual void(string, string) SpawnKey;
+	virtual void(NSClientPlayer) DropReturnable;
+	virtual void(void) TeamOwnerReturns;
+	virtual void(void) Spawned;
+
+private:
 	float m_dItemID;
 
 	int m_iTeamUses;
@@ -89,14 +99,7 @@ class item_tfgoal:NSRenderableEntity
 	string m_returnOwner;
 
 	float m_flPausetime;
-
-	void(void) item_tfgoal;
-	virtual void(entity) Touch;
-	virtual void(void) Respawn;
-	virtual void(string, string) SpawnKey;
-	virtual void(NSClientPlayer) DropReturnable;
-	virtual void(void) TeamOwnerReturns;
-	virtual void(void) Spawned;
+	string m_strSpawnModel; /* because we mangle it */
 };
 
 void
@@ -214,7 +217,7 @@ item_tfgoal::Touch(entity eToucher)
 void
 item_tfgoal::Respawn(void)
 {
-	SetModel(GetSpawnString("model"));
+	SetModel(m_strSpawnModel);
 	SetSize(VEC_HULL_MIN, VEC_HULL_MAX);
 	SetSolid(SOLID_TRIGGER);
 	SetOrigin(GetSpawnVector("origin"));
@@ -262,13 +265,15 @@ item_tfgoal::SpawnKey(string strKey, string strValue)
 	case "noise":
 		m_strSound = strValue;
 		break;
+	case "model":
 	case "mdl":
-		model = strValue;
+		m_strSpawnModel = strValue;
 
-		if (serverkeyfloat("*bspversion") == BSPVER_Q1) {
-			model = strreplace("progs", "models", model);
-			model = strreplace("tf_stan", "flag", model);
+		if (serverkeyfloat("*bspversion") == 0) {
+			m_strSpawnModel = strreplace("progs", "models", model);
+			m_strSpawnModel = strreplace("tf_stan", "flag", model);
 		}
+
 		break;
 	case "goal_no":
 		m_dItemID = stof(strValue);

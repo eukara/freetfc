@@ -61,6 +61,14 @@ typedef enumflags
 /* point entity version */
 class info_tfgoal:NSRenderableEntity
 {
+public:
+	void(void) info_tfgoal;
+	virtual void(entity) Touch;
+	virtual void(void) Respawn;
+	virtual void(string, string) SpawnKey;
+	virtual void Spawned(void);
+
+private:
 	string m_strName;
 	string m_strActivatedSound;
 
@@ -108,11 +116,7 @@ class info_tfgoal:NSRenderableEntity
 	string m_voxOwnerTeam; /* owner team */
 	string m_voxNonOwnerTeams;  /* non-owner team */
 
-	void(void) info_tfgoal;
-	virtual void(entity) Touch;
-	virtual void(void) Respawn;
-	virtual void(string, string) SpawnKey;
-	virtual void Spawned(void);
+	string m_strSpawnModel; /* because we mangle it */
 };
 
 void
@@ -286,7 +290,7 @@ info_tfgoal::Respawn(void)
 {
 	SetSolid(SOLID_TRIGGER);
 	SetMovetype(MOVETYPE_NONE);
-	SetModel(GetSpawnString("model"));
+	SetModel(m_strSpawnModel);
 	SetSize(VEC_HULL_MIN, VEC_HULL_MAX);
 	SetOrigin(GetSpawnVector("origin"));
 	team = m_iTeamUses;
@@ -305,12 +309,13 @@ info_tfgoal::SpawnKey(string strKey, string strValue)
 	case "noise":
 		m_strActivatedSound = strValue;
 		break;
+	case "model":
 	case "mdl":
-		model = strValue;
+		m_strSpawnModel = strValue;
 
 		if (serverkeyfloat("*bspversion") == 0) {
-			model = strreplace("progs", "models", model);
-			model = strreplace("tf_stan", "flag", model);
+			m_strSpawnModel = strreplace("progs", "models", model);
+			m_strSpawnModel = strreplace("tf_stan", "flag", model);
 		}
 
 		break;
@@ -450,7 +455,7 @@ i_t_g::Respawn(void)
 {
 	SetSolid(SOLID_BSPTRIGGER);
 	SetMovetype(MOVETYPE_NONE);
-	SetModel(GetSpawnString("model"));
+	SetModel(m_strSpawnModel);
 	SetOrigin(GetSpawnVector("origin"));
 	Hide();
 	team = m_iTeamUses;
